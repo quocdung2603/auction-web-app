@@ -2,7 +2,7 @@ import Category from "./Components/category";
 import FinalChart from "./Components/finalChart";
 import ReportWeb from "./Components/reportWeb";
 
-function HomePageAdmin() {
+function homePageAdmin() {
   return (
     <main className='w-full bg-gray-200 transition-all main'>
       <div className='p-6'>
@@ -14,4 +14,4 @@ function HomePageAdmin() {
   );
 }
 
-export default HomePageAdmin;
+export default homePageAdmin;

@@ -5,7 +5,7 @@ interface CardReportProps{
     content: string,
     percent?: number
 }
-const CardReport:React.FC<CardReportProps>=({content,percent,sum})=> {
+const cardReport:React.FC<CardReportProps>=({content,percent,sum})=> {
     return ( 
         <div className='bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5'>
             <div className='flex justify-between mb-4'>
@@ -34,4 +34,4 @@ const CardReport:React.FC<CardReportProps>=({content,percent,sum})=> {
      );
 }
 
-export default CardReport;
+export default cardReport;

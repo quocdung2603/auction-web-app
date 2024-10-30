@@ -4,7 +4,7 @@ interface InputTypeNumberProps {
   placeholder: string
 }
 
-const InputTypeNumber: React.FC<InputTypeNumberProps> = ({ title, setContent, placeholder }) => {
+const inputTypeNumber: React.FC<InputTypeNumberProps> = ({ title, setContent, placeholder }) => {
 return (
   <div className='w-full min-w-[200px] mb-5'>
     <label className='block mb-1 text-lg text-black font-medium'>
@@ -21,4 +21,4 @@ return (
 );
 }
 
-export default InputTypeNumber;
+export default inputTypeNumber;

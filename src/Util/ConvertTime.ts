@@ -1,4 +1,4 @@
-function ConvertDateTime(time:Date) {
+function convertDateTime(time:Date) {
   let day = time.getDate().toString();
   let month = time.getMonth().toString();
   const year=time.getFullYear();
@@ -8,4 +8,4 @@ function ConvertDateTime(time:Date) {
       day="0"+time.getDate().toString();
   return year+"-"+month+"-"+day;
 }
-export default ConvertDateTime;
+export default convertDateTime;

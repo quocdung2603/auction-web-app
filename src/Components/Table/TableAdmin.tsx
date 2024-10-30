@@ -10,7 +10,7 @@ interface TableAdminProps<T> {
   setItemChoose: React.Dispatch<React.SetStateAction<T | null>>;
 }
 
-const TableAdmin = <T,>({ data, column, setOpenFormDetail, setOpenFormRemove, setItemChoose }: TableAdminProps<T>) => {
+const tableAdmin = <T,>({ data, column, setOpenFormDetail, setOpenFormRemove, setItemChoose }: TableAdminProps<T>) => {
   
   return (
     <>
@@ -59,4 +59,4 @@ const TableAdmin = <T,>({ data, column, setOpenFormDetail, setOpenFormRemove, se
   );
 };
 
-export default TableAdmin;
+export default tableAdmin;

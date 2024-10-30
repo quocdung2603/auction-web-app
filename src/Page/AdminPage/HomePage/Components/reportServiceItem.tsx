@@ -1,9 +1,11 @@
+import { Link } from "react-router-dom";
+
 interface ReportServiceItemProps{
   nameService: string,
   Earning: number,
   status: string,
 }
-const ReportServiceItem:React.FC<ReportServiceItemProps>=({nameService,Earning,status})=> {
+const reportServiceItem:React.FC<ReportServiceItemProps>=({nameService,Earning,status})=> {
 return (
   <tr>
     <td className='py-2 px-4 border-b border-b-gray-50'>
@@ -13,12 +15,12 @@ return (
           alt=''
           className='w-8 h-8 rounded object-cover block'
         />
-        <a
-          href='#'
+        <Link
+          to='/'
           className='text-gray-600 text-sm font-medium hover:text-blue-500 ml-2 truncate'
         >
           {nameService}
-        </a>
+        </Link>
       </div>
     </td>
     <td className='py-2 px-4 border-b border-b-gray-50'>
@@ -35,4 +37,4 @@ return (
 );
 }
 
-export default ReportServiceItem;
+export default reportServiceItem;

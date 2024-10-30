@@ -8,7 +8,7 @@ interface InputTypeDateTimeProps{
     placeholder: string
 }
 
-const InputTypeDateTime:React.FC<InputTypeDateTimeProps>=({title,content,setContent,placeholder}) => {
+const inputTypeDateTime:React.FC<InputTypeDateTimeProps>=({title,content,setContent,placeholder}) => {
   return (
     <div className='w-full min-w-[200px] mb-5'>
       <label className='block mb-1 text-lg text-black font-medium'>
@@ -29,4 +29,4 @@ const InputTypeDateTime:React.FC<InputTypeDateTimeProps>=({title,content,setCont
   );
 }
 
-export default InputTypeDateTime;
+export default inputTypeDateTime;

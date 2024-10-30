@@ -1,4 +1,5 @@
-import ReportServiceItem from './reportServiceItem';
+import ReportServiceItem from './reportServiceItem'
+
 const listReportServices = [
   {
     nameService: 'Create landing page',
@@ -51,7 +52,7 @@ const listReportServices = [
     status: 'Withdrawn',
   },
 ];
-function ReportWeb() {
+function reportWeb() {
   return (
     <div className='grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6'>
       <div className='bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md lg:col-span-2'>
@@ -129,4 +130,4 @@ function ReportWeb() {
   );
 }
 
-export default ReportWeb;
+export default reportWeb;

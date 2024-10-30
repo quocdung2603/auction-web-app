@@ -5,7 +5,7 @@ interface RemoveFormProps {
   setOpenForm: React.Dispatch<React.SetStateAction<boolean>>;
   clickRemove: () => void;
 }
-const RemoveForm: React.FC<RemoveFormProps> = ({
+const removeForm: React.FC<RemoveFormProps> = ({
   openForm,
   setOpenForm,
   clickRemove,
@@ -69,4 +69,4 @@ const RemoveForm: React.FC<RemoveFormProps> = ({
   );
 };
 
-export default RemoveForm;
+export default removeForm;

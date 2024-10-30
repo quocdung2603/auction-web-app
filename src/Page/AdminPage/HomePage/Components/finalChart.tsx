@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function FinalChart() {
+function finalChart() {
   return (
     <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6'>
       <div className='p-6 relative flex flex-col min-w-0 mb-4 lg:mb-0 break-words bg-gray-50 dark:bg-gray-800 w-full shadow-lg rounded'>
@@ -280,4 +280,4 @@ function FinalChart() {
   );
 }
 
-export default FinalChart;
+export default finalChart;

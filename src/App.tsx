@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom"
-import LayoutAdmin from "./Layout/AdminLayout"
-import { adminRoute } from "./Routes/adminRoute"
+import LayoutAdmin from "./Layout/AdminLayout/LayoutAdmin"
+import { AdminRoute } from "./Routes/adminRoute"
 
 function App() {
 
@@ -8,9 +8,9 @@ function App() {
   <Routes>
     <Route path="admin" element={<LayoutAdmin/>}>
           {
-            adminRoute.map((route,index)=>{
+            AdminRoute.map((route,index)=>{
               return (
-                <Route key={index} path={route.path} element={<route.element/>}/>
+                <Route key={index+0} path={route.path} element={<route.element/>}/>
               )
             })
           }

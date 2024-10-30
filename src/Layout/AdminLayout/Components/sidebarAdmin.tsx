@@ -1,9 +1,9 @@
 import Logo from "../../../Assets/Image/Logo.svg";
-import { siteMenuAdmin } from "../../../Common/Config/SiteMenuAdmin";
+import { SiteMenuAdmin } from "../../../Common/Config/SiteMenuAdmin";
 import { IconSetting } from "../../../Common/Icon/Icon";
 import { IconLight } from "../../../Common/Icon/IconSlideBarAdmin";
 import ItemNavBar from "./itemNavbar";
-function SideBarAdmin() {
+function sideBarAdmin() {
   
   return (
     <div
@@ -18,7 +18,7 @@ function SideBarAdmin() {
         </ul>
       </div>
       <div id='menu' className='flex flex-col space-y-2 my-5'>
-        {siteMenuAdmin.map((item, index) => {
+        {SiteMenuAdmin.map((item, index) => {
           return (
             <ItemNavBar
               key={index+0}
@@ -40,4 +40,4 @@ function SideBarAdmin() {
   );
 }
 
-export default SideBarAdmin;
+export default sideBarAdmin;

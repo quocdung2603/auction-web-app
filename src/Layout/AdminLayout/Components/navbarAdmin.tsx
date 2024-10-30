@@ -1,7 +1,7 @@
 import { IconCart, IconChat, IconRing } from "../../../Common/Icon/Icon";
 // import ControllerForm from "../../DefaultLayout/Componets/ControllerForm";
 
-function NavBarAdmin() {
+function navBarAdmin() {
     return ( 
         <header className=' text-black border-none p-4 fixed top-0 left-[320px] right-0 z-10 shadow-md bg-[#FFF4E5]'>
       <div className='flex flex-1 space-x-4 items-center justify-end'>
@@ -22,4 +22,4 @@ function NavBarAdmin() {
      );
 }
 
-export default NavBarAdmin;
+export default navBarAdmin;
