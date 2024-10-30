@@ -5,7 +5,7 @@ interface InputTypeSelectProps {
   titleOption: string[]
 }
 
-const InputTypeSelect: React.FC<InputTypeSelectProps> = ({ title, content, setContent,titleOption }) => {
+const inputTypeSelect: React.FC<InputTypeSelectProps> = ({ title, content, setContent,titleOption }) => {
 return (
   <div className='w-full min-w-[200px] mb-5'>
     <label className='block mb-1 text-lg text-black font-medium'>
@@ -26,4 +26,4 @@ return (
 );
 };
 
-export default InputTypeSelect;
+export default inputTypeSelect;

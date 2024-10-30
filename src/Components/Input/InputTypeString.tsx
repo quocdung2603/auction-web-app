@@ -4,7 +4,7 @@ interface InputTypeStringProps{
   setContent: React.Dispatch<React.SetStateAction<string>>,
   placeholder: string
 }
-const InputTypeString:React.FC<InputTypeStringProps>=({title,content,setContent,placeholder}) =>{
+const inputTypeString:React.FC<InputTypeStringProps>=({title,content,setContent,placeholder}) =>{
 return (
   <div className='w-full min-w-[200px] mb-5'>
     <label className='block mb-1 text-lg text-black font-medium'>
@@ -25,4 +25,4 @@ return (
 );
 }
 
-export default InputTypeString;
+export default inputTypeString;

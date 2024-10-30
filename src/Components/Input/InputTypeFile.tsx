@@ -4,7 +4,7 @@ interface InputTypeFileProps{
     image: string,
     setImage: React.Dispatch<React.SetStateAction<string>>
 }
-const InputTypeFile:React.FC<InputTypeFileProps>=({image,setImage})=> {
+const inputTypeFile:React.FC<InputTypeFileProps>=({image,setImage})=> {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -44,4 +44,4 @@ const InputTypeFile:React.FC<InputTypeFileProps>=({image,setImage})=> {
   );
 }
 
-export default InputTypeFile;
+export default inputTypeFile;

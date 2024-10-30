@@ -6,7 +6,7 @@ interface CheckButtonProps {
     onChange: (key: string | null) => void;
 }
 
-const CheckButton: React.FC<CheckButtonProps> = ({ data, onChange }) => {
+const checkButton: React.FC<CheckButtonProps> = ({ data, onChange }) => {
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
     const handleCheckboxClick = (index: number) => {
@@ -45,4 +45,4 @@ const CheckButton: React.FC<CheckButtonProps> = ({ data, onChange }) => {
     );
 };
 
-export default CheckButton;
+export default checkButton;

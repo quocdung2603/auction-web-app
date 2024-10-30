@@ -6,7 +6,7 @@ interface AddStatusAdminProps {
   setOpenForm: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AddStatusAdmin: React.FC<AddStatusAdminProps> = ({
+const addStatusAdmin: React.FC<AddStatusAdminProps> = ({
   contentAdd,
   contentStatus,
   setOpenForm
@@ -39,4 +39,4 @@ const AddStatusAdmin: React.FC<AddStatusAdminProps> = ({
   );
 };
 
-export default AddStatusAdmin;
+export default addStatusAdmin;

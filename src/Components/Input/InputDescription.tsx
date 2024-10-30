@@ -7,7 +7,7 @@ interface InputTypeStringProps{
     setContent: React.Dispatch<React.SetStateAction<string>>,
     placeholder: string
 }
-const InputDescription:React.FC<InputTypeStringProps> = ({title,content,placeholder,setContent}) => {
+const inputDescription:React.FC<InputTypeStringProps> = ({title,content,placeholder,setContent}) => {
   return (
     <div className='w-full min-w-[200px] mb-5 text-black'>
       <label className='block mb-1 text-lg text-black font-medium'>
@@ -70,4 +70,4 @@ const InputDescription:React.FC<InputTypeStringProps> = ({title,content,placehol
   );
 }
 
-export default InputDescription;
+export default inputDescription;

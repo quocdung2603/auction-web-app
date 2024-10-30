@@ -1,4 +1,4 @@
-import CardReport from "../../../../Components/CardItem/cartReport";
+import CardReport from "../../../../Components/CardItem/CardReport";
 
 function Category() {
     return ( 

@@ -1,4 +1,4 @@
-export enum RouterLinkAdmin {
+export enum routerLinkAdmin {
   Home="",
   User="user",
 }

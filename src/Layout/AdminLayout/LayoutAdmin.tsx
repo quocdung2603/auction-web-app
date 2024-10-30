@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom';
 import SideBarAdmin from './Components/sidebarAdmin';
 import NavBarAdmin from './Components/navbarAdmin';
 
-function LayoutAdmin() {
+function layoutAdmin() {
   return (
     <div className='antialiased bg-gray-200 min-h-screen text-slate-300 relative'>
       <div className='grid grid-cols-12 gap-2 sm:gap-4 md:gap-6 lg:gap-10 xl:gap-5 max-w-screen min-h-screen'>
@@ -21,4 +21,4 @@ function LayoutAdmin() {
   );
 }
 
-export default LayoutAdmin;
+export default layoutAdmin;

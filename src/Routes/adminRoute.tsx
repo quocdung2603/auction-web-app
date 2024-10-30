@@ -1,14 +1,14 @@
-import { RouterLinkAdmin } from "../Util/routerLink"
-import HomePageAdmin from "../Page/AdminPage/HomePage"
-import UserManagement from "../Page/AdminPage/UserPage"
+import { routerLinkAdmin } from "../Util/routerLink"
+import HomePageAdmin from "../Page/AdminPage/HomePage/HomePageAdmin"
+import UserManagement from "../Page/AdminPage/UserPage/UserManagement"
 
-export const adminRoute=[
+export const AdminRoute=[
   {
-      path: RouterLinkAdmin.Home,
+      path: routerLinkAdmin.Home,
       element: HomePageAdmin,
   },
   {
-    path: RouterLinkAdmin.User,
+    path: routerLinkAdmin.User,
     element: UserManagement,
 },
 ]
