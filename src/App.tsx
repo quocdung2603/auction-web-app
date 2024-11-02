@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import LayoutAdmin from "./Layout/AdminLayout/LayoutAdmin";
-import LayoutUser from "./Layout/UserLayout/Index";
+import LayoutUser from "./Layout/ClientLayout/Index";
 import { AdminRoute } from "./Routes/adminRoute";
 import { userRoute } from "./Routes/UserRoute";
 
