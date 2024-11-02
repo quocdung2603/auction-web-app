@@ -1,17 +1,17 @@
 import { Route, Routes } from "react-router-dom";
 import LayoutAdmin from "./Layout/AdminLayout/LayoutAdmin";
-import LayoutUser from "./Layout/ClientLayout/Index";
+import LayoutClient from "./Layout/ClientLayout/LayoutClient";
 import { AdminRoute } from "./Routes/adminRoute";
-import { userRoute } from "./Routes/UserRoute";
+import { UserRoute } from "./Routes/UserRoute";
 
 function App() {
 	return (
 		<Routes>
-			<Route path="" element={<LayoutUser />}>
-				{userRoute.map((route, index) => {
+			<Route path="" element={<LayoutClient />}>
+				{UserRoute.map((route, index) => {
 					return (
 						<Route
-							key={index}
+							key={index+0}
 							path={route.path}
 							element={<route.element />}
 						/>
@@ -22,7 +22,7 @@ function App() {
 				{AdminRoute.map((route, index) => {
 					return (
 						<Route
-							key={index}
+							key={index+0}
 							path={route.path}
 							element={<route.element />}
 						/>

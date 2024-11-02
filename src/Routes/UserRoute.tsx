@@ -1,5 +1,5 @@
-import { routerLinkUser } from "../Util/RouterLink";
-import HomePageUser from "../Page/UserPage/HomePage/Index";
+import { routerLinkUser } from "../Util/routerLink";
+import HomePageUser from "../Page/ClientPage/HomePage/HomePageUser";
 
 export const UserRoute = [
 	{

@@ -1,4 +1,4 @@
-export interface User {
+type User = {
   id?: string,
   fullname: string,
   username: string,
@@ -11,3 +11,5 @@ export interface User {
   desciption?: string,
   role: string
 }
+
+export {type User}
