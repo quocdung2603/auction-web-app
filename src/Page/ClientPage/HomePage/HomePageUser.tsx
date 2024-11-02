@@ -6,7 +6,7 @@ import Time from "../../../Assets/Image/User/ProductDetail/Time.png";
 import Bill from "../../../Assets/Image/User/ProductDetail/Bil.png";
 import Locationn from "../../../Assets/Image/User/ProductDetail/Location.png";
 
-const Index = () => {
+const HomePageUser = () => {
 	return (
 		<>
 			{/* Product detail */}
@@ -152,4 +152,4 @@ const Index = () => {
 	);
 };
 
-export default Index;
+export default HomePageUser;

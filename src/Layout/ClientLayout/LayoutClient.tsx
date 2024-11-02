@@ -3,7 +3,7 @@ import Footer from "./Components/Footer";
 import Header from "./Components/Header";
 import { Outlet } from "react-router-dom";
 
-const Index = () => {
+const LayoutClient = () => {
 	return (
 		<div className="w-full m-auto">
 			<Header/>
@@ -15,4 +15,4 @@ const Index = () => {
 	);
 };
 
-export default Index;
+export default LayoutClient;
