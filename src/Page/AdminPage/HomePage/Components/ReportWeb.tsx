@@ -118,7 +118,7 @@ function reportWeb() {
                     nameService={item.nameService}
                     Earning={item.Earning}
                     status={item.status}
-                    key={index}
+                    key={index+0}
                   />
                 );
               })}
