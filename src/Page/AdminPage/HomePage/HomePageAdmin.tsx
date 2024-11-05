@@ -1,6 +1,6 @@
 import Category from "./Components/Category";
 import FinalChart from "./Components/FinalChart";
-import ReportWeb from "./Components/reportWeb";
+import ReportWeb from "./Components/ReportWeb";
 
 function homePageAdmin() {
   return (
