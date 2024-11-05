@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { IconWindowClose } from "../../../../Common/Icon/Icon";
 import InputTypeString from "../../../../Components/Input/InputTypeString";
 import InputDescription from "../../../../Components/Input/InputDescription";
-import { User } from "../../../../Type/User/user";
+import { User } from "../../../../Type/User/User";
 
 
 
@@ -14,24 +14,24 @@ interface CreateFormProps {
   userChoose?: User | null
 }
 const createForm: React.FC<CreateFormProps> = ({ openForm, setOpenForm, content = "ADD NEWS ACCOUNT", userChoose }) => {
-  const [nameAccount, setNameAccount] = useState<string>(userChoose?.fullname ?? "");
+  const [nameAccount, setNameAccount] = useState<string>(userChoose?.fullName ?? "");
   const [email, setEmail] = useState<string>(userChoose?.email ?? "");
   const [userName, setUserName] = useState<string>(userChoose?.username ?? "");
   const [phoneNumber, setPhoneNumber] = useState<string>(userChoose?.phone ?? "");
   const [password, setPassword] = useState<string>(userChoose?.password ?? "");
-  const [description, setDescription] = useState<string>(userChoose?.desciption ?? "");
+  const [description, setDescription] = useState<string>(userChoose?.description ?? "");
 
   const closeFormModal = () => {
     setOpenForm(false);
   };
   useEffect(() => {
     if (userChoose) {
-      setNameAccount(userChoose.fullname ?? "");
+      setNameAccount(userChoose.fullName ?? "");
       setEmail(userChoose.email ?? "");
       setUserName(userChoose.username ?? "");
       setPhoneNumber(userChoose.phone ?? "");
       setPassword(userChoose.password ?? "");
-      setDescription(userChoose.desciption ?? "");
+      setDescription(userChoose.description ?? "");
     }
   }, [userChoose]);
   return (

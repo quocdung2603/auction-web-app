@@ -1,4 +1,4 @@
-import { routerLinkAdmin } from "../../Util/routerLink";
+import { routerLinkAdmin } from "../../Util/RouterLink";
 import { IconDashboard, IconUserManager } from "../Icon/IconSlideBarAdmin";
 
 export const SiteMenuAdmin = [

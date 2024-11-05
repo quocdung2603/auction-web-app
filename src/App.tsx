@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import LayoutAdmin from "./Layout/AdminLayout/LayoutAdmin";
 import LayoutClient from "./Layout/ClientLayout/LayoutClient";
-import { AdminRoute } from "./Routes/adminRoute";
+import { AdminRoute } from "./Routes/AdminRoute";
 import { UserRoute } from "./Routes/UserRoute";
 
 function App() {
