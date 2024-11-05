@@ -6,7 +6,7 @@ interface ItemNavBarProps{
     href: string
 }
 
-const itemNavBar:React.FC<ItemNavBarProps>=({ content, icon, href})=> {
+const ItemNavBar:React.FC<ItemNavBarProps>=({ content, icon, href})=> {
   return (
     <Link
       to={href}
@@ -24,4 +24,4 @@ const itemNavBar:React.FC<ItemNavBarProps>=({ content, icon, href})=> {
   );
 }
 
-export default itemNavBar;
+export default ItemNavBar;

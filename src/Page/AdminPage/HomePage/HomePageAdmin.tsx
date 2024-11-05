@@ -1,5 +1,5 @@
-import Category from "./Components/category";
-import FinalChart from "./Components/finalChart";
+import Category from "./Components/Category";
+import FinalChart from "./Components/FinalChart";
 import ReportWeb from "./Components/reportWeb";
 
 function homePageAdmin() {

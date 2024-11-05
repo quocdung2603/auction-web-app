@@ -1,4 +1,4 @@
-import ReportServiceItem from './reportServiceItem'
+import ReportServiceItem from './ReportServiceItem'
 
 const listReportServices = [
   {

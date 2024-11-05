@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
-import SideBarAdmin from './Components/sidebarAdmin';
-import NavBarAdmin from './Components/navbarAdmin';
+import SideBarAdmin from './Components/SideBarAdmin';
+import NavBarAdmin from './Components/NavBarAdmin';
 
 function layoutAdmin() {
   return (

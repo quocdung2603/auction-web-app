@@ -1,8 +1,8 @@
-interface ReportUserItems{
-  role: string,
-  amount: number,
-  percents: string
-}
+// interface ReportUserItems {
+//   role: string,
+//   amount: number,
+//   percents: string
+// }
 const reportUserItems:React.FC =() =>{
 return (
   <tr className='text-gray-700 dark:text-gray-100'>
