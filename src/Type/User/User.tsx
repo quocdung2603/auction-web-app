@@ -1,6 +1,6 @@
 type User = {
   id?: string,
-  fullname: string,
+  fullName: string,
   username: string,
   email: string,
   password: string,
@@ -8,7 +8,7 @@ type User = {
   dob?: string,
   gender?: string,
   address?: string,
-  desciption?: string,
+  description?: string,
   role: string
 }
 

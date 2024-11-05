@@ -1,4 +1,3 @@
-
 interface ReportUserItems{
   role: string,
   amount: number,

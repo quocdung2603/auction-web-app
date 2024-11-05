@@ -1,4 +1,4 @@
-import { routerLinkAdmin } from "../Util/routerLink"
+import { routerLinkAdmin } from "../Util/RouterLink"
 import HomePageAdmin from "../Page/AdminPage/HomePage/HomePageAdmin"
 import UserManagement from "../Page/AdminPage/UserPage/UserManagement"
 

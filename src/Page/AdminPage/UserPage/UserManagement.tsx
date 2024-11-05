@@ -1,7 +1,7 @@
 import { useState } from "react";
 import AddStatusAdmin from "../../../Components/Button/AddStatusAdmin";
 import TableAdmin from "../../../Components/Table/TableAdmin";
-import { User } from "../../../Type/User/user";
+import { User } from "../../../Type/User/User";
 import CreateForm from "./Components/CreateForm";
 import RemoveForm from "../../../Components/Form/RemoveForm";
 
@@ -13,7 +13,7 @@ function UserManagement() {
   const [users, setUsers] = useState<User[]>(() => {
     const defaultItem: User = {
       id: "#1234",
-      fullname: "John wick",
+      fullName: "John wick",
       username: "John",
       email: "John@gmail.com",
       password: "12345678",
