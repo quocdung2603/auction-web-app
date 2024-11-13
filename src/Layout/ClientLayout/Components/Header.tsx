@@ -1,11 +1,7 @@
 import Logo from "../../../Assets/Image/User/Logo.png";
 import Avatar from "../../../Assets/Image/User/Avatar.png";
-import Slider1 from "../../../Assets/Image/User/Slider1.png";
-import Slider2 from "../../../Assets/Image/User/Slider2.png";
 
 import { GoBell } from "react-icons/go";
-import { IoMdSearch } from "react-icons/io";
-import { FaAngleDown } from "react-icons/fa6";
 
 const Header = () => {
 	return (
@@ -35,7 +31,7 @@ const Header = () => {
 			</header>
 			{/* Search bar */}
 			<div className="w-full flex items-center flex-col">
-				<div className="w-[40%] mx-auto relative mt-8">
+				{/* <div className="w-[40%] mx-auto relative mt-8">
 					<IoMdSearch className="absolute top-[50%] translate-y-[-50%] left-4 text-[1.8rem]" />
 					<input
 						className=" w-full rounded-3xl border-2 border-primary px-4 py-3 pl-12 
@@ -49,9 +45,9 @@ const Header = () => {
 						<p className="text-white">Category</p>
 						<FaAngleDown className="text-white" />
 					</div>
-				</div>
+				</div> */}
 				{/* Slider */}
-				<div className="w-full flex mt-10">
+				{/* <div className="w-full flex mt-10">
 					<div className="flex-1">
 						<img
 							className="w-full max-h-[300px]"
@@ -80,7 +76,7 @@ const Header = () => {
 							alt=""
 						/>
 					</div>
-				</div>
+				</div> */}
 			</div>
 		</>
 	);
