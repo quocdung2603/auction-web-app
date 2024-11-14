@@ -20,8 +20,9 @@ const cardProduct: React.FC<CardProductProps> = ({ img, name, location, time, pr
             bg_color="#FF4949"
             size="custom"
             onClick={() => alert('click')}
-            children={<p>Add</p>}
-          />
+          >
+            <p>Add</p>
+          </Button>
         );
       case 2:
         return (
@@ -33,8 +34,9 @@ const cardProduct: React.FC<CardProductProps> = ({ img, name, location, time, pr
               <IconPlus width="1.25rem" height="1.25rem" />
             }
             onClick={() => alert('click')}
-            children={'Add list'}
-          />
+          >
+            <p>Add List</p>
+          </Button>
         );
       default:
         return null;
