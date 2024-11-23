@@ -21,7 +21,7 @@ const cardProduct: React.FC<CardProductProps> = ({ img, name, location, time, pr
             size="custom"
             onClick={() => alert('click')}
           >
-            <p>Add</p>
+            <p>Xem chi tiết</p>
           </Button>
         );
       case 2:
@@ -35,7 +35,7 @@ const cardProduct: React.FC<CardProductProps> = ({ img, name, location, time, pr
             }
             onClick={() => alert('click')}
           >
-            <p>Add List</p>
+            <p>Thêm vào danh sách</p>
           </Button>
         );
       default:
