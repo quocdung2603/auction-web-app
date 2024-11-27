@@ -4,6 +4,8 @@ import Avatar from "../../../Assets/Image/User/Avatar.png";
 import { GoBell } from "react-icons/go";
 import { IoChevronForwardOutline } from "react-icons/io5";
 
+import CurrentTime from "./CurrentTime";
+
 const Header = () => {
 	return (
 		<>
@@ -68,10 +70,7 @@ const Header = () => {
 				{/* right menu */}
 				<div className="flex items-center justify-center">
 					<div className="flex items-center gap-8">
-						<div className="flex flex-col ">
-							<p className="text-white text-2xl font-medium">03:32:19</p>
-							<p className="text-white text-sm">Thứ Ba, 19/11/2024</p>
-						</div>
+						<CurrentTime/>
 						<GoBell className="text-[1.5rem] cursor-pointer" />
 						<div className="w-14 h-14 rounded-full overflow-hidden">
 							<img src={Avatar} alt="" />
