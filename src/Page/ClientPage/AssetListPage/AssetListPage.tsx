@@ -7,7 +7,7 @@ import { FiList } from "react-icons/fi";
 import { PiSquaresFour } from "react-icons/pi";
 
 const AssetListPage = () => {
-	const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
 	return (
 		<>
