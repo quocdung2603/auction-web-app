@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 import Logo from "../../../Assets/Image/User/Logo.png";
 import Avatar from "../../../Assets/Image/User/Avatar.png";
 
@@ -14,12 +16,14 @@ const Header = () => {
 				<div className="flex  justify-center gap-8 items-center">
 					<div className="flex items-center flex-col cursor-pointer">
 						<img src={Logo} alt="" className="w-14 h-14" />
-						<p className="text-white">Auction Table</p>
+						<p className="text-white">
+							<Link to="/">Auction Table</Link>
+						</p>
 					</div>
 					<div className="flex gap-10">
 						<div className="group flex gap-1 items-center relative cursor-pointer">
 							<p className="text-white text-sx font-medium">
-								Tài sản đấu giá
+								<Link to="/asset-list">Tài sản đấu giá</Link>
 							</p>
 							<IoChevronForwardOutline className="rotate-[90deg] text-white text-lg group-hover:rotate-[270deg] transitionLow" />
 							<div
@@ -28,7 +32,9 @@ const Header = () => {
 							>
 								<div className="py-2 cursor-pointer transitionLow group/SelectMenu">
 									<p className="px-3 font-semibold group-hover/SelectMenu:text-primary  transitionLow">
-										Tài sản nhà nước
+										<Link to="/asset-list">
+											Tài sản nhà nước
+										</Link>
 									</p>
 									<div className="h-1 w-0 group-hover/SelectMenu:w-full border-b-2 transitionLow origin-left border-primary"></div>
 								</div>
@@ -66,11 +72,14 @@ const Header = () => {
 							</div>
 						</div>
 					</div>
+					<div>
+						<Link to="/contact">Liên hệ</Link>
+					</div>
 				</div>
 				{/* right menu */}
 				<div className="flex items-center justify-center">
 					<div className="flex items-center gap-8">
-						<CurrentTime/>
+						<CurrentTime />
 						<GoBell className="text-[1.5rem] cursor-pointer" />
 						<div className="w-14 h-14 rounded-full overflow-hidden">
 							<img src={Avatar} alt="" />
