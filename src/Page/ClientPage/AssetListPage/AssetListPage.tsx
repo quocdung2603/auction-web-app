@@ -65,12 +65,44 @@ const AssetListPage = () => {
 									</div>
 								</div>
 							</div>
-                            <button className="rounded-md bg-red-600 px-5 py-2 text-white font-semibold">LỌC</button>
+							<button className="rounded-md bg-red-600 px-5 py-2 text-white font-semibold">
+								LỌC
+							</button>
 						</div>
-                        <div className="w-full shadow-custom rounded px-4 py-6">
+						<div className="w-full shadow-custom rounded px-4 py-6">
 							<h1 className="text-2xl font-semibold mb-4">
 								Trạng thái tài sản
 							</h1>
+							<div className="flex flex-col gap-3">
+								<label htmlFor="" className="">
+									<input
+										type="checkbox"
+										className="w-4 h-4 mr-4"
+									/>
+									<span>Tất cả</span>
+								</label>
+								<label htmlFor="">
+									<input
+										type="checkbox"
+										className="w-4 h-4 mr-4"
+									/>
+									Sắp diễn ra
+								</label>
+								<label htmlFor="">
+									<input
+										type="checkbox"
+										className="w-4 h-4 mr-4"
+									/>
+									Đang diễn ra
+								</label>
+								<label htmlFor="">
+									<input
+										type="checkbox"
+										className="w-4 h-4 mr-4"
+									/>
+									Đã kết thúc
+								</label>
+							</div>
 						</div>
 					</div>
 					<div className="w-[75%]">

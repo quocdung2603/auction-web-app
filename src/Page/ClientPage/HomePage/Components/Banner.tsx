@@ -1,3 +1,4 @@
+import ButtonPrimary from "../../../../Components/Button/ButtonPrimary";
 
 const Banner = () => {
   return (
@@ -16,9 +17,7 @@ const Banner = () => {
           cuộc đấu giá trực tuyến chính thống đầu tiên tại Việt Nam, mở ra 1
           chương mới cho hoạt động đấu giá nước nhà.
         </p>
-        <button className="bg-[#b41712] w-[25%] py-3 rounded mt-[8%]">
-          <p className="font-bold text-white">Khám phá</p>
-        </button>
+        <ButtonPrimary className="  text-xl">Khám phá</ButtonPrimary>
       </div>
       <div className="w-1/2">
         <div className="relative w-[50%] h-[65vh] flex items-center justify-center ml-auto">

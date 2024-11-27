@@ -5,6 +5,7 @@ export enum routerLinkAdmin {
 export enum routerLinkUser {
   Home="",
   AssetList="/assetList",
+  Contact="/contact"
 }
 
 

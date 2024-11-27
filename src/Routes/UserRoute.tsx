@@ -1,6 +1,7 @@
 import { routerLinkUser } from "../Util/RouterLink";
 import HomePageUser from "../Page/ClientPage/HomePage/HomePageUser";
-import AssetList from "../Page/ClientPage/AssetListPage/AssetListPage"
+import AssetList from "../Page/ClientPage/AssetListPage/AssetListPage";
+import Contact from '../Page/ClientPage/ContactPage/ContactPage';
 
 export const UserRoute = [
 	{
@@ -10,5 +11,9 @@ export const UserRoute = [
 	{
 		path: routerLinkUser.AssetList,
 		element: AssetList,
+	},
+	{
+		path: routerLinkUser.Contact,
+		element: Contact,
 	},
 ];
