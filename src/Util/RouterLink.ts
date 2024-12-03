@@ -6,6 +6,7 @@ export enum routerLinkUser {
   Home="",
   AssetList="/asset-list",
   ProductDetail="/product-detail",
+  // Login = "/login",
 }
 
 

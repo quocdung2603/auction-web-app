@@ -4,6 +4,7 @@ import Header from "./Components/Header";
 import { Outlet } from "react-router-dom";
 
 const LayoutClient = () => {
+  
 	return (
 		<div className="w-full m-auto">
 			<Header/>
