@@ -8,7 +8,7 @@ interface CreateFormProps {
   openForm: boolean,
   setOpenForm: React.Dispatch<React.SetStateAction<boolean>>,
   content?: string,
-  userChoose?: User | null
+  userChoose?: any | null
 }
 const createForm: React.FC<CreateFormProps> = ({ openForm, setOpenForm, content = "ADD NEWS ACCOUNT", userChoose }) => {
   const [nameAccount, setNameAccount] = useState<string>(userChoose?.fullName ?? "");
@@ -47,7 +47,7 @@ const createForm: React.FC<CreateFormProps> = ({ openForm, setOpenForm, content 
                 {content}
               </h1>
               <form method="POST" className="space-y-4">
-                <InputTypeString
+                {/* <InputTypeString
                   title="Full Name"
                   content={nameAccount}
                   setContent={setNameAccount}
@@ -84,7 +84,7 @@ const createForm: React.FC<CreateFormProps> = ({ openForm, setOpenForm, content 
                   content={description}
                   setContent={setDescription}
                   placeholder="Mô tả về bản thân"
-                />
+                /> */}
                 <div className="flex justify-end gap-4">
                   <button
                     type="button"
