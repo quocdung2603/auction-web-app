@@ -1,6 +1,18 @@
 export enum routerLinkAdmin {
-  Home="",
+  Home="dashboard",
   User="user",
+  Staff="staff",
+  Auction="auction",
+  AssetType="asset-type",
+  Asset="asset",
+  Warehouse="warehouse",
+  News="news",
+  Event="event",
+  Supplier="supplier",
+  Bill="bill",
+  Tax="tax",
+  Request="request",
+
 }
 export enum routerLinkUser {
   Home="",
@@ -9,5 +21,3 @@ export enum routerLinkUser {
   ProductDetail="/product-detail",
   Personal="/personal",
 }
-
-

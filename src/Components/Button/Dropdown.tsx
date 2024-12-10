@@ -5,11 +5,11 @@ interface option {
   value: string,
 }
 interface DropdownProps {
-    title: string,
-    data: Array<option>,
-    onChange?: React.Dispatch<React.SetStateAction<string>> 
+  title: string,
+  data: Array<option>,
+  onChange?: React.Dispatch<React.SetStateAction<string>>
 }
-const Dropdown: React.FC<DropdownProps> = ({title,data,onChange}) => {
+const Dropdown: React.FC<DropdownProps> = ({ title, data, onChange }) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState<string>("");
 
@@ -20,7 +20,7 @@ const Dropdown: React.FC<DropdownProps> = ({title,data,onChange}) => {
   const setLang = (item: option) => {
     setValue(item.key);
     setOpen(false);
-    if(onChange)
+    if (onChange)
       onChange(item.value);
   };
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -56,7 +56,7 @@ const Dropdown: React.FC<DropdownProps> = ({title,data,onChange}) => {
             <li
               key={index}
               className="cursor-pointer select-none p-2 hover:bg-gray-200"
-              onClick={()=>{setLang(item)}}
+              onClick={() => { setLang(item) }}
             >
               {item.key}
             </li>

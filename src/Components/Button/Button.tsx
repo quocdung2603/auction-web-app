@@ -54,7 +54,7 @@ const Button: React.FC<ButtonProps> = ({
 
   switch (variant) {
     case 'primary':
-      className += ' text-white hover:bg-[#e68a00]';
+      className += ' text-white hover:bg-[#e68a00] bg-red-500';
       break;
     case 'secondary':
       className += ' text-gray-700 bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100';
