@@ -4,32 +4,36 @@ import CreateForm from "./Components/CreateForm";
 import RemoveForm from "../../../Components/Form/RemoveForm";
 import Button from "../../../Components/Button/Button";
 import Select from "../../../Components/Button/Select";
+import { Bill } from "../../../Type/BillAndTax/Bill";
 
 const billManagement = () => {
   const [detailForm, setDetailForm] = useState<boolean>(false);
   const [removeForm, setRemoveForm] = useState<boolean>(false);
-  const [userChoose, setUserChoose] = useState<any | null>(null);
+  const [userChoose, setUserChoose] = useState<Bill | null>(null);
 
   const [sAssetType, setsAssetType] = useState<string | number | undefined>(undefined);
   const [sStatus, setsStatus] = useState<string | number | undefined>(undefined);
 
-  const [listData, setListData] = useState<any[]>(() => {
-    const defaultItem: any = {
-      id: "#1234",
-      name: "John",
-      auctionType: 'online/offline',
-      event: 'event',
-      status: 'Active',
+  const [listData, setListData] = useState<Bill[]>(() => {
+    const defaultItem: Bill = {
+      id: 0,
+      userId: 0,
+      staffId: 0,
+      billDate: new Date(),
+      totalAmount: 0,
+      paymentTerm: new Date(),
+      paymentStatus: false,
+      billItems: [],
     };
     return Array.from({ length: 10 }, () => ({ ...defaultItem }));
   });
 
   const column = [
-    "id",
-    "name",
-    "auctionType",
-    "event",
-    "status",
+    "billDate",
+    "totalAmount",
+    "paymentTerm",
+    "paymentStatus",
+    "Action",
   ];
 
   const AssetTypeData: any[] = [

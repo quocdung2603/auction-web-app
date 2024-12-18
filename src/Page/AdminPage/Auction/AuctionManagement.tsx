@@ -4,33 +4,40 @@ import CreateForm from "./Components/CreateForm";
 import RemoveForm from "../../../Components/Form/RemoveForm";
 import Button from "../../../Components/Button/Button";
 import Select from "../../../Components/Button/Select";
+import { AuctionItem } from "../../../Type/Auction/AuctionItem";
 
 const auctionManagement = () => {
   const [detailForm, setDetailForm] = useState<boolean>(false);
   const [removeForm, setRemoveForm] = useState<boolean>(false);
-  const [userChoose, setUserChoose] = useState<any | null>(null);
+  const [userChoose, setUserChoose] = useState<AuctionItem | null>(null);
 
   const [sAuctionType, setsAuctionType] = useState<string | number | undefined>(undefined);
   const [sStatus, setsStatus] = useState<string | number | undefined>(undefined);
   const [sEvent, setsEvent] = useState<string | number | undefined>(undefined);
 
-  const [listData, setListData] = useState<any[]>(() => {
-    const defaultItem: any = {
-      id: "#1234",
-      name: "John",
-      auctionType: 'online/offline',
-      event: 'event',
-      status: 'Active',
+  const [listData, setListData] = useState<AuctionItem[]>(() => {
+    const defaultItem: AuctionItem = {
+      auctionItemId: 0,
+      auctionSessionId: 0,
+      assetId: 0,
+      startingBids: 0,
+      bidIncrement: 0,
+      delflag: false,
+      created_at: new Date(),
+      updated_at: new Date(),
+      deleted_at: new Date(),
     };
     return Array.from({ length: 10 }, () => ({ ...defaultItem }));
   });
 
-  const column = [
-    "id",
-    "name",
-    "auctionType",
-    "event",
-    "status",
+  const column = [  
+    "auctionItemId",
+    "auctionSessionId",
+    "assetId",
+    "startingBids",
+    "bidIncrement",
+    "delflag",
+    "Action",
   ];
 
   const AuctionTypeData: any[] = [
@@ -80,7 +87,7 @@ const auctionManagement = () => {
 
   const removeUser = () => {
     if (userChoose) {
-      const userData = listData.filter(item => item.id === userChoose.id);
+      const userData = listData.filter(item => item.auctionItemId === userChoose.auctionItemId);
       setListData(userData);
       setRemoveForm(false);
     }
@@ -107,9 +114,15 @@ const auctionManagement = () => {
         <Select placeholder="Event" options={eventData} onChange={hsEvent} value={sEvent}></Select>
         <Select placeholder="Status" options={statusData} onChange={hSAuctionType} value={sAuctionType}></Select>
         <Select placeholder="Auction Type" options={AuctionTypeData} onChange={hsStatus} value={sStatus}></Select>
-        <Button onClick={() => setDetailForm(true)}><p>Add auction</p></Button>
+        <Button
+          className="bg-red hover:bg-opacity-50 text-white py-2 px-5"
+          onClick={() => setDetailForm(true)}
+        >
+          <p>Add Auction</p></Button>
       </div>
-      <TableAdmin column={column} data={listData} setOpenFormDetail={setDetailForm} setOpenFormRemove={setRemoveForm} setItemChoose={setUserChoose}></TableAdmin>
+      <TableAdmin column={column} data={listData} setOpenFormDetail={setDetailForm} setOpenFormRemove={setRemoveForm} setItemChoose={setUserChoose}
+        columnWidths={["15%", "15%", "15%", "15%", "15%", "10%", "10%"]}
+      ></TableAdmin>
       <CreateForm openForm={detailForm} setOpenForm={setDetailForm} content="Detail User" userChoose={userChoose} />
       <RemoveForm openForm={removeForm} setOpenForm={setRemoveForm} clickRemove={removeUser} />
     </div>

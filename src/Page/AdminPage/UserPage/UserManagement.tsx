@@ -1,9 +1,10 @@
 import { useState } from "react";
 import AddStatusAdmin from "../../../Components/Button/AddStatusAdmin";
 import TableAdmin from "../../../Components/Table/TableAdmin";
-import { User } from "../../../Type/User/User";
+import { User } from "../../../Type/Account/User";
 import CreateForm from "./Components/CreateForm";
 import RemoveForm from "../../../Components/Form/RemoveForm";
+import { Role } from "../../../Type/Account/Role";
 
 function UserManagement() {
   const [detailForm, setDetailForm] = useState<boolean>(false);
@@ -11,23 +12,30 @@ function UserManagement() {
   const [userChoose, setUserChoose] = useState<User | null>(null);
 
   const [users, setUsers] = useState<User[]>(() => {
+    const defaultRole: Role = {
+      id: 0,
+      name: "user",
+      delflag: false,
+      users: [],
+    }
     const defaultItem: User = {
-      id: "#1234",
-      fullName: "John wick",
-      username: "John",
-      email: "John@gmail.com",
+      id: 0,
+      name: "John Doe",
+      email: "quocdung@abccompany.com",
       password: "12345678",
-      role: "Active",
+      address: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Architecto, earum.", 
+      phone: "0123123123",
+      gender: true,
+      Role: defaultRole,
     };
     return Array.from({ length: 10 }, () => ({ ...defaultItem }));
   });
 
   const column = [
-    "id",
-    "username",
+    "name",
     "email",
-    "password",
-    "role",
+    "gender",
+    "phone",
     "Action",
   ];
   const status = [
