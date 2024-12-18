@@ -1,5 +1,5 @@
 export enum routerLinkAdmin {
-  Home="dashboard",
+  Home="",
   User="user",
   Staff="staff",
   Auction="auction",

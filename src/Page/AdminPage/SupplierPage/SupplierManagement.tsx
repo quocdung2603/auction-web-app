@@ -4,22 +4,33 @@ import RemoveForm from "../../../Components/Form/RemoveForm";
 import Button from "../../../Components/Button/Button";
 import Select from "../../../Components/Button/Select";
 import CreateForm from "./Components.tsx/CreateForm";
+import { User } from "../../../Type/Account/User";
+import { Role } from "../../../Type/Account/Role";
 
 const supplierManagement = () => {
   const [detailForm, setDetailForm] = useState<boolean>(false);
   const [removeForm, setRemoveForm] = useState<boolean>(false);
-  const [userChoose, setUserChoose] = useState<any | null>(null);
+  const [userChoose, setUserChoose] = useState<User | null>(null);
 
   const [sAssetType, setsAssetType] = useState<string | number | undefined>(undefined);
   const [sStatus, setsStatus] = useState<string | number | undefined>(undefined);
 
-  const [listData, setListData] = useState<any[]>(() => {
-    const defaultItem: any = {
-      id: "#1234",
-      name: "John",
-      auctionType: 'online/offline',
-      event: 'event',
-      status: 'Active',
+  const [listData, setListData] = useState<User[]>(() => {
+    const defaultRole: Role = {
+      id: 0,
+      name: "user",
+      delflag: false,
+      users: [],
+    }
+    const defaultItem: User = {
+      id: 0,
+      name: "John Doe",
+      email: "quocdung@abccompany.com",
+      password: "12345678",
+      address: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Architecto, earum.",
+      phone: "0123123123",
+      gender: true,
+      Role: defaultRole,
     };
     return Array.from({ length: 10 }, () => ({ ...defaultItem }));
   });

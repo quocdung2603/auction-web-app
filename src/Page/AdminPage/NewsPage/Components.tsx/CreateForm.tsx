@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { IconWindowClose } from "../../../../Common/Icon/Icon";
 import InputTypeString from "../../../../Components/Input/InputTypeString";
 import InputDescription from "../../../../Components/Input/InputDescription";
-import { User } from "../../../../Type/User/User";
+import { User } from "../../../../Type/Account/User";
 
 interface CreateFormProps {
   openForm: boolean,

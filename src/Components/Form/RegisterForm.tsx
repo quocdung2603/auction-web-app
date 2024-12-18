@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { IconGoogle, IconFacebook } from "../../Common/Icon/Icon";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { User } from "../../Type/User/User";
+import { User } from "../../Type/Account/User";
 
 type FormData = {
   fullName: string;
@@ -18,7 +18,7 @@ const registerForm = () => {
   } = useForm<FormData>();
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
-    const newUser: User = {
+    const newUser: any = {
       email: data.email,
       password: data.password,
       fullName: data.fullName,
@@ -54,7 +54,7 @@ const registerForm = () => {
         {errors.fullName && (
           <span className="text-red-500">{errors.fullName.message}</span>
         )}
-         <Controller
+        <Controller
           name="email"
           control={control}
           rules={{
@@ -86,7 +86,7 @@ const registerForm = () => {
           <span className="text-red-500">{errors.email.message}</span>
         )}
 
-       <Controller
+        <Controller
           name="password"
           control={control}
           rules={{

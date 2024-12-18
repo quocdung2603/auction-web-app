@@ -1,31 +1,42 @@
 import { useState } from "react";
 import AddStatusAdmin from "../../../Components/Button/AddStatusAdmin";
 import TableAdmin from "../../../Components/Table/TableAdmin";
+import { User } from "../../../Type/Account/User";
 import CreateForm from "./Components/CreateForm";
 import RemoveForm from "../../../Components/Form/RemoveForm";
+import { Role } from "../../../Type/Account/Role";
 
-const staffManagement = () => {
+function staffManagement() {
   const [detailForm, setDetailForm] = useState<boolean>(false);
   const [removeForm, setRemoveForm] = useState<boolean>(false);
-  const [userChoose, setUserChoose] = useState<any | null>(null);
+  const [userChoose, setUserChoose] = useState<User | null>(null);
 
-  const [listData, setListData] = useState<any[]>(() => {
-    const defaultItem: any = {
-      id: "#1234",
-      name: "John",
-      email: "John@gmail.com",
-      date: '2021-10-10',
-      status: "Active",
+  const [users, setUsers] = useState<User[]>(() => {
+    const defaultRole: Role = {
+      id: 0,
+      name: "user",
+      delflag: false,
+      users: [],
+    }
+    const defaultItem: User = {
+      id: 0,
+      name: "John Doe",
+      email: "quocdung@abccompany.com",
+      password: "12345678",
+      address: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Architecto, earum.", 
+      phone: "0123123123",
+      gender: true,
+      Role: defaultRole,
     };
     return Array.from({ length: 10 }, () => ({ ...defaultItem }));
   });
 
   const column = [
-    "id",
     "name",
     "email",
-    "date",
-    "status",
+    "gender",
+    "phone",
+    "Action",
   ];
   const status = [
     "Status",
@@ -34,15 +45,15 @@ const staffManagement = () => {
   ]
   const removeUser = () => {
     if (userChoose) {
-      const userData = listData.filter(item => item.id === userChoose.id);
-      setListData(userData);
+      const userData = users.filter(item => item.id === userChoose.id);
+      setUsers(userData);
       setRemoveForm(false);
     }
   }
   return (
     <div className="w-full">
-      <AddStatusAdmin contentAdd="Add Staff" contentStatus={status} setOpenForm={setDetailForm} />
-      <TableAdmin column={column} data={listData} setOpenFormDetail={setDetailForm} setOpenFormRemove={setRemoveForm} setItemChoose={setUserChoose}></TableAdmin>
+      <AddStatusAdmin contentAdd="Add User" contentStatus={status} setOpenForm={setDetailForm} />
+      <TableAdmin column={column} data={users} setOpenFormDetail={setDetailForm} setOpenFormRemove={setRemoveForm} setItemChoose={setUserChoose}></TableAdmin>
       <CreateForm openForm={detailForm} setOpenForm={setDetailForm} content="Detail User" userChoose={userChoose} />
       <RemoveForm openForm={removeForm} setOpenForm={setRemoveForm} clickRemove={removeUser} />
     </div>

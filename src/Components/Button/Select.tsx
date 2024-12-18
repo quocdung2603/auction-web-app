@@ -25,7 +25,7 @@ const Select: React.FC<SelectProps> = ({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       disabled={disabled}
-      className="border px-4 py-2 bg-red-500 border-red-500 text-white rounded-[10px]"
+      className="border px-4 py-2 bg-red border-red text-white rounded-[10px]"
     >
       {/* Placeholder option */}
       <option value="Auction Type" disabled hidden>

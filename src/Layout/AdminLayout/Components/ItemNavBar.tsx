@@ -18,6 +18,7 @@ const ItemNavBar: React.FC<ItemNavBarProps> = ({
   isOpen,
   onClick,
 }) => {
+  const defaultHref = "/admin/"; // Đường dẫn mặc định khi href là ""
   return (
     <div className="relative">
       {/* Menu Cha */}
@@ -28,7 +29,7 @@ const ItemNavBar: React.FC<ItemNavBarProps> = ({
         }`}
       >
         <Link
-          to={submenu ? "#" : href || "#"}
+          to={submenu ? "#" : href || defaultHref} // Sử dụng đường dẫn mặc định nếu href là chuỗi rỗng
           className="flex items-center gap-3"
         >
           {icon && <div>{icon}</div>}
@@ -49,7 +50,7 @@ const ItemNavBar: React.FC<ItemNavBarProps> = ({
           {submenu.map((subItem, index) => (
             <Link
               key={index}
-              to={subItem.href || "#"}
+              to={subItem.href || defaultHref} // Đường dẫn mặc định cho submenu nếu thiếu href
               className="block px-2 py-3 font-semibold text-sm text-black rounded-lg hover:bg-orange-700 transition duration-150 ease-linear"
             >
               {subItem.icon && <span className="mr-2">{subItem.icon}</span>}

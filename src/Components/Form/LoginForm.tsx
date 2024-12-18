@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { IconGoogle, IconFacebook } from "../../Common/Icon/Icon";
-import { User } from "../../Type/User/User";
+import { User } from "../../Type/Account/User";
 
 type FormData = {
   email: string;
@@ -15,7 +15,7 @@ const loginForm = () => {
   } = useForm<FormData>();
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
-    const newUser: User = {
+    const newUser: any = {
       email: data.email,
       password: data.password,
       fullName: "",
