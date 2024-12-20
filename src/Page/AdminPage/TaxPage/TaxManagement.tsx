@@ -18,7 +18,7 @@ const taxManagement = () => {
     const defaultItem: Tax = {
       id: 0,
       taxName: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-      taxDescription: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic maiores placeat quod, adipisci nostrum est consequuntur dolorem sit ut nesciunt?", 
+      taxDescription: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic maiores placeat quod, adipisci nostrum est consequuntur dolorem sit ut nesciunt?",
       taxAmount: 0,
       delflag: false,
       taxType: TaxType.Percentage,
@@ -89,7 +89,11 @@ const taxManagement = () => {
       <div className="flex flex-row justify-end space-x-5">
         <Select placeholder="Status" options={statusData} onChange={hsStatus} value={sStatus}></Select>
         <Select placeholder="Asset Type" options={AssetTypeData} onChange={hSAssetType} value={sAssetType}></Select>
-        <Button onClick={() => setDetailForm(true)}><p>Add Asset</p></Button>
+        <Button
+          className="bg-red hover:bg-opacity-50 text-white py-2 px-5"
+          onClick={() => setDetailForm(true)}
+        >
+          <p>Add Tax</p></Button>
       </div>
       <TableAdmin column={column} data={listData} setOpenFormDetail={setDetailForm} setOpenFormRemove={setRemoveForm} setItemChoose={setUserChoose}
         columnWidths={["15%", "20%", "10%", "10%", "10%", "10%"]}

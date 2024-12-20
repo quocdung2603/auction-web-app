@@ -3,8 +3,8 @@ import ConvertDateTime from "../../Util/ConvertTime";
 
 interface InputTypeDateTimeProps{
     title: string,
-    content: string,
-    setContent: React.Dispatch<React.SetStateAction<string>>,
+    content: any,
+    setContent: React.Dispatch<React.SetStateAction<any>>,
     placeholder: string
 }
 
