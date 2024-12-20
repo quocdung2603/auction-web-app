@@ -90,7 +90,11 @@ const billManagement = () => {
       <div className="flex flex-row justify-end space-x-5">
         <Select placeholder="Status" options={statusData} onChange={hsStatus} value={sStatus}></Select>
         <Select placeholder="Asset Type" options={AssetTypeData} onChange={hSAssetType} value={sAssetType}></Select>
-        <Button onClick={() => setDetailForm(true)}><p>Add Asset</p></Button>
+        <Button
+          className="bg-red hover:bg-opacity-50 text-white py-2 px-5"
+          onClick={() => setDetailForm(true)}
+        >
+          <p>Add Auction</p></Button>
       </div>
       <TableAdmin column={column} data={listData} setOpenFormDetail={setDetailForm} setOpenFormRemove={setRemoveForm} setItemChoose={setUserChoose}></TableAdmin>
       <CreateForm openForm={detailForm} setOpenForm={setDetailForm} content="Detail User" userChoose={userChoose} />

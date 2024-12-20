@@ -1,34 +1,23 @@
 import { useEffect, useState } from "react";
 import { IconWindowClose } from "../../../../Common/Icon/Icon";
 import InputTypeString from "../../../../Components/Input/InputTypeString";
-import InputDescription from "../../../../Components/Input/InputDescription";
-import { User } from "../../../../Type/Account/User";
+import { AssetType } from "../../../../Type/Asset/AssetType";
 
 interface CreateFormProps {
   openForm: boolean,
   setOpenForm: React.Dispatch<React.SetStateAction<boolean>>,
   content?: string,
-  userChoose?: any | null
+  userChoose?: AssetType | null
 }
-const createForm: React.FC<CreateFormProps> = ({ openForm, setOpenForm, content = "ADD NEWS ACCOUNT", userChoose }) => {
-  const [nameAccount, setNameAccount] = useState<string>(userChoose?.fullName ?? "");
-  const [email, setEmail] = useState<string>(userChoose?.email ?? "");
-  const [userName, setUserName] = useState<string>(userChoose?.username ?? "");
-  const [phoneNumber, setPhoneNumber] = useState<string>(userChoose?.phone ?? "");
-  const [password, setPassword] = useState<string>(userChoose?.password ?? "");
-  const [description, setDescription] = useState<string>(userChoose?.description ?? "");
 
+const createForm: React.FC<CreateFormProps> = ({ openForm, setOpenForm, content = "ADD NEWS ACCOUNT", userChoose }) => {
+  const [assetTypeName, setAssetTypeName] = useState<string>(userChoose?.assetTypeName ?? "");
   const closeFormModal = () => {
     setOpenForm(false);
   };
   useEffect(() => {
     if (userChoose) {
-      setNameAccount(userChoose.fullName ?? "");
-      setEmail(userChoose.email ?? "");
-      setUserName(userChoose.username ?? "");
-      setPhoneNumber(userChoose.phone ?? "");
-      setPassword(userChoose.password ?? "");
-      setDescription(userChoose.description ?? "");
+      setAssetTypeName(userChoose?.assetTypeName ?? "")
     }
   }, [userChoose]);
   return (
@@ -47,44 +36,13 @@ const createForm: React.FC<CreateFormProps> = ({ openForm, setOpenForm, content 
                 {content}
               </h1>
               <form method="POST" className="space-y-4">
-                {/* <InputTypeString
-                  title="Full Name"
-                  content={nameAccount}
-                  setContent={setNameAccount}
-                  placeholder="Nhập tên người dùng"
-                />
                 <InputTypeString
-                  title="Email"
-                  content={email}
-                  setContent={setEmail}
-                  placeholder="Nhập email người dùng"
+                  title="Tên loại tài sản"
+                  content={assetTypeName}
+                  setContent={setAssetTypeName}
+                  placeholder="Nhập tên loại tài sản"
                 />
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <InputTypeString
-                    title="Tên đăng nhập"
-                    content={userName}
-                    setContent={setUserName}
-                    placeholder="Nhập tên Đăng nhập"
-                  />
-                  <InputTypeString
-                    title="Phone Number"
-                    content={phoneNumber}
-                    setContent={setPhoneNumber}
-                    placeholder="Nhập số điện thoại người dùng"
-                  />
-                </div>
-                <InputTypeString
-                  title="Mật khẩu"
-                  content={password}
-                  setContent={setPassword}
-                  placeholder="Nhập mật khẩu"
-                />
-                <InputDescription
-                  title="Mô tả mong muốn nếu có"
-                  content={description}
-                  setContent={setDescription}
-                  placeholder="Mô tả về bản thân"
-                /> */}
+
                 <div className="flex justify-end gap-4">
                   <button
                     type="button"

@@ -1,34 +1,44 @@
 import { useEffect, useState } from "react";
 import { IconWindowClose } from "../../../../Common/Icon/Icon";
 import InputTypeString from "../../../../Components/Input/InputTypeString";
+import InputTypeNumber from "../../../../Components/Input/InputTypeNumber";
+import InputTypeSelect from "../../../../Components/Input/InputTypeSelect";
 import InputDescription from "../../../../Components/Input/InputDescription";
-import { User } from "../../../../Type/Account/User";
+import { Tax, TaxType } from "../../../../Type/BillAndTax/Tax";
 
 interface CreateFormProps {
   openForm: boolean,
   setOpenForm: React.Dispatch<React.SetStateAction<boolean>>,
   content?: string,
-  userChoose?: any | null
+  userChoose?: Tax | null
 }
+
+// id: number;
+// taxName: string;
+// taxDescription: string;
+// taxAmount: number;
+// taxType: TaxType;
+
+const taxTypeOptions = [
+  { value: TaxType.Fixed, label: "Fixed" },
+  { value: TaxType.Percentage, label: "Percent" }
+];
+
 const createForm: React.FC<CreateFormProps> = ({ openForm, setOpenForm, content = "ADD NEWS ACCOUNT", userChoose }) => {
-  const [nameAccount, setNameAccount] = useState<string>(userChoose?.fullName ?? "");
-  const [email, setEmail] = useState<string>(userChoose?.email ?? "");
-  const [userName, setUserName] = useState<string>(userChoose?.username ?? "");
-  const [phoneNumber, setPhoneNumber] = useState<string>(userChoose?.phone ?? "");
-  const [password, setPassword] = useState<string>(userChoose?.password ?? "");
-  const [description, setDescription] = useState<string>(userChoose?.description ?? "");
+  const [taxName, setTaxName] = useState<string>(userChoose?.taxName ?? "");
+  const [taxDescription, setTaxDescription] = useState<string>(userChoose?.taxDescription ?? "");
+  const [taxAmount, setTaxAmount] = useState<number>(userChoose?.taxAmount ?? 0);
+  const [taxType, setTaxType] = useState<TaxType>(userChoose?.taxType ?? TaxType.Fixed);
 
   const closeFormModal = () => {
     setOpenForm(false);
   };
   useEffect(() => {
     if (userChoose) {
-      setNameAccount(userChoose.fullName ?? "");
-      setEmail(userChoose.email ?? "");
-      setUserName(userChoose.username ?? "");
-      setPhoneNumber(userChoose.phone ?? "");
-      setPassword(userChoose.password ?? "");
-      setDescription(userChoose.description ?? "");
+      setTaxName(userChoose.taxName ?? "");
+      setTaxDescription(userChoose.taxDescription ?? "");
+      setTaxAmount(userChoose.taxAmount ?? 0);
+      setTaxType(userChoose.taxType ?? TaxType.Fixed);
     }
   }, [userChoose]);
   return (
@@ -47,44 +57,30 @@ const createForm: React.FC<CreateFormProps> = ({ openForm, setOpenForm, content 
                 {content}
               </h1>
               <form method="POST" className="space-y-4">
-                {/* <InputTypeString
-                  title="Full Name"
-                  content={nameAccount}
-                  setContent={setNameAccount}
-                  placeholder="Nhập tên người dùng"
-                />
                 <InputTypeString
-                  title="Email"
-                  content={email}
-                  setContent={setEmail}
-                  placeholder="Nhập email người dùng"
+                  title="Tên thuế"
+                  content={taxName}
+                  setContent={setTaxName}
+                  placeholder="Nhập tên thuế"
                 />
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <InputTypeString
-                    title="Tên đăng nhập"
-                    content={userName}
-                    setContent={setUserName}
-                    placeholder="Nhập tên Đăng nhập"
-                  />
-                  <InputTypeString
-                    title="Phone Number"
-                    content={phoneNumber}
-                    setContent={setPhoneNumber}
-                    placeholder="Nhập số điện thoại người dùng"
-                  />
-                </div>
-                <InputTypeString
-                  title="Mật khẩu"
-                  content={password}
-                  setContent={setPassword}
-                  placeholder="Nhập mật khẩu"
+                <InputTypeNumber
+                  title="Giá trị"
+                  content={taxAmount}
+                  setContent={setTaxAmount}
+                  placeholder="Nhập giá trị"
+                />
+                <InputTypeSelect
+                  title="Loại thuế"
+                  content={taxType}
+                  setContent={setTaxType}
+                  titleOption={taxTypeOptions}
                 />
                 <InputDescription
-                  title="Mô tả mong muốn nếu có"
-                  content={description}
-                  setContent={setDescription}
-                  placeholder="Mô tả về bản thân"
-                /> */}
+                  title="Mô tả"
+                  content={taxDescription}
+                  setContent={setTaxDescription}
+                  placeholder="Nhập mô tả"
+                />
                 <div className="flex justify-end gap-4">
                   <button
                     type="button"

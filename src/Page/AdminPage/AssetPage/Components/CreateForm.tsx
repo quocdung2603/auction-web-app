@@ -2,35 +2,65 @@ import { useEffect, useState } from "react";
 import { IconWindowClose } from "../../../../Common/Icon/Icon";
 import InputTypeString from "../../../../Components/Input/InputTypeString";
 import InputDescription from "../../../../Components/Input/InputDescription";
-import { User } from "../../../../Type/Account/User";
+import InputTypeNumber from "../../../../Components/Input/InputTypeNumber";
+import InputTypeSelect from "../../../../Components/Input/InputTypeSelect";
+import InputTypeFile from "../../../../Components/Input/InputTypeFile";
+import { Asset } from "../../../../Type/Asset/Asset";
 
 interface CreateFormProps {
   openForm: boolean,
   setOpenForm: React.Dispatch<React.SetStateAction<boolean>>,
   content?: string,
-  userChoose?: any | null
+  userChoose?: Asset | null
 }
-const createForm: React.FC<CreateFormProps> = ({ openForm, setOpenForm, content = "ADD NEWS ACCOUNT", userChoose }) => {
-  const [nameAccount, setNameAccount] = useState<string>(userChoose?.fullName ?? "");
-  const [email, setEmail] = useState<string>(userChoose?.email ?? "");
-  const [userName, setUserName] = useState<string>(userChoose?.username ?? "");
-  const [phoneNumber, setPhoneNumber] = useState<string>(userChoose?.phone ?? "");
-  const [password, setPassword] = useState<string>(userChoose?.password ?? "");
-  const [description, setDescription] = useState<string>(userChoose?.description ?? "");
 
+const assetType = [
+  { value: 1, label: "Asset Type 1" },
+  { value: 2, label: "Asset Type 2" },
+  { value: 3, label: "Asset Type 3" },
+  { value: 4, label: "Asset Type 4" },
+  { value: 5, label: "Asset Type 5" },
+];
+
+const assetStatus = [
+  { value: 1, label: "Asset Status 1" },
+  { value: 2, label: "Asset Status 2" },
+  { value: 3, label: "Asset Status 3" },
+  { value: 4, label: "Asset Status 4" },
+  { value: 5, label: "Asset Status 5" },
+];
+
+const inspector = [
+  { value: 1, label: "Inspector 1" },
+  { value: 2, label: "Inspector 2" },
+  { value: 3, label: "Inspector 3" },
+  { value: 4, label: "Inspector 4" },
+  { value: 5, label: "Inspector 5" },
+];
+
+const createForm: React.FC<CreateFormProps> = ({ openForm, setOpenForm, content = "ADD NEWS ACCOUNT", userChoose }) => {
+  const [assetName, setAssetName] = useState<string>(userChoose?.assetName ?? "");
+  const [mainImage, setMainImage] = useState<string>(userChoose?.mainImage ?? "");
+  const [assetDescription, setAssetDescription] = useState<string>(userChoose?.assetDescription ?? "");
+  const [assetPrice, setAssetPrice] = useState<number>(userChoose?.assetPrice ?? 0);
+  const [inspectorID, setInspectorID] = useState<number>(userChoose?.inspectorID ?? 0);
+  const [assetTypeID, setAssetTypeID] = useState<number>(userChoose?.assetTypeID ?? 0);
+  const [assetStatusID, setAssetStatusID] = useState<number>(userChoose?.assetStatusID ?? 0);
   const closeFormModal = () => {
     setOpenForm(false);
   };
   useEffect(() => {
     if (userChoose) {
-      setNameAccount(userChoose.fullName ?? "");
-      setEmail(userChoose.email ?? "");
-      setUserName(userChoose.username ?? "");
-      setPhoneNumber(userChoose.phone ?? "");
-      setPassword(userChoose.password ?? "");
-      setDescription(userChoose.description ?? "");
+      setAssetName(userChoose?.assetName ?? "");
+      setMainImage(userChoose?.mainImage ?? "");
+      setAssetDescription(userChoose?.assetDescription ?? "");
+      setAssetPrice(userChoose?.assetPrice ?? 0);
+      setInspectorID(userChoose?.inspectorID ?? 0);
+      setAssetTypeID(userChoose?.assetTypeID ?? 0);
+      setAssetStatusID(userChoose?.assetStatusID ?? 0);
     }
   }, [userChoose]);
+
   return (
     <>
       {openForm && (
@@ -47,44 +77,52 @@ const createForm: React.FC<CreateFormProps> = ({ openForm, setOpenForm, content 
                 {content}
               </h1>
               <form method="POST" className="space-y-4">
-                {/* <InputTypeString
-                  title="Full Name"
-                  content={nameAccount}
-                  setContent={setNameAccount}
-                  placeholder="Nhập tên người dùng"
-                />
-                <InputTypeString
-                  title="Email"
-                  content={email}
-                  setContent={setEmail}
-                  placeholder="Nhập email người dùng"
-                />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <InputTypeString
-                    title="Tên đăng nhập"
-                    content={userName}
-                    setContent={setUserName}
-                    placeholder="Nhập tên Đăng nhập"
+                  <InputTypeFile
+                    image={mainImage}
+                    setImage={setMainImage}
                   />
-                  <InputTypeString
-                    title="Phone Number"
-                    content={phoneNumber}
-                    setContent={setPhoneNumber}
-                    placeholder="Nhập số điện thoại người dùng"
+                  <div className="flex flex-col space-y-4">
+                    <InputTypeString
+                      title="Tên tài sản"
+                      content={assetName}
+                      setContent={setAssetName}
+                      placeholder="Nhập tên sản phẩm"
+                    />
+                    <InputTypeNumber
+                      title="Giá sản phẩm"
+                      content={assetPrice}
+                      setContent={setAssetPrice}
+                      placeholder="Nhập giá sản phẩm"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-row gap-4">
+                  <InputTypeSelect
+                    title="Mã người kiểm định"
+                    content={inspectorID}
+                    setContent={setInspectorID}
+                    titleOption={inspector}
+                  />
+                  <InputTypeSelect
+                    title="Mã loại sản phẩm"
+                    content={inspectorID}
+                    setContent={setInspectorID}
+                    titleOption={assetType}
+                  />
+                  <InputTypeSelect
+                    title="Mã trạng thái sản phẩm"
+                    content={assetStatusID}
+                    setContent={setAssetStatusID}
+                    titleOption={assetStatus}
                   />
                 </div>
-                <InputTypeString
-                  title="Mật khẩu"
-                  content={password}
-                  setContent={setPassword}
-                  placeholder="Nhập mật khẩu"
-                />
                 <InputDescription
-                  title="Mô tả mong muốn nếu có"
-                  content={description}
-                  setContent={setDescription}
-                  placeholder="Mô tả về bản thân"
-                /> */}
+                  title="Mô tả về sản phẩm"
+                  content={assetDescription}
+                  setContent={setAssetDescription}
+                  placeholder="Nhập mô tả về sản phẩm"
+                />
                 <div className="flex justify-end gap-4">
                   <button
                     type="button"
