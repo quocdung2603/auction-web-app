@@ -1,112 +1,137 @@
-import { useEffect, useState } from "react";
-import { IconWindowClose } from "../../../../Common/Icon/Icon";
-import InputTypeString from "../../../../Components/Input/InputTypeString";
-import InputTypeDateTime from "../../../../Components/Input/InputTypeDateTime";
+import { useEffect } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { Button, notification } from "antd";
 import InputDescription from "../../../../Components/Input/InputDescription";
+import InputTypeString from "../../../../Components/Input/InputTypeString";
 import { Event } from "../../../../Type/Event/Event";
+import InputTypeDateTime from "../../../../Components/Input/InputTypeDateTime";
+import { StaffEvent } from "../../../../Type/Event/StaffEvent";
+import InputTypeSelect from "../../../../Components/Input/InputTypeSelect";
 
-interface CreateFormProps {
-  openForm: boolean,
-  setOpenForm: React.Dispatch<React.SetStateAction<boolean>>,
-  content?: string,
-  userChoose?: Event | null
-}
+interface CreateFormFields extends Event, StaffEvent { }
 
-//     eventName: string;
-//     startTime: Date;
-//     endTime: Date;
-//     eventState: string;
-//     description: string;
+type CreateEditArticleFormProps = {
+  initForm?: CreateFormFields;
+};
 
-const createForm: React.FC<CreateFormProps> = ({ openForm, setOpenForm, content = "ADD NEWS ACCOUNT", userChoose }) => {
-  const [eventName, setEventName] = useState<string>(userChoose?.eventName ?? "");
-  const [startTime, setStartTime] = useState<Date>(userChoose?.startTime ?? new Date());
-  const [endTime, setEndTime] = useState<Date>(userChoose?.endTime ?? new Date());
-  const [eventState, setEventState] = useState<string>(userChoose?.eventState ?? "");
-  const [description, setDescription] = useState<string>(userChoose?.description ?? "");
+const defaultFormValues = {
+  eventName: "",
+  startTime: new Date(),
+  endTime: new Date(),
+  eventState: "",
+  description: "",
+  staffEventId: 0,
+};
 
-  const closeFormModal = () => {
-    setOpenForm(false);
-  };
+const eventStateList = [
+  { value: 1, label: "Sắp diễn ra" },
+  { value: 2, label: "Đang diễn ra" },
+  { value: 3, label: "Đã kết thúc" },
+];
+
+const staffList = [
+  { value: 1, label: "Nhân viên 1" },
+  { value: 2, label: "Nhân viên 2" },
+  { value: 3, label: "Nhân viên 3" },
+]
+
+const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
+  const {
+    control,
+    reset,
+    handleSubmit,
+  } = useForm<CreateFormFields>({
+    defaultValues: defaultFormValues,
+  });
+
   useEffect(() => {
-    if (userChoose) {
-      setEventName(userChoose.eventName ?? "");
-      setStartTime(userChoose.startTime ?? new Date());
-      setEndTime(userChoose.endTime ?? new Date());
-      setEventState(userChoose.eventState ?? "");
-      setDescription(userChoose.description ?? "");
+    if (initForm) {
+      reset(initForm);
+    } else {
+      reset(defaultFormValues);
     }
-  }, [userChoose]);
+  }, [initForm, reset]);
+
+  const onSubmit: SubmitHandler<CreateFormFields> = async (data) => {
+    try {
+      if (initForm) {
+        // API Update logic
+        notification.success({ message: "Cập nhật thành công" });
+        alert(data)
+      } else {
+        // API Create logic
+        notification.success({ message: "Thêm thành công" });
+        alert(JSON.stringify(data));
+      }
+      reset(defaultFormValues);
+    } catch (err) {
+      notification.error({ message: "Có lỗi xảy ra, vui lòng kiểm tra lại!" });
+    }
+  };
+
   return (
-    <>
-      {openForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white max-h-full rounded-3xl shadow-md lg:shadow-lg p-6 sm:p-8 w-full max-w-[400px] sm:max-w-[600px] lg:max-w-[700px] mx-auto relative">
-            <button
-              className="absolute top-3 right-4 text-slate-600 text-xl hover:text-gray-500 focus:outline-none"
-              onClick={closeFormModal}
-            >
-              <IconWindowClose />
-            </button>
-            <div className="flex flex-col gap-6">
-              <h1 className="text-center text-black text-xl sm:text-2xl font-bold mb-4">
-                {content}
-              </h1>
-              <form method="POST" className="space-y-4">
-                <InputTypeString
-                  title="Tên sự kiện"
-                  content={eventName}
-                  setContent={setEventName}
-                  placeholder="Nhập tên sự kiện"
-                />
-                <div className="grid grid-cols-2 gap-4">
-                  <InputTypeDateTime
-                    title="Thời gian bắt đầu"
-                    content={startTime}
-                    setContent={setStartTime}
-                    placeholder="Nhập thời gian bắt đầu"
-                  />
-                  <InputTypeDateTime
-                    title="Thời gian kết thúc"
-                    content={endTime}
-                    setContent={setEndTime}
-                    placeholder="Nhập thời gian kết thúc"
-                  />
-                </div>
-                <InputTypeString
-                  title="Trạng thái"
-                  content={eventState}
-                  setContent={setEventState}
-                  placeholder="Nhập trạng thái"
-                />
-                <InputDescription
-                  title="Mô tả"
-                  content={description}
-                  setContent={setDescription}
-                  placeholder="Nhập mô tả"
-                />
-                <div className="flex justify-end gap-4">
-                  <button
-                    type="button"
-                    className="min-w-[90px] py-2 bg-[#ECEBE9] rounded-3xl font-bold text-[#4F4B45] text-sm focus:outline-none hover:bg-[#bdbcba]"
-                    onClick={closeFormModal}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="min-w-[90px] py-2 bg-[#FB9400] rounded-3xl font-bold text-white text-sm focus:outline-none hover:bg-[#E07B00]"
-                  >
-                    Add
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+    <form
+      method="POST"
+      className="space-y-6"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <InputTypeString
+        name="eventName"
+        control={control}
+        rules={{ required: "Tên sự kiện không được để trống!" }}
+        title="Tên sự kiện"
+        placeholder="Nhập tên sự kiện"
+      />
+      <div className="grid grid-cols-2 gap-4">
+        <InputTypeDateTime
+          title="Ngày bắt đầu"
+          name="startTime"
+          control={control}
+          rules={{ required: "Vui lòng chọn ngày" }}
+          placeholder="Nhập ngày tạo"
+        />
+        <InputTypeDateTime
+          title="Ngày kết thúc"
+          name="endTime"
+          control={control}
+          rules={{ required: "Vui lòng chọn ngày" }}
+          placeholder="Nhập ngày tạo"
+        />
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <InputTypeSelect
+          name="eventState"
+          control={control}
+          rules={{ required: "Vui lòng chọn danh mục" }}
+          title="Trạng thái sự kiện"
+          titleOption={eventStateList}
+        />
+        <InputTypeSelect
+          name="staffEventId"
+          control={control}
+          rules={{ required: "Vui lòng chọn danh mục" }}
+          title="Nhân viên quản lý"
+          titleOption={staffList}
+        />
+      </div>
+      <InputDescription
+        name="description"
+        control={control}
+        placeholder="Nhập mô tả sản phẩm"
+        rules={{ required: 'Mô tả sản phẩm không được để trống!' }}
+        defaultValue={initForm?.description}
+      />
+      <div className="text-right">
+        <Button
+          type="primary"
+          htmlType="submit"
+          className="bg-blue-600 hover:bg-blue-700 text-white"
+        >
+          {initForm ? "Cập nhật" : "Tạo"}
+        </Button>
+      </div>
+    </form>
   );
 };
 
-export default createForm;
+export default CreateForm;

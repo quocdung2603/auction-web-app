@@ -1,28 +1,29 @@
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Button, notification } from "antd";
-import { Bill } from "../../../../Type/BillAndTax/Bill";
+import { Inventory } from "../../../../Type/Asset/Inventory";
 import InputTypeNumber from "../../../../Components/Input/InputTypeNumber";
 import InputTypeSelect from "../../../../Components/Input/InputTypeSelect";
 import InputTypeDateTime from "../../../../Components/Input/InputTypeDateTime";
 
-interface CreateFormFields extends Bill { }
+interface CreateFormFields extends Inventory { }
 
 type CreateEditArticleFormProps = {
   initForm?: CreateFormFields;
 };
 
 const defaultFormValues = {
-  id: 0,
-  userId: 0,
-  staffId: 0,
-  billDate: new Date(),
-  totalAmount: 0,
-  paymentTerm: new Date(),
-  paymentStatus: false,
+  assetID: 0,
+  assetName: "",
+  mainImage: "",
+  assetDescription: "",
+  assetPrice: 0,
+  inspectorID: 0,
+  assetTypeID: 0,
+  assetStatusID: 0,
 };
 
-const userList = [
+const warehouseList = [
   { value: 1, label: "Asset Type 1" },
   { value: 2, label: "Asset Type 2" },
   { value: 3, label: "Asset Type 3" },
@@ -30,20 +31,12 @@ const userList = [
   { value: 5, label: "Asset Type 5" },
 ];
 
-const staffList = [
+const assetList = [
   { value: 1, label: "Asset Status 1" },
   { value: 2, label: "Asset Status 2" },
   { value: 3, label: "Asset Status 3" },
   { value: 4, label: "Asset Status 4" },
   { value: 5, label: "Asset Status 5" },
-];
-
-const paymentStatusList = [
-  { value: 1, label: "Inspector 1" },
-  { value: 2, label: "Inspector 2" },
-  { value: 3, label: "Inspector 3" },
-  { value: 4, label: "Inspector 4" },
-  { value: 5, label: "Inspector 5" },
 ];
 
 const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
@@ -86,54 +79,43 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
       className="space-y-6"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <InputTypeSelect
-          name="userId"
-          control={control}
-          rules={{ required: "Vui lòng chọn danh mục" }}
-          title="Danh mục sản phẩm"
-          titleOption={userList}
-        />
-        <InputTypeSelect
-          name="staffId"
-          control={control}
-          rules={{ required: "Vui lòng chọn danh mục" }}
-          title="Danh mục sản phẩm"
-          titleOption={staffList}
-        />
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <InputTypeNumber
+        name="quantity"
+        control={control}
+        rules={{ required: "Giá sản phẩm không được để trống!" }}
+        title="Giá sản phẩm"
+        placeholder="Nhập giá sản phẩm"
+      />
+      <div className="grid grid-cols-2 gap-4">
         <InputTypeDateTime
-          title="Ngày tạo"
-          name="billDate"
+          title="Ngày nhập kho"
+          name="entryTime"
           control={control}
           rules={{ required: "Vui lòng chọn ngày" }}
           placeholder="Nhập ngày tạo"
         />
-        <InputTypeNumber
-          name="totalAmount"
-          control={control}
-          rules={{ required: "Vui lòng nhập số tiền" }}
-          title="Số tiền"
-          placeholder="Nhập số tiền"
-        />
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <InputTypeDateTime
-          title="Thời hạn thanh toán"
-          name="paymentTerm"
+          title="Ngày xuất kho"
+          name="exitTime"
           control={control}
           rules={{ required: "Vui lòng chọn ngày" }}
-          placeholder="Thời hạn thanh toán"
-        />
-        <InputTypeSelect
-          name="paymentStatus"
-          control={control}
-          rules={{ required: "Vui lòng chọn danh mục" }}
-          title="Danh mục sản phẩm"
-          titleOption={paymentStatusList}
+          placeholder="Nhập ngày tạo"
         />
       </div>
+      <InputTypeSelect
+        name="warehouseID"
+        control={control}
+        rules={{ required: "Vui lòng chọn danh mục" }}
+        title="Danh mục sản phẩm"
+        titleOption={warehouseList}
+      />
+      <InputTypeSelect
+        name="assetID"
+        control={control}
+        rules={{ required: "Vui lòng chọn danh mục" }}
+        title="Danh mục sản phẩm"
+        titleOption={assetList}
+      />
       <div className="text-right">
         <Button
           type="primary"

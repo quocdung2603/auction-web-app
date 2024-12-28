@@ -1,18 +1,31 @@
+import { useController, FieldValues, UseControllerProps, Path, PathValue } from 'react-hook-form';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 
-interface InputTypeStringProps{
-    title: string,
-    content: string,
-    setContent: React.Dispatch<React.SetStateAction<string>>,
-    placeholder: string
+interface InputDescriptionProps<T extends FieldValues> extends UseControllerProps<T> {
+  placeholder: string;
+  defaultValue?: PathValue<T, Path<T>>;  // Cập nhật kiểu defaultValue
 }
-const inputDescription:React.FC<InputTypeStringProps> = ({title,content,placeholder,setContent}) => {
+
+const InputDescription = <T extends FieldValues>({
+  name,
+  control,
+  defaultValue,
+  rules,
+  placeholder,
+}: InputDescriptionProps<T>) => {
+  const {
+    field: { value, onChange },
+    fieldState: { error },
+  } = useController<T>({
+    name,
+    control,
+    defaultValue: defaultValue as PathValue<T, Path<T>>, // Cập nhật với kiểu mặc định phù hợp
+    rules,
+  });
+
   return (
-    <div className='w-full min-w-[200px] mb-5 text-black'>
-      <label className='block mb-1 text-lg text-black font-medium'>
-        {title}
-      </label>
+    <div className="w-full min-w-[200px] mb-5 text-black">
       <CKEditor
         editor={ClassicEditor}
         config={{
@@ -56,18 +69,16 @@ const inputDescription:React.FC<InputTypeStringProps> = ({title,content,placehol
             ],
           },
           placeholder: placeholder,
-          initialData: content,
         }}
+        data={value} // Sử dụng giá trị từ react-hook-form
         onChange={(event, editor) => {
-          console.log(event);
-          setContent(editor.getData());
+          const data = editor.getData(); // Lấy dữ liệu từ CKEditor
+          onChange(data); // Đồng bộ dữ liệu với react-hook-form
         }}
       />
-      {/* <p className='flex items-center mt-2 text-xs text-red-500'>
-        Great! Your phone number is valid.
-      </p> */}
+      {error && <p className="text-red-500 text-sm">{error.message}</p>}
     </div>
   );
-}
+};
 
-export default inputDescription;
+export default InputDescription;

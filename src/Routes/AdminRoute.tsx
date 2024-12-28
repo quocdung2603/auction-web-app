@@ -1,17 +1,15 @@
 import { routerLinkAdmin } from "../Util/RouterLink"
 import HomePageAdmin from "../Page/AdminPage/HomePage/HomePageAdmin"
 import UserManagement from "../Page/AdminPage/UserPage/UserManagement"
-import StaffManagement from "../Page/AdminPage/StaffPage/StaffManagement"
 import AssetTypeManagement from "../Page/AdminPage/AssetType/AssetTypeManagement"
 import AuctionManagement from "../Page/AdminPage/Auction/AuctionManagement"
 import AssetManagement from "../Page/AdminPage/AssetPage/AssetManagement"
-import NewsManagement from "../Page/AdminPage/NewsPage/NewsManagement"
 import EventManagement from "../Page/AdminPage/EventPage/eventManagement"
-import SupplierManagement from "../Page/AdminPage/SupplierPage/SupplierManagement"
-import WarehouseManagement from "../Page/AdminPage/WarehousePage/WarehouseManagement"
 import BillManagement from "../Page/AdminPage/BillPage/BillManagement"
 import TaxManagement from "../Page/AdminPage/TaxPage/TaxManagement"
-import RequestManagement from "../Page/AdminPage/RequestPage/RequestManagement"
+import InventoryManagement from "../Page/AdminPage/InventoryPage/InventoryManagement"
+import WarehouseManagement from "../Page/AdminPage/WarehousePage/WarehouseManagement"
+import RoleManagement from "../Page/AdminPage/RolePage/RoleManagement"
 
 export const AdminRoute = [
   {
@@ -21,10 +19,6 @@ export const AdminRoute = [
   {
     path: routerLinkAdmin.User,
     element: UserManagement,
-  },
-  {
-    path: routerLinkAdmin.Staff,
-    element: StaffManagement,   
   },
   {
     path: routerLinkAdmin.AssetType,
@@ -39,20 +33,16 @@ export const AdminRoute = [
     element: AssetManagement
   },
   {
-    path: routerLinkAdmin.News,
-    element: NewsManagement
-  },
-  {
     path: routerLinkAdmin.Event,
     element: EventManagement
   },
   {
-    path: routerLinkAdmin.Supplier,
-    element: SupplierManagement
-  },
-  {
     path: routerLinkAdmin.Warehouse,
     element: WarehouseManagement
+  },
+  {
+    path: routerLinkAdmin.Inventory,
+    element: InventoryManagement
   },
   {
     path: routerLinkAdmin.Bill,
@@ -63,7 +53,7 @@ export const AdminRoute = [
     element: TaxManagement
   },
   {
-    path: routerLinkAdmin.Request,
-    element: RequestManagement
+    path: routerLinkAdmin.Role,
+    element: RoleManagement
   },
 ]

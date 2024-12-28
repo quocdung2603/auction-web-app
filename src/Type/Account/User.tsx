@@ -1,5 +1,3 @@
-import { Role } from "./Role";
-
 type User = {
   id: number;
   name: string;
@@ -8,7 +6,7 @@ type User = {
   gender: boolean;
   email: string;
   phone: string;
-  Role: Role;
+  Role: number;
 }
 
 export { type User }

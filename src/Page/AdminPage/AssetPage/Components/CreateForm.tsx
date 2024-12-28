@@ -1,18 +1,29 @@
-import { useEffect, useState } from "react";
-import { IconWindowClose } from "../../../../Common/Icon/Icon";
-import InputTypeString from "../../../../Components/Input/InputTypeString";
+import { useEffect } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { Button, notification } from "antd";
 import InputDescription from "../../../../Components/Input/InputDescription";
+import InputTypeString from "../../../../Components/Input/InputTypeString";
+import { Asset } from "../../../../Type/Asset/Asset";
 import InputTypeNumber from "../../../../Components/Input/InputTypeNumber";
 import InputTypeSelect from "../../../../Components/Input/InputTypeSelect";
 import InputTypeFile from "../../../../Components/Input/InputTypeFile";
-import { Asset } from "../../../../Type/Asset/Asset";
 
-interface CreateFormProps {
-  openForm: boolean,
-  setOpenForm: React.Dispatch<React.SetStateAction<boolean>>,
-  content?: string,
-  userChoose?: Asset | null
-}
+interface CreateFormFields extends Asset { }
+
+type CreateEditArticleFormProps = {
+  initForm?: CreateFormFields;
+};
+
+const defaultFormValues = {
+  assetID: 0,
+  assetName: "",
+  mainImage: "",
+  assetDescription: "",
+  assetPrice: 0,
+  inspectorID: 0,
+  assetTypeID: 0,
+  assetStatusID: 0,
+};
 
 const assetType = [
   { value: 1, label: "Asset Type 1" },
@@ -38,113 +49,113 @@ const inspector = [
   { value: 5, label: "Inspector 5" },
 ];
 
-const createForm: React.FC<CreateFormProps> = ({ openForm, setOpenForm, content = "ADD NEWS ACCOUNT", userChoose }) => {
-  const [assetName, setAssetName] = useState<string>(userChoose?.assetName ?? "");
-  const [mainImage, setMainImage] = useState<string>(userChoose?.mainImage ?? "");
-  const [assetDescription, setAssetDescription] = useState<string>(userChoose?.assetDescription ?? "");
-  const [assetPrice, setAssetPrice] = useState<number>(userChoose?.assetPrice ?? 0);
-  const [inspectorID, setInspectorID] = useState<number>(userChoose?.inspectorID ?? 0);
-  const [assetTypeID, setAssetTypeID] = useState<number>(userChoose?.assetTypeID ?? 0);
-  const [assetStatusID, setAssetStatusID] = useState<number>(userChoose?.assetStatusID ?? 0);
-  const closeFormModal = () => {
-    setOpenForm(false);
-  };
+const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
+  const {
+    control,
+    reset,
+    handleSubmit,
+  } = useForm<CreateFormFields>({
+    defaultValues: defaultFormValues,
+  });
+
   useEffect(() => {
-    if (userChoose) {
-      setAssetName(userChoose?.assetName ?? "");
-      setMainImage(userChoose?.mainImage ?? "");
-      setAssetDescription(userChoose?.assetDescription ?? "");
-      setAssetPrice(userChoose?.assetPrice ?? 0);
-      setInspectorID(userChoose?.inspectorID ?? 0);
-      setAssetTypeID(userChoose?.assetTypeID ?? 0);
-      setAssetStatusID(userChoose?.assetStatusID ?? 0);
+    if (initForm) {
+      reset(initForm);
+    } else {
+      reset(defaultFormValues);
     }
-  }, [userChoose]);
+  }, [initForm, reset]);
+
+  const onSubmit: SubmitHandler<CreateFormFields> = async (data) => {
+    try {
+      if (initForm) {
+        // API Update logic
+        notification.success({ message: "Cập nhật thành công" });
+        alert(data)
+      } else {
+        // API Create logic
+        notification.success({ message: "Thêm thành công" });
+        alert(JSON.stringify(data));
+      }
+      reset(defaultFormValues);
+    } catch (err) {
+      notification.error({ message: "Có lỗi xảy ra, vui lòng kiểm tra lại!" });
+    }
+  };
 
   return (
-    <>
-      {openForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white max-h-full rounded-3xl shadow-md lg:shadow-lg p-6 sm:p-8 w-full max-w-[400px] sm:max-w-[600px] lg:max-w-[700px] mx-auto relative">
-            <button
-              className="absolute top-3 right-4 text-slate-600 text-xl hover:text-gray-500 focus:outline-none"
-              onClick={closeFormModal}
-            >
-              <IconWindowClose />
-            </button>
-            <div className="flex flex-col gap-6">
-              <h1 className="text-center text-black text-xl sm:text-2xl font-bold mb-4">
-                {content}
-              </h1>
-              <form method="POST" className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <InputTypeFile
-                    image={mainImage}
-                    setImage={setMainImage}
-                  />
-                  <div className="flex flex-col space-y-4">
-                    <InputTypeString
-                      title="Tên tài sản"
-                      content={assetName}
-                      setContent={setAssetName}
-                      placeholder="Nhập tên sản phẩm"
-                    />
-                    <InputTypeNumber
-                      title="Giá sản phẩm"
-                      content={assetPrice}
-                      setContent={setAssetPrice}
-                      placeholder="Nhập giá sản phẩm"
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-row gap-4">
-                  <InputTypeSelect
-                    title="Mã người kiểm định"
-                    content={inspectorID}
-                    setContent={setInspectorID}
-                    titleOption={inspector}
-                  />
-                  <InputTypeSelect
-                    title="Mã loại sản phẩm"
-                    content={inspectorID}
-                    setContent={setInspectorID}
-                    titleOption={assetType}
-                  />
-                  <InputTypeSelect
-                    title="Mã trạng thái sản phẩm"
-                    content={assetStatusID}
-                    setContent={setAssetStatusID}
-                    titleOption={assetStatus}
-                  />
-                </div>
-                <InputDescription
-                  title="Mô tả về sản phẩm"
-                  content={assetDescription}
-                  setContent={setAssetDescription}
-                  placeholder="Nhập mô tả về sản phẩm"
-                />
-                <div className="flex justify-end gap-4">
-                  <button
-                    type="button"
-                    className="min-w-[90px] py-2 bg-[#ECEBE9] rounded-3xl font-bold text-[#4F4B45] text-sm focus:outline-none hover:bg-[#bdbcba]"
-                    onClick={closeFormModal}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="min-w-[90px] py-2 bg-[#FB9400] rounded-3xl font-bold text-white text-sm focus:outline-none hover:bg-[#E07B00]"
-                  >
-                    Add
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
+    <form
+      method="POST"
+      className="space-y-6"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="w-full h-[300px]">
+          <InputTypeFile
+            name="mainImage"
+            control={control}
+            rules={{ required: "Vui lòng chọn ảnh" }}
+            label="Chọn ảnh sản phẩm"
+          />
         </div>
-      )}
-    </>
+        <div className="flex flex-col space-y-4">
+          <InputTypeString
+            name="assetName"
+            control={control}
+            rules={{ required: "Tên sản phẩm không được để trống!" }}
+            title="Tên sản phẩm"
+            placeholder="Nhập tên sản phẩm"
+          />
+          <InputTypeNumber
+            name="assetPrice"
+            control={control}
+            rules={{ required: "Giá sản phẩm không được để trống!" }}
+            title="Giá sản phẩm"
+            placeholder="Nhập giá sản phẩm"
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <InputTypeSelect
+          name="assetTypeID"
+          control={control}
+          rules={{ required: "Vui lòng chọn danh mục" }}
+          title="Danh mục sản phẩm"
+          titleOption={assetType}
+        />
+        <InputTypeSelect
+          name="inspectorID"
+          control={control}
+          rules={{ required: "Vui lòng chọn danh mục" }}
+          title="Người kiểm định"
+          titleOption={inspector}
+        />
+        <InputTypeSelect
+          name="assetStatusID"
+          control={control}
+          rules={{ required: "Vui lòng chọn danh mục" }}
+          title="Danh mục sản phẩm"
+          titleOption={assetStatus}
+        />
+      </div>
+      <InputDescription
+        name="assetDescription"
+        control={control}
+        placeholder="Nhập mô tả sản phẩm"
+        rules={{ required: 'Mô tả sản phẩm không được để trống!' }}
+        defaultValue={initForm?.assetDescription} 
+      />
+      <div className="text-right">
+        <Button
+          type="primary"
+          htmlType="submit"
+          className="bg-blue-600 hover:bg-blue-700 text-white"
+        >
+          {initForm ? "Cập nhật" : "Tạo"}
+        </Button>
+      </div>
+    </form>
   );
 };
 
-export default createForm;
+export default CreateForm;
