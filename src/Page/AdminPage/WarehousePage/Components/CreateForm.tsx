@@ -1,121 +1,76 @@
-import { useEffect, useState } from "react";
-import { IconWindowClose } from "../../../../Common/Icon/Icon";
+import { useEffect } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { Button, notification } from "antd";
 import InputTypeString from "../../../../Components/Input/InputTypeString";
-import InputTypeNumber from "../../../../Components/Input/InputTypeNumber";
-import InputTypeSelect from "../../../../Components/Input/InputTypeSelect";
-import InputTypeDateTime from "../../../../Components/Input/InputTypeDateTime";
-import { Inventory } from "../../../../Type/Asset/Inventory";
+import { Warehouse } from "../../../../Type/Asset/Warehouse";
+interface CreateFormFields extends Warehouse { }
 
-interface CreateFormProps {
-  openForm: boolean,
-  setOpenForm: React.Dispatch<React.SetStateAction<boolean>>,
-  content?: string,
-  userChoose?: Inventory | null
-}
+type CreateEditArticleFormProps = {
+  initForm?: CreateFormFields;
+};
 
-const warehouseList = [
-  { value: 1, label: "Kho 1" },
-  { value: 2, label: "Kho 2" },
-  { value: 3, label: "Kho 3" },
-  { value: 4, label: "Kho 4" },
-]
+const defaultFormValues = {
+  location: "",
+};
 
-const assetList = [
-  { value: 1, label: "Tài sản 1" },
-  { value: 2, label: "Tài sản 2" },
-  { value: 3, label: "Tài sản 3" },
-  { value: 4, label: "Tài sản 4" },
-]
+const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
+  const {
+    control,
+    reset,
+    handleSubmit,
+  } = useForm<CreateFormFields>({
+    defaultValues: defaultFormValues,
+  });
 
-const createForm: React.FC<CreateFormProps> = ({ openForm, setOpenForm, content = "ADD NEWS ACCOUNT", userChoose }) => {
-  const [quantity, setQuantity] = useState<number>(userChoose?.quantity ?? 0);
-  const [entryTime, setEntryTime] = useState<Date | string>(userChoose?.entryTime ?? new Date());
-  const [exitTime, setExitTime] = useState<Date | string>(userChoose?.exitTime ?? new Date());
-  const [warehouseID, setWarehouseID] = useState<number>(userChoose?.warehouseID ?? 0);
-  const [assetID, setAssetID] = useState<number>(userChoose?.assetID ?? 0);
-
-  const closeFormModal = () => {
-    setOpenForm(false);
-  };
   useEffect(() => {
-    if (userChoose) {
-      setQuantity(userChoose.quantity ?? 0);
-      setEntryTime(userChoose.entryTime ?? new Date());
-      setExitTime(userChoose.exitTime ?? new Date());
-      setWarehouseID(userChoose.warehouseID ?? 0);
-      setAssetID(userChoose.assetID ?? 0);
+    if (initForm) {
+      reset(initForm);
+    } else {
+      reset(defaultFormValues);
     }
-  }, [userChoose]);
+  }, [initForm, reset]);
+
+  const onSubmit: SubmitHandler<CreateFormFields> = async (data) => {
+    try {
+      if (initForm) {
+        // API Update logic
+        notification.success({ message: "Cập nhật thành công" });
+        alert(data)
+      } else {
+        // API Create logic
+        notification.success({ message: "Thêm thành công" });
+        alert(JSON.stringify(data));
+      }
+      reset(defaultFormValues);
+    } catch (err) {
+      notification.error({ message: "Có lỗi xảy ra, vui lòng kiểm tra lại!" });
+    }
+  };
+
   return (
-    <>
-      {openForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white max-h-full rounded-3xl shadow-md lg:shadow-lg p-6 sm:p-8 w-full max-w-[400px] sm:max-w-[600px] lg:max-w-[700px] mx-auto relative">
-            <button
-              className="absolute top-3 right-4 text-slate-600 text-xl hover:text-gray-500 focus:outline-none"
-              onClick={closeFormModal}
-            >
-              <IconWindowClose />
-            </button>
-            <div className="flex flex-col gap-6">
-              <h1 className="text-center text-black text-xl sm:text-2xl font-bold mb-4">
-                {content}
-              </h1>
-              <form method="POST" className="space-y-4">
-                <InputTypeNumber
-                  title="Số lượng"
-                  content={quantity}
-                  setContent={setQuantity}
-                  placeholder="Nhập số lượng"
-                />
-                <div className="grid grid-cols-2 gap-4">
-                  <InputTypeDateTime
-                    title="Thời gian nhập"
-                    content={entryTime}
-                    setContent={setEntryTime}
-                    placeholder="Nhập thời gian nhập"
-                  />
-                  <InputTypeDateTime
-                    title="Thời gian xuất"
-                    content={exitTime}
-                    setContent={setExitTime}
-                    placeholder="Nhập thời gian xuất"
-                  />
-                </div>
-                <InputTypeSelect
-                  title="ID kho"
-                  content={warehouseID}
-                  setContent={setWarehouseID}
-                  titleOption={warehouseList}
-                />
-                <InputTypeSelect
-                  title="ID tài sản"
-                  content={assetID}
-                  setContent={setAssetID}
-                  titleOption={assetList}
-                />
-                <div className="flex justify-end gap-4">
-                  <button
-                    type="button"
-                    className="min-w-[90px] py-2 bg-[#ECEBE9] rounded-3xl font-bold text-[#4F4B45] text-sm focus:outline-none hover:bg-[#bdbcba]"
-                    onClick={closeFormModal}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="min-w-[90px] py-2 bg-[#FB9400] rounded-3xl font-bold text-white text-sm focus:outline-none hover:bg-[#E07B00]"
-                  >
-                    Add
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+    <form
+      method="POST"
+      className="space-y-6"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <InputTypeString
+        name="location"
+        control={control}
+        rules={{ required: "Tên sản phẩm không được để trống!" }}
+        title="Vị trí kho"
+        placeholder="Nhập vị trí kho"
+      />
+      <div className="text-right">
+        <Button
+          type="primary"
+          htmlType="submit"
+          className="bg-blue-600 hover:bg-blue-700 text-white"
+        >
+          {initForm ? "Cập nhật" : "Tạo"}
+        </Button>
+      </div>
+    </form>
   );
 };
 
-export default createForm;
+export default CreateForm;

@@ -1,7 +1,7 @@
 import React from "react";
 import { IconDetail, IconTrash } from "../../Common/Icon/Icon";
 import Pagination from "./Pagination";
-
+import { shortenText } from "../../Util/ShortenText";
 interface TableAdminProps<T> {
   column: string[];
   data: T[];
@@ -9,11 +9,6 @@ interface TableAdminProps<T> {
   setOpenFormRemove: React.Dispatch<React.SetStateAction<boolean>>;
   setItemChoose: React.Dispatch<React.SetStateAction<T | null>>;
   columnWidths?: string[];
-}
-
-const shortenText = (text: string, maxlength: number) => {
-  // chỉ hiện khoảng 20 từ đầu tiên
-  return text.split(' ').slice(0, maxlength).join(' ');
 }
 
 const convertTitle = (title: string) => {

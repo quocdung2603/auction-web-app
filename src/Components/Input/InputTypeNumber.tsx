@@ -1,26 +1,41 @@
-interface InputTypeNumberProps {
-  title: string,
-  content: number,
-  setContent: React.Dispatch<React.SetStateAction<number>>,
-  placeholder: string
+import { useController, FieldValues, UseControllerProps } from 'react-hook-form';
+
+interface InputTypeNumberProps<T extends FieldValues> extends UseControllerProps<T> {
+  title: string;
+  placeholder: string;
 }
 
-const inputTypeNumber: React.FC<InputTypeNumberProps> = ({ title, content, setContent, placeholder }) => {
-return (
-  <div className='w-full min-w-[200px] mb-5'>
-    <label className='block mb-1 text-lg text-black font-medium'>
-      {title}
-    </label>
-    <input
-      id='contactNumber'
-      type="number"
-      value={content}
-      className='w-full h-10 bg-gray-200 text-black text-sm border border-black rounded-3xl px-3 py-2 transition duration-300 ease focus:outline-none shadow-sm focus:shadow-md'
-      onChange={(e) => setContent(Number(e.target.value))} // Convert string to number
-      placeholder={placeholder}
-    />
-  </div>
-);
-}
+const InputTypeNumber = <T extends FieldValues>({
+  name,
+  control,
+  title,
+  placeholder,
+  rules,
+}: InputTypeNumberProps<T>) => {
+  const {
+    field: { value, onChange },
+    fieldState: { error },
+  } = useController<T>({
+    name,
+    control,
+    rules,
+  });
 
-export default inputTypeNumber;
+  return (
+    <div className='w-full min-w-[200px] mb-5'>
+      <label className='block mb-1 text-lg text-black font-medium'>
+        {title}
+      </label>
+      <input
+        type="number"
+        value={value || 0} // Dùng giá trị mặc định là 0 nếu không có giá trị
+        onChange={(e) => onChange(Number(e.target.value))} // Convert từ string sang number
+        className='w-full h-10 bg-gray-200 text-black text-sm border border-black rounded-3xl px-3 py-2 transition duration-300 ease focus:outline-none shadow-sm focus:shadow-md'
+        placeholder={placeholder}
+      />
+      {error && <p className="text-red-500 text-sm">{error.message}</p>}
+    </div>
+  );
+};
+
+export default InputTypeNumber;

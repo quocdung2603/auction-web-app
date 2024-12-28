@@ -1,4 +1,4 @@
-import { AssetType } from "../../../Type/Asset/AssetType";
+import { Role } from "../../../Type/Account/Role";
 import { Button, DatePicker, Modal, notification, Table, TableProps } from "antd";
 import Search, { SearchProps } from "antd/es/input/Search";
 import confirm from "antd/es/modal/confirm";
@@ -7,24 +7,21 @@ import Columns from "./Components/Columns";
 import CreateForm from "./Components/CreateForm";
 import moment from "moment";
 
-const assetTypeManagement: React.FC = () => {
+const roleManagement: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalEdit, setModalEdit] = useState<{
     isOpen: boolean;
-    data: undefined | AssetType;
+    data: undefined | Role;
   }>({
     isOpen: false,
     data: undefined,
   });
 
-  const [listData, setListData] = useState<AssetType[]>(() => {
-    const defaultItem: AssetType = {
-      assetTypeID: 0,
-      assetTypeName: "ABCDEF",
+  const [listData, setListData] = useState<Role[]>(() => {
+    const defaultItem: Role = {
+      id: 0,
+      name: "user",
       delflag: false,
-      created_at: new Date(),
-      updated_at: new Date(),
-      deleted_at: new Date(),
     };
     return Array.from({ length: 10 }, () => ({ ...defaultItem }));
   });
@@ -59,7 +56,7 @@ const assetTypeManagement: React.FC = () => {
     // });
   }, [filters]);
 
-  const onChange: TableProps<AssetType>["onChange"] = (pagination) => {
+  const onChange: TableProps<Role>["onChange"] = (pagination) => {
     //refetch data
     setFilters((prev) => ({
       ...prev,
@@ -79,7 +76,7 @@ const assetTypeManagement: React.FC = () => {
     }, 1500);
   };
 
-  const showModalEdit = (isOpen: boolean, data: AssetType) => {
+  const showModalEdit = (isOpen: boolean, data: Role) => {
     setModalEdit({
       isOpen,
       data,
@@ -141,6 +138,7 @@ const assetTypeManagement: React.FC = () => {
         />
         <Button onClick={showModal}>Thêm mới</Button>
         <Modal
+          width={1000}
           title={modalEdit.isOpen ? "Sửa Thông tin" : "Thêm mới thông tin"}
           open={isModalOpen || modalEdit.isOpen}
           onCancel={closeModal}
@@ -167,4 +165,4 @@ const assetTypeManagement: React.FC = () => {
   );
 };
 
-export default assetTypeManagement;
+export default roleManagement;

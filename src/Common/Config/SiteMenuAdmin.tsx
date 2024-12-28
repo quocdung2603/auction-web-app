@@ -16,23 +16,18 @@ export const SiteMenuAdmin: MenuItem[] = [
     submenu: null,
   },
   {
-    content: "User",
+    content: "Account",
     icon: <IconUserManager />,
     submenu: [
       {
-        content: "Customer",
+        content: "User",
         icon: <></>,
         href: routerLinkAdmin.User,
       },
       {
-        content: "Staff",
+        content: "Role",
         icon: <></>,
-        href: routerLinkAdmin.Staff,
-      },
-      {
-        content: "Supplier",
-        icon: <></>,
-        href: routerLinkAdmin.Supplier,
+        href: routerLinkAdmin.Role,
       },
     ],
   },
@@ -51,6 +46,11 @@ export const SiteMenuAdmin: MenuItem[] = [
         href: routerLinkAdmin.Asset,
       },
       {
+        content: "Inventory",
+        icon: <></>,
+        href: routerLinkAdmin.Inventory,
+      },
+      {
         content: "Warehouse",
         icon: <></>,
         href: routerLinkAdmin.Warehouse,
@@ -61,11 +61,6 @@ export const SiteMenuAdmin: MenuItem[] = [
     content: "Activities",
     icon: <IconUserManager />,
     submenu: [
-      {
-        content: "News",
-        icon: <></>,
-        href: routerLinkAdmin.News,
-      },
       {
         content: "Event",
         icon: <></>,
@@ -93,11 +88,6 @@ export const SiteMenuAdmin: MenuItem[] = [
     content: "Inquire and bid",
     icon: <IconUserManager />,
     submenu: [
-      {
-        content: "Request",
-        icon: <></>,
-        href: routerLinkAdmin.Request,
-      },
       {
         content: "Auction",
         icon: <></>,

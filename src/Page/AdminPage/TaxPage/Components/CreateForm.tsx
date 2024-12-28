@@ -1,108 +1,110 @@
-import { useEffect, useState } from "react";
-import { IconWindowClose } from "../../../../Common/Icon/Icon";
+import { useEffect } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { Button, notification } from "antd";
+import InputDescription from "../../../../Components/Input/InputDescription";
 import InputTypeString from "../../../../Components/Input/InputTypeString";
+import { Tax, TaxType } from "../../../../Type/BillAndTax/Tax";
 import InputTypeNumber from "../../../../Components/Input/InputTypeNumber";
 import InputTypeSelect from "../../../../Components/Input/InputTypeSelect";
-import InputDescription from "../../../../Components/Input/InputDescription";
-import { Tax, TaxType } from "../../../../Type/BillAndTax/Tax";
 
-interface CreateFormProps {
-  openForm: boolean,
-  setOpenForm: React.Dispatch<React.SetStateAction<boolean>>,
-  content?: string,
-  userChoose?: Tax | null
-}
+interface CreateFormFields extends Tax { }
 
-// id: number;
-// taxName: string;
-// taxDescription: string;
-// taxAmount: number;
-// taxType: TaxType;
+type CreateEditArticleFormProps = {
+  initForm?: CreateFormFields;
+};
+
+const defaultFormValues = {
+  taxID: 0,
+  taxName: "",
+  taxAmount: 0,
+  taxType: TaxType.Fixed,
+  taxDescription: "",
+};
 
 const taxTypeOptions = [
   { value: TaxType.Fixed, label: "Fixed" },
   { value: TaxType.Percentage, label: "Percent" }
 ];
 
-const createForm: React.FC<CreateFormProps> = ({ openForm, setOpenForm, content = "ADD NEWS ACCOUNT", userChoose }) => {
-  const [taxName, setTaxName] = useState<string>(userChoose?.taxName ?? "");
-  const [taxDescription, setTaxDescription] = useState<string>(userChoose?.taxDescription ?? "");
-  const [taxAmount, setTaxAmount] = useState<number>(userChoose?.taxAmount ?? 0);
-  const [taxType, setTaxType] = useState<TaxType>(userChoose?.taxType ?? TaxType.Fixed);
+const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
+  const {
+    control,
+    reset,
+    handleSubmit,
+  } = useForm<CreateFormFields>({
+    defaultValues: defaultFormValues,
+  });
 
-  const closeFormModal = () => {
-    setOpenForm(false);
-  };
   useEffect(() => {
-    if (userChoose) {
-      setTaxName(userChoose.taxName ?? "");
-      setTaxDescription(userChoose.taxDescription ?? "");
-      setTaxAmount(userChoose.taxAmount ?? 0);
-      setTaxType(userChoose.taxType ?? TaxType.Fixed);
+    if (initForm) {
+      reset(initForm);
+    } else {
+      reset(defaultFormValues);
     }
-  }, [userChoose]);
+  }, [initForm, reset]);
+
+  const onSubmit: SubmitHandler<CreateFormFields> = async (data) => {
+    try {
+      if (initForm) {
+        // API Update logic
+        notification.success({ message: "Cập nhật thành công" });
+        alert(data)
+      } else {
+        // API Create logic
+        notification.success({ message: "Thêm thành công" });
+        alert(JSON.stringify(data));
+      }
+      reset(defaultFormValues);
+    } catch (err) {
+      notification.error({ message: "Có lỗi xảy ra, vui lòng kiểm tra lại!" });
+    }
+  };
+
   return (
-    <>
-      {openForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white max-h-full rounded-3xl shadow-md lg:shadow-lg p-6 sm:p-8 w-full max-w-[400px] sm:max-w-[600px] lg:max-w-[700px] mx-auto relative">
-            <button
-              className="absolute top-3 right-4 text-slate-600 text-xl hover:text-gray-500 focus:outline-none"
-              onClick={closeFormModal}
-            >
-              <IconWindowClose />
-            </button>
-            <div className="flex flex-col gap-6">
-              <h1 className="text-center text-black text-xl sm:text-2xl font-bold mb-4">
-                {content}
-              </h1>
-              <form method="POST" className="space-y-4">
-                <InputTypeString
-                  title="Tên thuế"
-                  content={taxName}
-                  setContent={setTaxName}
-                  placeholder="Nhập tên thuế"
-                />
-                <InputTypeNumber
-                  title="Giá trị"
-                  content={taxAmount}
-                  setContent={setTaxAmount}
-                  placeholder="Nhập giá trị"
-                />
-                <InputTypeSelect
-                  title="Loại thuế"
-                  content={taxType}
-                  setContent={setTaxType}
-                  titleOption={taxTypeOptions}
-                />
-                <InputDescription
-                  title="Mô tả"
-                  content={taxDescription}
-                  setContent={setTaxDescription}
-                  placeholder="Nhập mô tả"
-                />
-                <div className="flex justify-end gap-4">
-                  <button
-                    type="button"
-                    className="min-w-[90px] py-2 bg-[#ECEBE9] rounded-3xl font-bold text-[#4F4B45] text-sm focus:outline-none hover:bg-[#bdbcba]"
-                    onClick={closeFormModal}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="min-w-[90px] py-2 bg-[#FB9400] rounded-3xl font-bold text-white text-sm focus:outline-none hover:bg-[#E07B00]"
-                  >
-                    Add
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+    <form
+      method="POST"
+      className="space-y-6"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <InputTypeString
+        name="taxName"
+        control={control}
+        rules={{ required: "Tên sản phẩm không được để trống!" }}
+        title="Tên thuế"
+        placeholder="Nhập tên sản phẩm"
+      />
+      <InputTypeNumber
+        name="taxAmount"
+        control={control}
+        rules={{ required: "Tên sản phẩm không được để trống!" }}
+        title="Tên thuế"
+        placeholder="Nhập tên sản phẩm"
+      />
+      <InputTypeSelect
+        name="taxType"
+        control={control}
+        rules={{ required: "Vui lòng chọn danh mục" }}
+        title="Người kiểm định"
+        titleOption={taxTypeOptions}
+      />
+      <InputDescription
+        name="taxDescription"
+        control={control}
+        placeholder="Nhập mô tả sản phẩm"
+        rules={{ required: 'Mô tả sản phẩm không được để trống!' }}
+        defaultValue={initForm?.taxDescription}
+      />
+      <div className="text-right">
+        <Button
+          type="primary"
+          htmlType="submit"
+          className="bg-blue-600 hover:bg-blue-700 text-white"
+        >
+          {initForm ? "Cập nhật" : "Tạo"}
+        </Button>
+      </div>
+    </form>
   );
 };
 
-export default createForm;
+export default CreateForm;

@@ -2,15 +2,15 @@ import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Button, notification } from "antd";
 import InputTypeString from "../../../../Components/Input/InputTypeString";
-import { AssetType } from "../../../../Type/Asset/AssetType";
-interface CreateFormFields extends AssetType { }
+import { Role } from "../../../../Type/Account/Role";
+interface CreateFormFields extends Role { }
 
 type CreateEditArticleFormProps = {
   initForm?: CreateFormFields;
 };
 
 const defaultFormValues = {
-  assetTypeName: "",
+  name: "",
 };
 
 const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
@@ -54,11 +54,11 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
       onSubmit={handleSubmit(onSubmit)}
     >
       <InputTypeString
-        name="assetTypeName"
+        name="name"
         control={control}
-        rules={{ required: "Loại tài sản không được để trống!" }}
-        title="Loại tài sản"
-        placeholder="Nhập loại tài sản"
+        rules={{ required: "Tên sản phẩm không được để trống!" }}
+        title="Vai trò"
+        placeholder="Nhập vị trí kho"
       />
       <div className="text-right">
         <Button

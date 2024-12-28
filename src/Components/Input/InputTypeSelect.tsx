@@ -1,25 +1,34 @@
 import React, { useState } from "react";
+import { Controller, Control, FieldValues, UseControllerProps, useController } from "react-hook-form";
 
 interface Options {
   value: any;
   label: string;
 }
 
-interface InputTypeSelectProps {
+interface InputTypeSelectProps<T extends FieldValues> extends UseControllerProps<T> {
   title: string;
-  content: any;
-  setContent: React.Dispatch<React.SetStateAction<any>>;
   titleOption: Options[];
 }
 
-const InputTypeSelect: React.FC<InputTypeSelectProps> = ({
+const InputTypeSelect = <T extends FieldValues>({
+  name,
+  control,
   title,
-  content,
-  setContent,
   titleOption,
-}) => {
+  rules,
+}: InputTypeSelectProps<T>) => {
   const [searchTerm, setSearchTerm] = useState(""); // Trạng thái tìm kiếm
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Trạng thái mở/đóng dropdown
+
+  const {
+    field: { value, onChange },
+    fieldState: { error },
+  } = useController<T>({
+    name,
+    control,
+    rules,
+  });
 
   // Lọc các option dựa trên từ khóa tìm kiếm
   const filteredOptions = titleOption.filter((option) =>
@@ -33,8 +42,8 @@ const InputTypeSelect: React.FC<InputTypeSelectProps> = ({
         className="w-full h-10 bg-gray-200 text-black text-sm border border-black rounded-3xl px-3 py-2 transition duration-300 ease focus:outline-none shadow-sm focus:shadow-md cursor-pointer"
         onClick={() => setIsDropdownOpen(!isDropdownOpen)} // Toggle dropdown
       >
-        {content
-          ? titleOption.find((option) => option.value === content)?.label || "Chọn..."
+        {value
+          ? titleOption.find((option) => option.value === value)?.label || "Chọn..."
           : "Chọn..."}
       </div>
       {isDropdownOpen && (
@@ -54,10 +63,10 @@ const InputTypeSelect: React.FC<InputTypeSelectProps> = ({
             <div
               key={index}
               className={`px-3 py-2 cursor-pointer hover:bg-[#FB9400] ${
-                content === item.value ? "bg-gray-200" : ""
+                value === item.value ? "bg-gray-200" : ""
               }`}
               onClick={() => {
-                setContent(item.value); // Cập nhật giá trị đã chọn
+                onChange(item.value); // Cập nhật giá trị đã chọn
                 setIsDropdownOpen(false); // Đóng dropdown
                 setSearchTerm(""); // Xóa từ khóa tìm kiếm
               }}
@@ -70,6 +79,7 @@ const InputTypeSelect: React.FC<InputTypeSelectProps> = ({
           )}
         </div>
       )}
+      {error && <p className="text-red-500 text-sm">{error.message}</p>}
     </div>
   );
 };
