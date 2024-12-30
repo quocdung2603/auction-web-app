@@ -1,132 +1,179 @@
-import { useState } from "react";
-import TableAdmin from "../../../Components/Table/TableAdmin";
+import { AuctionSession } from "../../../Type/Auction/AuctionSession";
+import { Button, DatePicker, Modal, notification, Table, TableProps } from "antd";
+import Search, { SearchProps } from "antd/es/input/Search";
+import confirm from "antd/es/modal/confirm";
+import { useEffect, useRef, useState } from "react";
+import Columns from "./Components/Columns";
 import CreateForm from "./Components/CreateForm";
-import RemoveForm from "../../../Components/Form/RemoveForm";
-import Button from "../../../Components/Button/Button";
-import Select from "../../../Components/Button/Select";
-import { AuctionItem } from "../../../Type/Auction/AuctionItem";
+import moment from "moment";
 
-const auctionManagement = () => {
-  const [detailForm, setDetailForm] = useState<boolean>(false);
-  const [removeForm, setRemoveForm] = useState<boolean>(false);
-  const [userChoose, setUserChoose] = useState<AuctionItem | null>(null);
+const assetManagement: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalEdit, setModalEdit] = useState<{
+    isOpen: boolean;
+    data: undefined | AuctionSession;
+  }>({
+    isOpen: false,
+    data: undefined,
+  });
 
-  const [sAuctionType, setsAuctionType] = useState<string | number | undefined>(undefined);
-  const [sStatus, setsStatus] = useState<string | number | undefined>(undefined);
-  const [sEvent, setsEvent] = useState<string | number | undefined>(undefined);
-
-  const [listData, setListData] = useState<AuctionItem[]>(() => {
-    const defaultItem: AuctionItem = {
-      auctionItemId: 0,
-      auctionSessionId: 0,
-      assetId: 0,
-      startingBids: 0,
-      bidIncrement: 0,
+  const [listData, setListData] = useState<AuctionSession[]>(() => {
+    const defaultItem: AuctionSession = {
+      auctionSessionID: 0,
+      startTime: new Date(),
+      endTime: new Date(),
+      eventID: 0,
       delflag: false,
       created_at: new Date(),
       updated_at: new Date(),
       deleted_at: new Date(),
+      auctionItems: [], // Thêm trường này
     };
     return Array.from({ length: 10 }, () => ({ ...defaultItem }));
   });
+  
 
-  const column = [  
-    "auctionItemId",
-    "auctionSessionId",
-    "assetId",
-    "startingBids",
-    "bidIncrement",
-    "delflag",
-    "Action",
-  ];
+  const timeoutRef = useRef(setTimeout(() => { }, 0));
+  const [filters, setFilters] = useState({
+    start: 0,
+    end: Date.now(),
+    search: "",
+    pageSize: 5,
+    pageNumber: 1,
+  });
 
-  const AuctionTypeData: any[] = [
-    {
-      label: 'Auction Type',
-      value: '0',
-    },
-    {
-      label: 'Online',
-      value: '1',
-    },
-    {
-      label: 'Offline',
-      value: '2',
-    }
-  ]
-
-  const statusData: any[] = [
-    {
-      label: 'Status',
-      value: '0',
-    },
-    {
-      label: 'Active',
-      value: '1',
-    },
-    {
-      label: 'Inactive',
-      value: '2',
-    }
-  ]
-
-  const eventData: any[] = [
-    {
-      label: 'Event',
-      value: '0',
-    },
-    {
-      label: 'Event 1',
-      value: '1',
-    },
-    {
-      label: 'Event 2',
-      value: '2',
-    }
-  ]
-
-  const removeUser = () => {
-    if (userChoose) {
-      const userData = listData.filter(item => item.auctionItemId === userChoose.auctionItemId);
-      setListData(userData);
-      setRemoveForm(false);
-    }
-  }
-
-  const hSAuctionType = (value: string | number) => {
-    console.log('Selected:', value);
-    setsAuctionType(value);
+  const showModal = () => {
+    setIsModalOpen(true);
   };
 
-  const hsStatus = (value: string | number) => {
-    console.log('Selected:', value);
-    setsStatus(value);
-  }
+  const closeModal = () => {
+    if (modalEdit.data) {
+      setModalEdit({
+        isOpen: false,
+        data: undefined,
+      });
+      return;
+    }
+    setIsModalOpen(false);
+  };
 
-  const hsEvent = (value: string | number) => {
-    console.log('Selected:', value);
-    setsEvent(value);
-  }
+  useEffect(() => {
+    // fetchArticles().then((res) => {
+    //   setArticles(res.data.data);
+    // });
+  }, [filters]);
+
+  const onChange: TableProps<AuctionSession>["onChange"] = (pagination) => {
+    //refetch data
+    setFilters((prev) => ({
+      ...prev,
+      pageNumber: pagination.current ?? 1,
+      pageSize: pagination.pageSize ?? 5,
+    }));
+  };
+
+  const onSearch: SearchProps["onSearch"] = (value, _e) => {
+    //refetch data
+    clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      setFilters((prev) => ({
+        ...prev,
+        search: value,
+      }));
+    }, 1500);
+  };
+
+  const showModalEdit = (isOpen: boolean, data: AuctionSession) => {
+    setModalEdit({
+      isOpen,
+      data: {
+        ...data,
+        auctionItems: data.auctionItems || [], // Đảm bảo auctionItems luôn tồn tại
+      },
+    });
+  };
+  
+
+  const showDeleteConfirm = (_id: string) => {
+    confirm({
+      title: "Bạn có chắc muốn xóa dữ liệu này?",
+      content: "Bạn sẽ không thể khôi phục dữ liệu sau khi xóa!",
+      okText: "Xóa luôn sợ gì",
+      okType: "danger",
+      maskClosable: true,
+      closable: true,
+      onOk() {
+        // deleteArticle({ _id })
+        //   .then(() => {
+        //     notification.success({ message: "Xóa thành công" });
+        //   })
+        //   .catch(() => {
+        //     notification.error({
+        //       message: "Xóa thất bại ! Kiểm tra lại nha !",
+        //     });
+        //   });
+      },
+      cancelText: "Hủy",
+    });
+  };
 
   return (
-    <div className="w-full">
-      <div className="flex flex-row justify-end space-x-5">
-        <Select placeholder="Event" options={eventData} onChange={hsEvent} value={sEvent}></Select>
-        <Select placeholder="Status" options={statusData} onChange={hSAuctionType} value={sAuctionType}></Select>
-        <Select placeholder="Auction Type" options={AuctionTypeData} onChange={hsStatus} value={sStatus}></Select>
-        <Button
-          className="bg-red hover:bg-opacity-50 text-white py-2 px-5"
-          onClick={() => setDetailForm(true)}
+    <div>
+      <div className="flex items-center justify-end my-4 space-x-2">
+        <DatePicker.RangePicker
+          placeholder={["", "Hôm nay"]}
+          allowEmpty={[false, true]}
+          onChange={(date) => {
+            if (!date) return;
+
+            if (date[0]) {
+              setFilters((prev) => ({
+                ...prev,
+                start: moment(date[0]?.toString()).valueOf(),
+              }));
+            }
+
+            if (date[1]) {
+              setFilters((prev) => ({
+                ...prev,
+                end: moment(date[1]?.toString()).valueOf(),
+              }));
+            }
+          }}
+        />
+        <Search
+          placeholder="Tìm kiếm"
+          allowClear
+          className="w-[300px]"
+          onSearch={onSearch}
+        />
+        <Button onClick={showModal}>Thêm mới</Button>
+        <Modal
+          width={2000}
+          title={modalEdit.isOpen ? "Sửa Thông tin" : "Thêm mới thông tin"}
+          open={isModalOpen || modalEdit.isOpen}
+          onCancel={closeModal}
+          cancelButtonProps={{
+            className: "hidden",
+          }}
+          okButtonProps={{
+            className: "hidden",
+          }}
         >
-          <p>Add Auction</p></Button>
+          <CreateForm initForm={modalEdit.data} />
+        </Modal>
       </div>
-      <TableAdmin column={column} data={listData} setOpenFormDetail={setDetailForm} setOpenFormRemove={setRemoveForm} setItemChoose={setUserChoose}
-        columnWidths={["15%", "15%", "15%", "15%", "15%", "10%", "10%"]}
-      ></TableAdmin>
-      <CreateForm openForm={detailForm} setOpenForm={setDetailForm} content="Detail User" userChoose={userChoose} />
-      <RemoveForm openForm={removeForm} setOpenForm={setRemoveForm} clickRemove={removeUser} />
+      <Table
+        columns={Columns(showModalEdit, showDeleteConfirm)}
+        dataSource={listData.map((item, index) => ({ ...item, key: index }))}
+        pagination={{
+          pageSize: 5,
+          total: listData.length,
+        }}
+        onChange={onChange}
+      />
     </div>
   );
-}
+};
 
-export default auctionManagement;
+export default assetManagement;
