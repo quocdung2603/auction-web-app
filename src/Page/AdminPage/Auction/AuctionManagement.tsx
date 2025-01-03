@@ -22,16 +22,28 @@ const assetManagement: React.FC = () => {
       auctionSessionID: 0,
       startTime: new Date(),
       endTime: new Date(),
-      eventID: 0,
+      eventID: 1,
       delflag: false,
       created_at: new Date(),
       updated_at: new Date(),
       deleted_at: new Date(),
-      auctionItems: [], // Thêm trường này
+      auctionItems: [
+        {
+          auctionSessionId: 0,
+          auctionItemId: 1,
+          assetId: 1,
+          startingBids: 100000,
+          bidIncrement: 5000,
+          delflag: false,
+          created_at: new Date(),
+          updated_at: new Date(),
+          deleted_at: new Date(),
+        }
+      ],
     };
     return Array.from({ length: 10 }, () => ({ ...defaultItem }));
   });
-  
+
 
   const timeoutRef = useRef(setTimeout(() => { }, 0));
   const [filters, setFilters] = useState({
@@ -92,7 +104,7 @@ const assetManagement: React.FC = () => {
       },
     });
   };
-  
+
 
   const showDeleteConfirm = (_id: string) => {
     confirm({
