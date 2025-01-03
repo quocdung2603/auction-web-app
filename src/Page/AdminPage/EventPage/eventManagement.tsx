@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import Columns from "./Components/Columns";
 import CreateForm from "./Components/CreateForm";
 import moment from "moment";
+import { EventServices } from "../../../Services/Event/EventServices";
 
 const assetManagement: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -61,6 +62,9 @@ const assetManagement: React.FC = () => {
     // fetchArticles().then((res) => {
     //   setArticles(res.data.data);
     // });
+    EventServices.getAll().then((res) => {
+      setListData(res.data);
+    });
   }, [filters]);
 
   const onChange: TableProps<Event>["onChange"] = (pagination) => {

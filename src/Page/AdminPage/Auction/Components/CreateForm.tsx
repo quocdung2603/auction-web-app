@@ -98,7 +98,6 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
       created_at: new Date(),
       updated_at: new Date(),
       deleted_at: new Date(),
-
     });
   };
 
