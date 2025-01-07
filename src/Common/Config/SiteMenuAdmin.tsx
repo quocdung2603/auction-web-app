@@ -55,7 +55,7 @@ export const SiteMenuAdmin: MenuItem[] = [
         icon: <></>,
         href: routerLinkAdmin.Warehouse,
       },
-    ]
+    ],
   },
   {
     content: "Activities",
@@ -65,8 +65,8 @@ export const SiteMenuAdmin: MenuItem[] = [
         content: "Event",
         icon: <></>,
         href: routerLinkAdmin.Event,
-      }
-    ]
+      },
+    ],
   },
   {
     content: "Finance",
@@ -81,8 +81,8 @@ export const SiteMenuAdmin: MenuItem[] = [
         content: "Tax",
         icon: <></>,
         href: routerLinkAdmin.Tax,
-      }
-    ]
+      },
+    ],
   },
   {
     content: "Inquire and bid",
@@ -92,7 +92,23 @@ export const SiteMenuAdmin: MenuItem[] = [
         content: "Auction",
         icon: <></>,
         href: routerLinkAdmin.Auction,
-      }
-    ]
+      },
+    ],
+  },
+  {
+    content: "Inspector and Request",
+    icon: <IconUserManager />,
+    submenu: [
+      {
+        content: "Inspector",
+        icon: <></>,
+        href: routerLinkAdmin.Request,
+      },
+      {
+        content: "Request",
+        icon: <></>,
+        href: routerLinkAdmin.Request,
+      },
+    ],
   },
 ];
