@@ -1,10 +1,10 @@
 import { request } from "../../Common/Config/Request";
-import { Asset } from "../../Type/Asset/Asset";
+import { AssetType } from "../../Type/Asset/AssetType";
 
-export const AssetServices = {
+export const AssetTypeServices = {
   getAll: async () => {
     try {
-      const response = await request.get("/asset-service/assets");
+      const response = await request.get("/asset-service/asset-types");
       return response.data;
     } catch (error) {
       console.log(error);
@@ -12,23 +12,26 @@ export const AssetServices = {
   },
   getById: async (id: string) => {
     try {
-      const response = await request.get(`/asset-service/assets/${id}`);
+      const response = await request.get(`/asset-service/asset-types/${id}`);
       return response.data;
     } catch (error) {
       console.log(error);
     }
   },
-  create: async (data: Asset) => {
+  create: async (data: AssetType) => {
     try {
-      const response = await request.post("/asset-service/assets", data);
+      const response = await request.post("/asset-service/asset-types", data);
       return response.data;
     } catch (error) {
       console.log(error);
     }
   },
-  update: async (id: string, data: Asset) => {
+  update: async (id: string, data: AssetType) => {
     try {
-      const response = await request.put(`/asset-service/assets/${id}`, data);
+      const response = await request.put(
+        `/asset-service/asset-types/${id}`,
+        data
+      );
       return response.data;
     } catch (error) {
       console.log(error);
@@ -36,7 +39,7 @@ export const AssetServices = {
   },
   delete: async (id: string) => {
     try {
-      const response = await request.delete(`/asset-service/assets/${id}`);
+      const response = await request.delete(`/asset-service/asset-types/${id}`);
       return response.data;
     } catch (error) {
       console.log(error);
