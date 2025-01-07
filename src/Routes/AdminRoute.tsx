@@ -1,15 +1,16 @@
-import { routerLinkAdmin } from "../Util/RouterLink"
-import HomePageAdmin from "../Page/AdminPage/HomePage/HomePageAdmin"
-import UserManagement from "../Page/AdminPage/UserPage/UserManagement"
-import AssetTypeManagement from "../Page/AdminPage/AssetType/AssetTypeManagement"
-import AuctionManagement from "../Page/AdminPage/Auction/AuctionManagement"
-import AssetManagement from "../Page/AdminPage/AssetPage/AssetManagement"
-import EventManagement from "../Page/AdminPage/EventPage/eventManagement"
-import BillManagement from "../Page/AdminPage/BillPage/BillManagement"
-import TaxManagement from "../Page/AdminPage/TaxPage/TaxManagement"
-import InventoryManagement from "../Page/AdminPage/InventoryPage/InventoryManagement"
-import WarehouseManagement from "../Page/AdminPage/WarehousePage/WarehouseManagement"
-import RoleManagement from "../Page/AdminPage/RolePage/RoleManagement"
+import { routerLinkAdmin } from "../Util/RouterLink";
+import HomePageAdmin from "../Page/AdminPage/HomePage/HomePageAdmin";
+import UserManagement from "../Page/AdminPage/UserPage/UserManagement";
+import AssetTypeManagement from "../Page/AdminPage/AssetType/AssetTypeManagement";
+import AuctionManagement from "../Page/AdminPage/Auction/AuctionManagement";
+import AssetManagement from "../Page/AdminPage/AssetPage/AssetManagement";
+import EventManagement from "../Page/AdminPage/EventPage/eventManagement";
+import BillManagement from "../Page/AdminPage/BillPage/BillManagement";
+import TaxManagement from "../Page/AdminPage/TaxPage/TaxManagement";
+import InventoryManagement from "../Page/AdminPage/InventoryPage/InventoryManagement";
+import WarehouseManagement from "../Page/AdminPage/WarehousePage/WarehouseManagement";
+import RoleManagement from "../Page/AdminPage/RolePage/RoleManagement";
+import RequestManagement from "../Page/AdminPage/RequestPage/RequestManagement";
 
 export const AdminRoute = [
   {
@@ -22,38 +23,42 @@ export const AdminRoute = [
   },
   {
     path: routerLinkAdmin.AssetType,
-    element: AssetTypeManagement
+    element: AssetTypeManagement,
   },
   {
     path: routerLinkAdmin.Auction,
-    element: AuctionManagement
+    element: AuctionManagement,
   },
   {
     path: routerLinkAdmin.Asset,
-    element: AssetManagement
+    element: AssetManagement,
   },
   {
     path: routerLinkAdmin.Event,
-    element: EventManagement
+    element: EventManagement,
   },
   {
     path: routerLinkAdmin.Warehouse,
-    element: WarehouseManagement
+    element: WarehouseManagement,
   },
   {
     path: routerLinkAdmin.Inventory,
-    element: InventoryManagement
+    element: InventoryManagement,
   },
   {
     path: routerLinkAdmin.Bill,
-    element: BillManagement
+    element: BillManagement,
   },
   {
     path: routerLinkAdmin.Tax,
-    element: TaxManagement
+    element: TaxManagement,
   },
   {
     path: routerLinkAdmin.Role,
-    element: RoleManagement
+    element: RoleManagement,
   },
-]
+  {
+    path: routerLinkAdmin.Request,
+    element: RequestManagement,
+  },
+];

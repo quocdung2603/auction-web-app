@@ -1,5 +1,12 @@
 import { Request } from "../../../Type/Inspector/Request";
-import { Button, DatePicker, Modal, notification, Table, TableProps } from "antd";
+import {
+  Button,
+  DatePicker,
+  Modal,
+  notification,
+  Table,
+  TableProps,
+} from "antd";
 import Search, { SearchProps } from "antd/es/input/Search";
 import confirm from "antd/es/modal/confirm";
 import { useEffect, useRef, useState } from "react";
@@ -7,7 +14,7 @@ import Columns from "./Components/Columns";
 import CreateForm from "./Components/CreateForm";
 import moment from "moment";
 
-const assetManagement: React.FC = () => {
+const requestManagement: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalEdit, setModalEdit] = useState<{
     isOpen: boolean;
@@ -21,18 +28,19 @@ const assetManagement: React.FC = () => {
     const defaultItem: Request = {
       id: 0,
       name: "request name",
-      description: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi, error!",
+      description:
+        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi, error!",
       verify: true,
       status: false,
-      inspector: 0,
-      userId: 0,
-      assetId: 0,
+      inspector: 1,
+      userId: 1,
+      assetId: 1,
       deflag: true,
     };
     return Array.from({ length: 10 }, () => ({ ...defaultItem }));
   });
 
-  const timeoutRef = useRef(setTimeout(() => { }, 0));
+  const timeoutRef = useRef(setTimeout(() => {}, 0));
   const [filters, setFilters] = useState({
     start: 0,
     end: Date.now(),
@@ -171,4 +179,4 @@ const assetManagement: React.FC = () => {
   );
 };
 
-export default assetManagement;
+export default requestManagement;
