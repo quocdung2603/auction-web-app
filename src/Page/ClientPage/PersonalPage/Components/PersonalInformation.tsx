@@ -12,7 +12,7 @@ const PersonalInformation = () => {
 			<div className="flex gap-6 items-center mb-8">
 				<IoMdPerson className="rounded-full shadow-custom text-8xl text-gray-300" />
 				<div>
-					<h1 className="text-3xl font-medium">Chu Bá Trường</h1>
+					<h1 className="text-3xl font-medium">Nguyễn Quốc Dũng</h1>
 					<p className="text-blue-700 font-medium">Đổi mật khẩu</p>
 				</div>
 			</div>

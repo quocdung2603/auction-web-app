@@ -6,6 +6,8 @@ import ButtonPrimary from "../../../Components/Button/ButtonPrimary";
 // icon
 import { IoClose } from "react-icons/io5";
 import { useState } from "react";
+import { useAuth } from "../../../Common/Context/AuthContext";
+import { LoginRequst } from "../../../Type/Account/Login";
 
 interface LoginProps {
 	showLogin: boolean;
@@ -13,14 +15,17 @@ interface LoginProps {
 }
 
 const Login: React.FC<LoginProps> = ({ showLogin, setShowLogin }) => {
+	const {login}=useAuth();
     const [email,setEmail]=useState<string>("");
     const [password,setPassword]=useState<string>("");
 
     const handleLogin =()=>{
-        if (email === "abc" && password === "123456")
-        {
-                setShowLogin(!showLogin)
-        }
+        const dataLogin:LoginRequst={
+			email,
+			password
+		}
+		login(dataLogin);
+		setShowLogin(false);
     }
 	return (
 		<div

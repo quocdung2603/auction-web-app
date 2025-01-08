@@ -6,6 +6,7 @@ export const AuthServices = {
       const response = await request.post("/user/auth", { email, password });
       return response.data;
     } catch (error) {
+      alert("Lỗi đăng nhập");
       console.log(error);
     }
   },
