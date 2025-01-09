@@ -15,14 +15,7 @@ const loginForm = () => {
   } = useForm<FormData>();
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
-    const newUser: any = {
-      email: data.email,
-      password: data.password,
-      fullName: "",
-      username: "",
-      role: "customer",
-    };
-    console.log(newUser);
+    console.log(data);
   };
 
   return (
