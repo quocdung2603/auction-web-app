@@ -55,7 +55,7 @@ const Login: React.FC<LoginProps> = ({ showLogin, setShowLogin }) => {
 						<input
                             onChange={(e)=>setEmail(e.target.value)}
                             value={email}
-							type="text"
+							type="email"
 							placeholder="Nhập tên đăng nhập/Email"
 							className="py-3 px-5 border-small border-gray-600 border-solid outline-none focus:border-red focus:rounded-md transitionHight "
 						/>

@@ -26,7 +26,7 @@ export const RequestServices = {
       console.log(error);
     }
   },
-  update: async (id: string, data: Request) => {
+  update: async (id: number, data: Request) => {
     try {
       const response = await request.put(`/inspector/request/${id}`, data);
       return response.data;
@@ -34,7 +34,7 @@ export const RequestServices = {
       console.log(error);
     }
   },
-  delete: async (id: string) => {
+  delete: async (id: number) => {
     try {
       const response = await request.delete(`/inspector/request/${id}`);
       return response.data;

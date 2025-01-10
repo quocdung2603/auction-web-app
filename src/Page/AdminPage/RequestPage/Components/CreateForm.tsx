@@ -1,15 +1,24 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Button, notification } from "antd";
 import InputDescription from "../../../../Components/Input/InputDescription";
 import InputTypeString from "../../../../Components/Input/InputTypeString";
 import { Request } from "../../../../Type/Inspector/Request";
 import InputTypeSelect from "../../../../Components/Input/InputTypeSelect";
+import { ResponseDataUser } from "../../../../Type/Account/User";
+import { UserServices } from "../../../../Services/Account/UserServices";
+import {
+  Inspector,
+  ResponseDataInspector,
+} from "../../../../Type/Inspector/Inspector";
+import { InspectorServices } from "../../../../Services/Inspsector/InspectorServices";
+import { RequestServices } from "../../../../Services/Inspsector/RequestServices";
 
 interface CreateFormFields extends Request {}
 
 type CreateEditArticleFormProps = {
   initForm?: CreateFormFields;
+  getAll: ()=>void;
 };
 
 const defaultFormValues = {
@@ -30,22 +39,6 @@ const assetType = [
   { value: 5, label: "Asset Type 5" },
 ];
 
-const userList = [
-  { value: 1, label: "Asset Status 1" },
-  { value: 2, label: "Asset Status 2" },
-  { value: 3, label: "Asset Status 3" },
-  { value: 4, label: "Asset Status 4" },
-  { value: 5, label: "Asset Status 5" },
-];
-
-const inspector = [
-  { value: 1, label: "Inspector 1" },
-  { value: 2, label: "Inspector 2" },
-  { value: 3, label: "Inspector 3" },
-  { value: 4, label: "Inspector 4" },
-  { value: 5, label: "Inspector 5" },
-];
-
 const verifyList = [
   { value: true, label: "Đã Xác thực" },
   { value: false, label: "Chưa xác thực " },
@@ -56,10 +49,16 @@ const statusList = [
   { value: false, label: "Chưa xác thực " },
 ];
 
-const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
+const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm,getAll }) => {
   const { control, reset, handleSubmit } = useForm<CreateFormFields>({
     defaultValues: defaultFormValues,
   });
+  const [userList, setUserList] = useState<{ value: number; label: string }[]>(
+    []
+  );
+  const [inspectorList, setInspectoList] = useState<
+    { value: number; label: string }[]
+  >([]);
 
   useEffect(() => {
     if (initForm) {
@@ -68,24 +67,75 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
       reset(defaultFormValues);
     }
   }, [initForm, reset]);
-
+  const createRequest= async (data:Request)=>{
+    try {
+      await RequestServices.create(data);
+      getAll();
+      notification.success({ message: "Thêm thành công" });
+    } catch (error) {
+      notification.error({ message: "Thêm thất bại" });
+    }
+  }
+  const updateRequest= async(id: number,data:Request)=>{
+    try {
+      await RequestServices.update(id,data);
+      getAll();
+      notification.success({ message: "Cập nhật thành công" });
+    } catch (error) {
+      notification.error({ message: "Cập nhật thất bại" });
+    }
+  }
   const onSubmit: SubmitHandler<CreateFormFields> = async (data) => {
     try {
       if (initForm) {
         // API Update logic
-        notification.success({ message: "Cập nhật thành công" });
-        alert(data);
+        updateRequest(data.id,data);
       } else {
         // API Create logic
-        notification.success({ message: "Thêm thành công" });
-        alert(JSON.stringify(data));
+        createRequest(data);
       }
       reset(defaultFormValues);
     } catch (err) {
       notification.error({ message: "Có lỗi xảy ra, vui lòng kiểm tra lại!" });
     }
   };
+  const getAllInspector = async () => {
+    try {
+      const res: ResponseDataInspector = await InspectorServices.getAll();
+      return res.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getAllUser = async () => {
+    try {
+      const listInspector: Inspector[] | undefined = await getAllInspector();
+      const res: ResponseDataUser = await UserServices.getAll();
+      if (!listInspector) {
+        throw new Error("Không thể lấy danh sách người kiểm định");
+      }
+      const formattedUserList = res.data.map((item) => ({
+        value: item.id,
+        label: `${item.id}: ${item.name}`,
+      }));
+      setUserList(formattedUserList);
 
+      const inspectorIds = listInspector.map((inspector) => inspector.userId);
+      const formattedInspectorList = res.data
+        .filter((item) => inspectorIds.includes(item.id))
+        .map((item) => ({
+          value: item.id,
+          label: `${item.id}: ${item.name}`,
+        }));
+      setInspectoList(formattedInspectorList);
+    } catch (error) {
+      alert("lỗi");
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getAllUser();
+  }, []);
   return (
     <form method="POST" className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
       <InputTypeString
@@ -100,22 +150,22 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
           name="userId"
           control={control}
           rules={{ required: "Vui lòng chọn danh mục" }}
-          title="Người yêu cầucầu"
-          titleOption={assetType}
+          title="Người yêu cầu"
+          titleOption={userList}
         />
         <InputTypeSelect
-          name="inspector"
+          name="inspectorId"
           control={control}
           rules={{ required: "Vui lòng chọn danh mục" }}
           title="Người kiểm định"
-          titleOption={inspector}
+          titleOption={inspectorList}
         />
         <InputTypeSelect
           name="assetId"
           control={control}
           rules={{ required: "Vui lòng chọn danh mục" }}
           title="Tài sản"
-          titleOption={userList}
+          titleOption={assetType}
         />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

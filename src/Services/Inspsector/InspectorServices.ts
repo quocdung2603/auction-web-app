@@ -26,7 +26,7 @@ export const InspectorServices = {
       console.log(error);
     }
   },
-  update: async (id: string, data: Inspector) => {
+  update: async (id: number, data: Inspector) => {
     try {
       const response = await request.put(`/inspector/${id}`, data);
       return response.data;
