@@ -26,7 +26,11 @@ export const UserServices = {
       console.log(error);
     }
   },
-  update: async (id: string, data: User) => {
+  createUserByAdmin: async(data: User)=>{
+    const response = await request.post("/user/createUser", data);
+    return response.data;
+  },
+  update: async (id: number, data: User) => {
     try {
       const response = await request.put(`/user/${id}`, data);
       return response.data;

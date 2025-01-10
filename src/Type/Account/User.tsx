@@ -6,7 +6,13 @@ type User = {
   gender: boolean;
   email: string;
   phone: string;
-  Role: number;
+  role: number;
 }
 
 export { type User }
+
+export interface ResponseDataUser{
+  code: number,
+  message: string,
+  data: User[]
+}
