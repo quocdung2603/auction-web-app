@@ -1,6 +1,6 @@
 export enum TaxType {
-  Percentage = "P",
-  Fixed = "F",
+  Percentage = "Percentage",
+  Fixed = "Fixed",
 }
 
 type Tax = {

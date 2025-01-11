@@ -1,11 +1,20 @@
 import { Tax, TaxType } from "../../../Type/BillAndTax/Tax";
-import { Button, DatePicker, Modal, notification, Table, TableProps } from "antd";
+import {
+  Button,
+  DatePicker,
+  Modal,
+  notification,
+  Table,
+  TableProps,
+} from "antd";
 import Search, { SearchProps } from "antd/es/input/Search";
 import confirm from "antd/es/modal/confirm";
 import { useEffect, useRef, useState } from "react";
 import Columns from "./Components/Columns";
 import CreateForm from "./Components/CreateForm";
 import moment from "moment";
+import { TaxServices } from "../../../Services/Fee/TaxServices";
+import { id } from "date-fns/locale";
 
 const taxManagement: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,19 +26,21 @@ const taxManagement: React.FC = () => {
     data: undefined,
   });
 
-  const [listData, setListData] = useState<Tax[]>(() => {
-    const defaultItem: Tax = {
-      id: 0,
-      taxName: "abc",
-      taxDescription: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, obcaecati?",
-      taxAmount: 0,
-      delflag: false,
-      taxType: TaxType.Fixed,
-    };
-    return Array.from({ length: 10 }, () => ({ ...defaultItem }));
-  });
+  // const [listData, setListData] = useState<Tax[]>(() => {
+  //   const defaultItem: Tax = {
+  //     id: 0,
+  //     taxName: "abc",
+  //     taxDescription: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, obcaecati?",
+  //     taxAmount: 0,
+  //     delflag: false,
+  //     taxType: TaxType.Fixed,
+  //   };
+  //   return Array.from({ length: 10 }, () => ({ ...defaultItem }));
+  // });
 
-  const timeoutRef = useRef(setTimeout(() => { }, 0));
+  const [listData, setListData] = useState<Tax[]>([]);
+
+  const timeoutRef = useRef(setTimeout(() => {}, 0));
   const [filters, setFilters] = useState({
     start: 0,
     end: Date.now(),
@@ -53,10 +64,14 @@ const taxManagement: React.FC = () => {
     setIsModalOpen(false);
   };
 
+  const getAll = async () => {
+    TaxServices.getAll().then((res) => {
+      setListData(res.data);
+    });
+  };
+
   useEffect(() => {
-    // fetchArticles().then((res) => {
-    //   setArticles(res.data.data);
-    // });
+    getAll();
   }, [filters]);
 
   const onChange: TableProps<Tax>["onChange"] = (pagination) => {
@@ -95,15 +110,17 @@ const taxManagement: React.FC = () => {
       maskClosable: true,
       closable: true,
       onOk() {
-        // deleteArticle({ _id })
-        //   .then(() => {
-        //     notification.success({ message: "Xóa thành công" });
-        //   })
-        //   .catch(() => {
-        //     notification.error({
-        //       message: "Xóa thất bại ! Kiểm tra lại nha !",
-        //     });
-        //   });
+        TaxServices.delete(_id)
+          .then(() => {
+            notification.success({ message: "Xóa thành công" });
+            getAll();
+            closeModal();
+          })
+          .catch(() => {
+            notification.error({
+              message: "Xóa thất bại ! Kiểm tra lại nha !",
+            });
+          });
       },
       cancelText: "Hủy",
     });
@@ -152,7 +169,11 @@ const taxManagement: React.FC = () => {
             className: "hidden",
           }}
         >
-          <CreateForm initForm={modalEdit.data} />
+          <CreateForm
+            initForm={modalEdit.data}
+            getAll={getAll}
+            closeModal={closeModal}
+          />
         </Modal>
       </div>
       <Table
