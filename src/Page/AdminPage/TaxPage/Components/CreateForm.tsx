@@ -6,32 +6,36 @@ import InputTypeString from "../../../../Components/Input/InputTypeString";
 import { Tax, TaxType } from "../../../../Type/BillAndTax/Tax";
 import InputTypeNumber from "../../../../Components/Input/InputTypeNumber";
 import InputTypeSelect from "../../../../Components/Input/InputTypeSelect";
+import { TaxServices } from "../../../../Services/Fee/TaxServices";
 
-interface CreateFormFields extends Tax { }
+interface CreateFormFields extends Tax {}
 
 type CreateEditArticleFormProps = {
   initForm?: CreateFormFields;
+  getAll: () => void;
+  closeModal: () => void;
 };
 
 const defaultFormValues = {
-  taxID: 0,
+  id: 0,
   taxName: "",
   taxAmount: 0,
   taxType: TaxType.Fixed,
   taxDescription: "",
+  deflag: false,
 };
 
 const taxTypeOptions = [
   { value: TaxType.Fixed, label: "Fixed" },
-  { value: TaxType.Percentage, label: "Percent" }
+  { value: TaxType.Percentage, label: "Percentage" },
 ];
 
-const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
-  const {
-    control,
-    reset,
-    handleSubmit,
-  } = useForm<CreateFormFields>({
+const CreateForm: React.FC<CreateEditArticleFormProps> = ({
+  initForm,
+  getAll,
+  closeModal,
+}) => {
+  const { control, reset, handleSubmit } = useForm<CreateFormFields>({
     defaultValues: defaultFormValues,
   });
 
@@ -47,12 +51,26 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
     try {
       if (initForm) {
         // API Update logic
-        notification.success({ message: "Cập nhật thành công" });
-        alert(data)
+        TaxServices.update(initForm.id.toString(), data)
+          .then(() => {
+            notification.success({ message: "Cập nhật thành công" });
+            getAll();
+            closeModal();
+          })
+          .catch(() => {
+            notification.error({ message: "Cập nhật thất bại" });
+          });
       } else {
         // API Create logic
-        notification.success({ message: "Thêm thành công" });
-        alert(JSON.stringify(data));
+        TaxServices.create(data)
+          .then(() => {
+            notification.success({ message: "Thêm thành công" });
+            closeModal();
+            getAll();
+          })
+          .catch(() => {
+            notification.error({ message: "Thêm thất bại" });
+          });
       }
       reset(defaultFormValues);
     } catch (err) {
@@ -61,37 +79,33 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
   };
 
   return (
-    <form
-      method="POST"
-      className="space-y-6"
-      onSubmit={handleSubmit(onSubmit)}
-    >
+    <form method="POST" className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
       <InputTypeString
         name="taxName"
         control={control}
         rules={{ required: "Tên sản phẩm không được để trống!" }}
         title="Tên thuế"
-        placeholder="Nhập tên sản phẩm"
+        placeholder="Tên thuế "
       />
       <InputTypeNumber
         name="taxAmount"
         control={control}
         rules={{ required: "Tên sản phẩm không được để trống!" }}
-        title="Tên thuế"
-        placeholder="Nhập tên sản phẩm"
+        title="Giá trị "
+        placeholder="Giá trị loại thuế "
       />
       <InputTypeSelect
         name="taxType"
         control={control}
         rules={{ required: "Vui lòng chọn danh mục" }}
-        title="Người kiểm định"
+        title="Đơn vị tính "
         titleOption={taxTypeOptions}
       />
       <InputDescription
         name="taxDescription"
         control={control}
-        placeholder="Nhập mô tả sản phẩm"
-        rules={{ required: 'Mô tả sản phẩm không được để trống!' }}
+        placeholder="Nhập mô tả"
+        rules={{ required: "Mô tả sản phẩm không được để trống!" }}
         defaultValue={initForm?.taxDescription}
       />
       <div className="text-right">

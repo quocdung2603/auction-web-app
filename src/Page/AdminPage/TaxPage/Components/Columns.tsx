@@ -57,7 +57,7 @@ const Columns = (showModalEdit: (
       width: "16.67%",
       align: "center",
       render: (value) => {
-        return <span className="text-center">{value}</span>;
+        return <span className="text-center">{new DOMParser().parseFromString(value, 'text/html').body.innerText}</span>;
       },
     },
     {

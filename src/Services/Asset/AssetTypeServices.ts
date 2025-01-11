@@ -1,3 +1,4 @@
+import axios from "axios";
 import { request } from "../../Common/Config/Request";
 import { AssetType } from "../../Type/Asset/AssetType";
 
@@ -27,11 +28,15 @@ export const AssetTypeServices = {
     }
   },
   update: async (id: string, data: AssetType) => {
+    const req = {
+      assetTypeName: data.assetTypeName,
+    };
     try {
       const response = await request.put(
         `/asset-service/asset-types/${id}`,
-        data
+        req
       );
+
       return response.data;
     } catch (error) {
       console.log(error);
