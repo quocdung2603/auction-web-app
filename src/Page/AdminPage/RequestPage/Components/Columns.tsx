@@ -44,7 +44,7 @@ const Columns = (
   },
   {
     title: "Người kiểm định",
-    dataIndex: "inspector",
+    dataIndex: "inspectorId",
     width: "16.67%",
     align: "center",
     render: (value) => {

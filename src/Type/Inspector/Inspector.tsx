@@ -5,3 +5,9 @@ type Inspector = {
 }
 
 export { type Inspector };
+
+export interface ResponseDataInspector{
+  code: number,
+  message: string,
+  data: Inspector[]
+}

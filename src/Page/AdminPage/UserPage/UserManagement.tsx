@@ -1,11 +1,20 @@
-import { User } from "../../../Type/Account/User";
-import { Button, DatePicker, Modal, notification, Select, Table, TableProps } from "antd";
+import { ResponseDataUser, User } from "../../../Type/Account/User";
+import {
+  Button,
+  DatePicker,
+  Modal,
+  notification,
+  Select,
+  Table,
+  TableProps,
+} from "antd";
 import Search, { SearchProps } from "antd/es/input/Search";
 import confirm from "antd/es/modal/confirm";
 import { useEffect, useRef, useState } from "react";
 import Columns from "./Components/Columns";
 import CreateForm from "./Components/CreateForm";
 import moment from "moment";
+import { UserServices } from "../../../Services/Account/UserServices";
 
 const roleOptions = [
   { label: "Admin", value: 1 },
@@ -13,7 +22,7 @@ const roleOptions = [
   { label: "Staff", value: 3 },
   { label: "Suplier", value: 4 },
   { label: "Inspector", value: 5 },
-]
+];
 
 const userManagement: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,21 +34,9 @@ const userManagement: React.FC = () => {
     data: undefined,
   });
 
-  const [listData, setListData] = useState<User[]>(() => {
-    const defaultItem: User = {
-      id: 0,
-      name: "Nguyễn Văn A",
-      password: "abc@123",
-      address: "Hà Nội",
-      gender: true,
-      email: "nguyenvana@gmail.com",
-      phone: "0123456789",
-      Role: 1,
-    };
-    return Array.from({ length: 10 }, () => ({ ...defaultItem }));
-  });
+  const [listData, setListData] = useState<User[]>([]);
 
-  const timeoutRef = useRef(setTimeout(() => { }, 0));
+  const timeoutRef = useRef(setTimeout(() => {}, 0));
   const [filters, setFilters] = useState({
     start: 0,
     end: Date.now(),
@@ -101,7 +98,15 @@ const userManagement: React.FC = () => {
       data,
     });
   };
-
+  const deleteUser = async (id: string)=>{
+    try {
+      await UserServices.delete(id);
+      notification.success({message: "Xóa thành công"});
+      getAllUser();
+    } catch (error) {
+      notification.error({message: "Xóa thất bại"});
+    }
+  }
   const showDeleteConfirm = (_id: string) => {
     confirm({
       title: "Bạn có chắc muốn xóa dữ liệu này?",
@@ -111,28 +116,32 @@ const userManagement: React.FC = () => {
       maskClosable: true,
       closable: true,
       onOk() {
-        // deleteArticle({ _id })
-        //   .then(() => {
-        //     notification.success({ message: "Xóa thành công" });
-        //   })
-        //   .catch(() => {
-        //     notification.error({
-        //       message: "Xóa thất bại ! Kiểm tra lại nha !",
-        //     });
-        //   });
+        deleteUser(_id);
       },
       cancelText: "Hủy",
     });
   };
 
   // Lọc dữ liệu dựa trên Role
-  const filteredData = listData.filter((item) => {
-    if (filters.role !== undefined) {
-      return item.Role === filters.role;
+  // const filteredData = listData.filter((item) => {
+  //   if (filters.role !== undefined) {
+  //     return item.Role === filters.role;
+  //   }
+  //   return true;
+  // });
+  const getAllUser = async () => {
+    try {
+      const res: ResponseDataUser = await UserServices.getAll();
+      const dataUser: User[] = res.data;
+      setListData(dataUser);
+    } catch (error) {
+      alert("lỗi");
+      console.log(error);
     }
-    return true;
-  });
-
+  };
+  useEffect(() => {
+    getAllUser();
+  }, []);
   return (
     <div>
       <div className="flex items-center justify-end my-4 space-x-2">
@@ -183,15 +192,15 @@ const userManagement: React.FC = () => {
             className: "hidden",
           }}
         >
-          <CreateForm initForm={modalEdit.data} />
+          <CreateForm initForm={modalEdit.data} getAllUser={getAllUser} />
         </Modal>
       </div>
       <Table
         columns={Columns(showModalEdit, showDeleteConfirm)}
-        dataSource={filteredData.map((item, index) => ({ ...item, key: index }))}
+        dataSource={listData.map((item, index) => ({ ...item, key: index }))}
         pagination={{
           pageSize: filters.pageSize,
-          total: filteredData.length,
+          total: listData.length,
         }}
         onChange={onChange}
       />

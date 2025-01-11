@@ -102,7 +102,7 @@ export const SiteMenuAdmin: MenuItem[] = [
       {
         content: "Inspector",
         icon: <></>,
-        href: routerLinkAdmin.Request,
+        href: routerLinkAdmin.Inspector,
       },
       {
         content: "Request",

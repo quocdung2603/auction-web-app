@@ -5,3 +5,9 @@ type Role = {
 }
 
 export { type Role };
+
+export interface ResponseDataRole{
+  code: number,
+  message: string,
+  data: Role[]
+}

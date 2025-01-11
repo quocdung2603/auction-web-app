@@ -1,4 +1,4 @@
-import { Role } from "../../../Type/Account/Role";
+import { ResponseDataRole, Role } from "../../../Type/Account/Role";
 import { Button, DatePicker, Modal, notification, Table, TableProps } from "antd";
 import Search, { SearchProps } from "antd/es/input/Search";
 import confirm from "antd/es/modal/confirm";
@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import Columns from "./Components/Columns";
 import CreateForm from "./Components/CreateForm";
 import moment from "moment";
+import { RoleServices } from "../../../Services/Account/RoleServices";
 
 const roleManagement: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,14 +18,7 @@ const roleManagement: React.FC = () => {
     data: undefined,
   });
 
-  const [listData, setListData] = useState<Role[]>(() => {
-    const defaultItem: Role = {
-      id: 0,
-      name: "user",
-      delflag: false,
-    };
-    return Array.from({ length: 10 }, () => ({ ...defaultItem }));
-  });
+  const [listData, setListData] = useState<Role[]>([]);
 
   const timeoutRef = useRef(setTimeout(() => { }, 0));
   const [filters, setFilters] = useState({
@@ -50,11 +44,6 @@ const roleManagement: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  useEffect(() => {
-    // fetchArticles().then((res) => {
-    //   setArticles(res.data.data);
-    // });
-  }, [filters]);
 
   const onChange: TableProps<Role>["onChange"] = (pagination) => {
     //refetch data
@@ -105,7 +94,19 @@ const roleManagement: React.FC = () => {
       cancelText: "Hủy",
     });
   };
-
+  const getAllRole = async ()=>{
+    try {
+      const res:ResponseDataRole=await RoleServices.getAll();
+      setListData(res.data);
+    } catch (error) {
+      alert("lỗi");
+      console.log("Lỗi nek: ",error);
+    }
+   
+  }
+  useEffect(()=>{
+    getAllRole();
+  },[])
   return (
     <div>
       <div className="flex items-center justify-end my-4 space-x-2">

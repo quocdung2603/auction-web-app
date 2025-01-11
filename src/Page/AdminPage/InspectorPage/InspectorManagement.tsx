@@ -1,4 +1,3 @@
-import { Request, ResponseDataRequest } from "../../../Type/Inspector/Request";
 import {
   Button,
   DatePicker,
@@ -13,33 +12,20 @@ import { useEffect, useRef, useState } from "react";
 import Columns from "./Components/Columns";
 import CreateForm from "./Components/CreateForm";
 import moment from "moment";
-import { RequestServices } from "../../../Services/Inspsector/RequestServices";
+import { Inspector, ResponseDataInspector } from "../../../Type/Inspector/Inspector";
+import { InspectorServices } from "../../../Services/Inspsector/InspectorServices";
 
-const requestManagement: React.FC = () => {
+const inspectorManagement: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalEdit, setModalEdit] = useState<{
     isOpen: boolean;
-    data: undefined | Request;
+    data: undefined | Inspector;
   }>({
     isOpen: false,
     data: undefined,
   });
 
-  const [listData, setListData] = useState<Request[]>(() => {
-    const defaultItem: Request = {
-      id: 0,
-      name: "request name",
-      description:
-        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi, error!",
-      verify: true,
-      status: false,
-      inspectorId: 1,
-      userId: 1,
-      assetId: 1,
-      deflag: true,
-    };
-    return Array.from({ length: 10 }, () => ({ ...defaultItem }));
-  });
+  const [listData, setListData] = useState<Inspector[]>([]);
 
   const timeoutRef = useRef(setTimeout(() => {}, 0));
   const [filters, setFilters] = useState({
@@ -71,7 +57,7 @@ const requestManagement: React.FC = () => {
     // });
   }, [filters]);
 
-  const onChange: TableProps<Request>["onChange"] = (pagination) => {
+  const onChange: TableProps<Inspector>["onChange"] = (pagination) => {
     //refetch data
     setFilters((prev) => ({
       ...prev,
@@ -91,19 +77,19 @@ const requestManagement: React.FC = () => {
     }, 1500);
   };
 
-  const showModalEdit = (isOpen: boolean, data: Request) => {
+  const showModalEdit = (isOpen: boolean, data: Inspector) => {
     setModalEdit({
       isOpen,
       data,
     });
   };
-  const deleteRequest= async(id: number)=>{
+  const deleteInspector = async (id:string)=>{
     try {
-      await RequestServices.delete(id);
-      getAllRequest();
-      notification.success({ message: "Xóa thành công" });
+      await InspectorServices.delete(id);
+      notification.success({message: "Xóa thành công"});
+      getAllInspector();
     } catch (error) {
-      notification.error({ message: "Xóa thất bại" });
+      notification.error({message: "Xóa thất bại"});
     }
   }
   const showDeleteConfirm = (_id: string) => {
@@ -115,17 +101,21 @@ const requestManagement: React.FC = () => {
       maskClosable: true,
       closable: true,
       onOk() {
-        deleteRequest(Number(_id));
+        deleteInspector(_id);
       },
       cancelText: "Hủy",
     });
   };
-  const getAllRequest= async()=>{
-    const res:ResponseDataRequest=await RequestServices.getAll();
-    setListData(res.data);
+  const getAllInspector=async ()=>{
+    try {
+      const res:ResponseDataInspector = await InspectorServices.getAll();
+      setListData(res.data);
+    } catch (error) {
+      console.log(error);
+    }
   }
   useEffect(()=>{
-    getAllRequest();
+    getAllInspector();
   },[])
   return (
     <div>
@@ -170,7 +160,7 @@ const requestManagement: React.FC = () => {
             className: "hidden",
           }}
         >
-          <CreateForm initForm={modalEdit.data} getAll={getAllRequest}/>
+          <CreateForm initForm={modalEdit.data} getAll={getAllInspector} />
         </Modal>
       </div>
       <Table
@@ -186,4 +176,4 @@ const requestManagement: React.FC = () => {
   );
 };
 
-export default requestManagement;
+export default inspectorManagement;

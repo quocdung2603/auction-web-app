@@ -4,10 +4,16 @@ type Request = {
   description: string;
   verify: boolean;
   status: boolean;
-  inspector: number;
+  inspectorId: number;
   userId: number;
   assetId: number;
   deflag: boolean;
 }
 
 export { type Request };
+
+export interface ResponseDataRequest{
+  code: number,
+  message: string,
+  data: Request[]
+}

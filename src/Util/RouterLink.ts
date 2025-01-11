@@ -11,6 +11,7 @@ export enum routerLinkAdmin {
   Tax = "tax",
   Role = "role",
   Request = "request",
+  Inspector="inspector"
 }
 export enum routerLinkUser {
   Home = "",

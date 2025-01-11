@@ -4,11 +4,13 @@ import { Button, notification } from "antd";
 import InputTypeString from "../../../../Components/Input/InputTypeString";
 import { User } from "../../../../Type/Account/User";
 import InputTypeSelect from "../../../../Components/Input/InputTypeSelect";
+import { UserServices } from "../../../../Services/Account/UserServices";
 
 interface CreateFormFields extends User { }
 
 type CreateEditArticleFormProps = {
   initForm?: CreateFormFields;
+  getAllUser: ()=>void;
 };
 
 const defaultFormValues = {
@@ -17,14 +19,19 @@ const defaultFormValues = {
   address: "",
   phone: "",
   gender: false,
+  role: 3,
 };
 
 const genderOpt = [
   { value: false, label: "Nữ" },
   { value: true, label: "Nam" },
 ];
+const roleOpt = [
+  { value: 2, label: "Admin" },
+  { value: 3, label: "Staff" },
+];
 
-const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
+const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm,getAllUser }) => {
   const {
     control,
     reset,
@@ -40,17 +47,34 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
       reset(defaultFormValues);
     }
   }, [initForm, reset]);
-
+  const createUser = async(data:User)=>{
+    try {
+      await UserServices.createUserByAdmin(data);
+      notification.success({ message: "Thêm thành công" });
+      getAllUser();
+    } catch (error) {
+      notification.error({message: "Thêm User thất bại"})
+      console.log("Error");
+    }
+  }
+  const updateUser=async(id: number,data: User)=>{
+    try {
+      await UserServices.update(id,data);
+      notification.success({ message: "Cập nhật thành công" });
+      getAllUser();
+    } catch (error) {
+      notification.error({message: "Thêm User thất bại"})
+      console.log("Error");
+    }
+  }
   const onSubmit: SubmitHandler<CreateFormFields> = async (data) => {
     try {
       if (initForm) {
         // API Update logic
-        notification.success({ message: "Cập nhật thành công" });
-        alert(data)
+        updateUser(data.id,data);
       } else {
         // API Create logic
-        notification.success({ message: "Thêm thành công" });
-        alert(JSON.stringify(data));
+       createUser(data);
       }
       reset(defaultFormValues);
     } catch (err) {
@@ -96,11 +120,18 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
         <InputTypeSelect
           name="gender"
           control={control}
-          rules={{ required: "Vui lòng chọn danh mục" }}
-          title="Danh mục sản phẩm"
+          rules={{ required: "Vui lòng chọn giới tính" }}
+          title="Giới tính"
           titleOption={genderOpt}
         />
       </div>
+      <InputTypeSelect
+          name="role"
+          control={control}
+          rules={{ required: "Vui lòng chọn quyền của tài khoản" }}
+          title="Quyền"
+          titleOption={roleOpt}
+        />
       <div className="text-right">
         <Button
           type="primary"

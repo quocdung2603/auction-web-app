@@ -11,6 +11,7 @@ import InventoryManagement from "../Page/AdminPage/InventoryPage/InventoryManage
 import WarehouseManagement from "../Page/AdminPage/WarehousePage/WarehouseManagement";
 import RoleManagement from "../Page/AdminPage/RolePage/RoleManagement";
 import RequestManagement from "../Page/AdminPage/RequestPage/RequestManagement";
+import inspectorManagement from "../Page/AdminPage/InspectorPage/InspectorManagement";
 
 export const AdminRoute = [
   {
@@ -61,4 +62,8 @@ export const AdminRoute = [
     path: routerLinkAdmin.Request,
     element: RequestManagement,
   },
+  {
+    path: routerLinkAdmin.Inspector,
+    element: inspectorManagement
+  }
 ];
