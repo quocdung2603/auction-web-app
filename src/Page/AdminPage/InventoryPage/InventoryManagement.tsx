@@ -1,11 +1,19 @@
 import { Inventory } from "../../../Type/Asset/Inventory";
-import { Button, DatePicker, Modal, notification, Table, TableProps } from "antd";
+import {
+  Button,
+  DatePicker,
+  Modal,
+  notification,
+  Table,
+  TableProps,
+} from "antd";
 import Search, { SearchProps } from "antd/es/input/Search";
 import confirm from "antd/es/modal/confirm";
 import { useEffect, useRef, useState } from "react";
 import Columns from "./Components/Columns";
 import CreateForm from "./Components/CreateForm";
 import moment from "moment";
+import { InventoryServices } from "../../../Services/Asset/InventoryServices";
 
 const inventoryManagement: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,23 +25,9 @@ const inventoryManagement: React.FC = () => {
     data: undefined,
   });
 
-  const [listData, setListData] = useState<Inventory[]>(() => {
-    const defaultItem: Inventory = {
-      inventoryID: 0,
-      quantity: 0,
-      entryTime: new Date(),
-      exitTime: new Date(),
-      warehouseID: 0,
-      assetID: 0,
-      delflag: true,
-      created_at: new Date(),
-      updated_at: new Date(),
-      deleted_at: new Date(),
-    };
-    return Array.from({ length: 10 }, () => ({ ...defaultItem }));
-  });
+  const [listData, setListData] = useState<Inventory[]>([]);
 
-  const timeoutRef = useRef(setTimeout(() => { }, 0));
+  const timeoutRef = useRef(setTimeout(() => {}, 0));
   const [filters, setFilters] = useState({
     start: 0,
     end: Date.now(),
@@ -57,10 +51,14 @@ const inventoryManagement: React.FC = () => {
     setIsModalOpen(false);
   };
 
+  const getAll = async () => {
+    InventoryServices.getAll().then((res) => {
+      setListData(res.data.data);
+    });
+  };
+
   useEffect(() => {
-    // fetchArticles().then((res) => {
-    //   setArticles(res.data.data);
-    // });
+    getAll();
   }, [filters]);
 
   const onChange: TableProps<Inventory>["onChange"] = (pagination) => {
@@ -99,15 +97,15 @@ const inventoryManagement: React.FC = () => {
       maskClosable: true,
       closable: true,
       onOk() {
-        // deleteArticle({ _id })
-        //   .then(() => {
-        //     notification.success({ message: "Xóa thành công" });
-        //   })
-        //   .catch(() => {
-        //     notification.error({
-        //       message: "Xóa thất bại ! Kiểm tra lại nha !",
-        //     });
-        //   });
+        InventoryServices.delete(_id)
+          .then(() => {
+            notification.success({ message: "Xóa thành công" });
+          })
+          .catch(() => {
+            notification.error({
+              message: "Xóa thất bại ! Kiểm tra lại nha !",
+            });
+          });
       },
       cancelText: "Hủy",
     });
@@ -156,7 +154,11 @@ const inventoryManagement: React.FC = () => {
             className: "hidden",
           }}
         >
-          <CreateForm initForm={modalEdit.data} />
+          <CreateForm
+            initForm={modalEdit.data}
+            getAll={getAll}
+            closeModal={closeModal}
+          />
         </Modal>
       </div>
       <Table

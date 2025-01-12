@@ -12,7 +12,10 @@ import { useEffect, useRef, useState } from "react";
 import Columns from "./Components/Columns";
 import CreateForm from "./Components/CreateForm";
 import moment from "moment";
-import { Inspector, ResponseDataInspector } from "../../../Type/Inspector/Inspector";
+import {
+  Inspector,
+  ResponseDataInspector,
+} from "../../../Type/Inspector/Inspector";
 import { InspectorServices } from "../../../Services/Inspsector/InspectorServices";
 
 const inspectorManagement: React.FC = () => {
@@ -51,12 +54,6 @@ const inspectorManagement: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  useEffect(() => {
-    // fetchArticles().then((res) => {
-    //   setArticles(res.data.data);
-    // });
-  }, [filters]);
-
   const onChange: TableProps<Inspector>["onChange"] = (pagination) => {
     //refetch data
     setFilters((prev) => ({
@@ -83,15 +80,15 @@ const inspectorManagement: React.FC = () => {
       data,
     });
   };
-  const deleteInspector = async (id:string)=>{
+  const deleteInspector = async (id: string) => {
     try {
       await InspectorServices.delete(id);
-      notification.success({message: "Xóa thành công"});
+      notification.success({ message: "Xóa thành công" });
       getAllInspector();
     } catch (error) {
-      notification.error({message: "Xóa thất bại"});
+      notification.error({ message: "Xóa thất bại" });
     }
-  }
+  };
   const showDeleteConfirm = (_id: string) => {
     confirm({
       title: "Bạn có chắc muốn xóa dữ liệu này?",
@@ -106,17 +103,17 @@ const inspectorManagement: React.FC = () => {
       cancelText: "Hủy",
     });
   };
-  const getAllInspector=async ()=>{
+  const getAllInspector = async () => {
     try {
-      const res:ResponseDataInspector = await InspectorServices.getAll();
+      const res: ResponseDataInspector = await InspectorServices.getAll();
       setListData(res.data);
     } catch (error) {
       console.log(error);
     }
-  }
-  useEffect(()=>{
+  };
+  useEffect(() => {
     getAllInspector();
-  },[])
+  }, [filters]);
   return (
     <div>
       <div className="flex items-center justify-end my-4 space-x-2">
@@ -160,7 +157,11 @@ const inspectorManagement: React.FC = () => {
             className: "hidden",
           }}
         >
-          <CreateForm initForm={modalEdit.data} getAll={getAllInspector} />
+          <CreateForm
+            initForm={modalEdit.data}
+            getAll={getAllInspector}
+            closeModal={closeModal}
+          />
         </Modal>
       </div>
       <Table

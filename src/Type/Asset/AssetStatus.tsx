@@ -8,3 +8,11 @@ type AssetStatus = {
 }
 
 export {type AssetStatus};
+
+export interface ResponseDataAssetStatus {
+  code: number;
+  message: string;
+  metadata: {
+    result: AssetStatus[];
+  };
+}

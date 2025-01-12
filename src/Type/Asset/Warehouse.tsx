@@ -5,6 +5,14 @@ type Warehouse = {
   created_at: Date;
   updated_at: Date;
   deleted_at: Date;
-}
+};
 
-export {type Warehouse};
+export { type Warehouse };
+
+export interface ResponseDataWarehouse {
+  code: number;
+  message: string;
+  metadata: {
+    data: Warehouse[];
+  };
+}

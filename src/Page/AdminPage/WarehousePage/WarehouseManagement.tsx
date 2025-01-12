@@ -1,11 +1,19 @@
 import { Warehouse } from "../../../Type/Asset/Warehouse";
-import { Button, DatePicker, Modal, notification, Table, TableProps } from "antd";
+import {
+  Button,
+  DatePicker,
+  Modal,
+  notification,
+  Table,
+  TableProps,
+} from "antd";
 import Search, { SearchProps } from "antd/es/input/Search";
 import confirm from "antd/es/modal/confirm";
 import { useEffect, useRef, useState } from "react";
 import Columns from "./Components/Columns";
 import CreateForm from "./Components/CreateForm";
 import moment from "moment";
+import { WarehouseServices } from "../../../Services/Asset/WarehouseServices";
 
 const warehouseManagement: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,19 +25,9 @@ const warehouseManagement: React.FC = () => {
     data: undefined,
   });
 
-  const [listData, setListData] = useState<Warehouse[]>(() => {
-    const defaultItem: Warehouse = {
-      warehouseID: 0,
-      location: "230 Đại lộ Bình Dương, Phường Phú Hòa, Thành phố Thủ Dầu Một, Bình Dương",
-      delflag: true,
-      created_at: new Date(),
-      updated_at: new Date(),
-      deleted_at: new Date(),
-    };
-    return Array.from({ length: 10 }, () => ({ ...defaultItem }));
-  });
+  const [listData, setListData] = useState<Warehouse[]>([]);
 
-  const timeoutRef = useRef(setTimeout(() => { }, 0));
+  const timeoutRef = useRef(setTimeout(() => {}, 0));
   const [filters, setFilters] = useState({
     start: 0,
     end: Date.now(),
@@ -53,10 +51,14 @@ const warehouseManagement: React.FC = () => {
     setIsModalOpen(false);
   };
 
+  const getAll = async () => {
+    WarehouseServices.getAll().then((res) => {
+      setListData(res.metadata.data);
+    });
+  };
+
   useEffect(() => {
-    // fetchArticles().then((res) => {
-    //   setArticles(res.data.data);
-    // });
+    getAll();
   }, [filters]);
 
   const onChange: TableProps<Warehouse>["onChange"] = (pagination) => {
@@ -95,15 +97,17 @@ const warehouseManagement: React.FC = () => {
       maskClosable: true,
       closable: true,
       onOk() {
-        // deleteArticle({ _id })
-        //   .then(() => {
-        //     notification.success({ message: "Xóa thành công" });
-        //   })
-        //   .catch(() => {
-        //     notification.error({
-        //       message: "Xóa thất bại ! Kiểm tra lại nha !",
-        //     });
-        //   });
+        WarehouseServices.delete(_id)
+          .then(() => {
+            notification.success({ message: "Xóa thành công" });
+            getAll();
+            closeModal();
+          })
+          .catch(() => {
+            notification.error({
+              message: "Xóa thất bại ! Kiểm tra lại nha !",
+            });
+          });
       },
       cancelText: "Hủy",
     });
@@ -152,7 +156,11 @@ const warehouseManagement: React.FC = () => {
             className: "hidden",
           }}
         >
-          <CreateForm initForm={modalEdit.data} />
+          <CreateForm
+            initForm={modalEdit.data}
+            getAll={getAll}
+            closeModal={closeModal}
+          />
         </Modal>
       </div>
       <Table

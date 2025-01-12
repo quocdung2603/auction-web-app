@@ -1,11 +1,19 @@
 import { Asset } from "../../../Type/Asset/Asset";
-import { Button, DatePicker, Modal, notification, Table, TableProps } from "antd";
+import {
+  Button,
+  DatePicker,
+  Modal,
+  notification,
+  Table,
+  TableProps,
+} from "antd";
 import Search, { SearchProps } from "antd/es/input/Search";
 import confirm from "antd/es/modal/confirm";
 import { useEffect, useRef, useState } from "react";
 import Columns from "./Components/Columns";
 import CreateForm from "./Components/CreateForm";
 import moment from "moment";
+import { AssetServices } from "../../../Services/Asset/AssetServices";
 
 const assetManagement: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,26 +25,9 @@ const assetManagement: React.FC = () => {
     data: undefined,
   });
 
-  const [listData, setListData] = useState<Asset[]>(() => {
-    const defaultItem: Asset = {
-      assetID: 0,
-      assetName: "ABCDEF",
-      mainImage: "https://picsum.photos/200/300",
-      assetDescription:
-        "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Impedit earum veniam quas saepe doloremque exercitationem minus, vel ex quod voluptates.",
-      assetPrice: 0,
-      inspectorID: 1,
-      assetTypeID: 1,
-      assetStatusID: 1,
-      delflag: false,
-      created_at: new Date(),
-      updated_at: new Date(),
-      deleted_at: new Date(),
-    };
-    return Array.from({ length: 10 }, () => ({ ...defaultItem }));
-  });
+  const [listData, setListData] = useState<Asset[]>([]);
 
-  const timeoutRef = useRef(setTimeout(() => { }, 0));
+  const timeoutRef = useRef(setTimeout(() => {}, 0));
   const [filters, setFilters] = useState({
     start: 0,
     end: Date.now(),
@@ -60,10 +51,14 @@ const assetManagement: React.FC = () => {
     setIsModalOpen(false);
   };
 
+  const getAll = async () => {
+    AssetServices.getAll().then((res) => {
+      setListData(res.metadata.data);
+    });
+  };
+
   useEffect(() => {
-    // fetchArticles().then((res) => {
-    //   setArticles(res.data.data);
-    // });
+    getAll();
   }, [filters]);
 
   const onChange: TableProps<Asset>["onChange"] = (pagination) => {
@@ -102,15 +97,15 @@ const assetManagement: React.FC = () => {
       maskClosable: true,
       closable: true,
       onOk() {
-        // deleteArticle({ _id })
-        //   .then(() => {
-        //     notification.success({ message: "Xóa thành công" });
-        //   })
-        //   .catch(() => {
-        //     notification.error({
-        //       message: "Xóa thất bại ! Kiểm tra lại nha !",
-        //     });
-        //   });
+        AssetServices.delete(_id)
+          .then(() => {
+            notification.success({ message: "Xóa thành công" });
+          })
+          .catch(() => {
+            notification.error({
+              message: "Xóa thất bại ! Kiểm tra lại nha !",
+            });
+          });
       },
       cancelText: "Hủy",
     });
@@ -159,7 +154,11 @@ const assetManagement: React.FC = () => {
             className: "hidden",
           }}
         >
-          <CreateForm initForm={modalEdit.data} />
+          <CreateForm
+            initForm={modalEdit.data}
+            getAll={getAll}
+            closeModal={closeModal}
+          />
         </Modal>
       </div>
       <Table

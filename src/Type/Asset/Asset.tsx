@@ -11,6 +11,14 @@ type Asset = {
   created_at: Date;
   updated_at: Date;
   deleted_at: Date;
-}
+};
 
-export {type Asset}
+export { type Asset };
+
+export interface ResponseDataAsset {
+  code: number;
+  message: string;
+  metadata: {
+    data: Asset[];
+  };
+}
