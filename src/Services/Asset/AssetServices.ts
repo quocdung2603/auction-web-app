@@ -21,13 +21,15 @@ export const AssetServices = {
   create: async (data: Asset) => {
     const req = {
       assetName: data.assetName,
-      mainImage: data.mainImage,
+      file: data.mainImage,
       assetDescription: data.assetDescription,
       assetPrice: data.assetPrice,
       inspectorID: data.inspectorID,
       assetTypeID: data.assetTypeID,
       assetStatusID: data.assetStatusID,
     };
+
+    console.log(req);
     try {
       const response = await request.post("/asset-service/assets", req);
       return response.data;

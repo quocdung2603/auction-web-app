@@ -19,7 +19,7 @@ const InputTypeFile = <T extends FieldValues>({
   ) => {
     const file = event.target.files?.[0];
     if (file) {
-      onChange(file.name); // Truyền file vào react-hook-form thay vì tên file
+      onChange(file); // Truyền file vào react-hook-form thay vì tên file
     }
   };
 
@@ -40,12 +40,12 @@ const InputTypeFile = <T extends FieldValues>({
           >
             {value ? (
               <div className="w-full text-center">
-                {/* <img
+                <img
                   src={URL.createObjectURL(value)} // Hiển thị ảnh đã chọn
                   alt="Selected file"
                   className="w-48 h-48 object-cover mx-auto"
-                /> */}
-                <p className="text-gray-700">{value}</p>
+                />
+                {/* <p className="text-gray-700">{value}</p> */}
                 <button
                   type="button"
                   onClick={() => handleRemoveFile(onChange)}

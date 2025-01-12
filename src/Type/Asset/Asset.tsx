@@ -1,7 +1,7 @@
 type Asset = {
   assetID: number;
   assetName: string;
-  mainImage: string;
+  mainImage: any;
   assetDescription: string;
   assetPrice: number;
   inspectorID: number;
