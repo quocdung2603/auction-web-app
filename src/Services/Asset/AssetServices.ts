@@ -19,8 +19,17 @@ export const AssetServices = {
     }
   },
   create: async (data: Asset) => {
+    const req = {
+      assetName: data.assetName,
+      mainImage: data.mainImage,
+      assetDescription: data.assetDescription,
+      assetPrice: data.assetPrice,
+      inspectorID: data.inspectorID,
+      assetTypeID: data.assetTypeID,
+      assetStatusID: data.assetStatusID,
+    };
     try {
-      const response = await request.post("/asset-service/assets", data);
+      const response = await request.post("/asset-service/assets", req);
       return response.data;
     } catch (error) {
       console.log(error);

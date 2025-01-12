@@ -1,8 +1,9 @@
-import React from 'react';
-import { Controller, UseControllerProps, FieldValues } from 'react-hook-form';
-import { IconUploadFile } from '../../Common/Icon/Icon';
+import React from "react";
+import { Controller, UseControllerProps, FieldValues } from "react-hook-form";
+import { IconUploadFile } from "../../Common/Icon/Icon";
 
-interface InputTypeFileProps<T extends FieldValues> extends UseControllerProps<T> {
+interface InputTypeFileProps<T extends FieldValues>
+  extends UseControllerProps<T> {
   label: string;
 }
 
@@ -12,11 +13,13 @@ const InputTypeFile = <T extends FieldValues>({
   label,
   rules,
 }: InputTypeFileProps<T>) => {
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, onChange: (value: any) => void) => {
+  const handleFileChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    onChange: (value: any) => void
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
-      onChange(file); // Truyền file vào react-hook-form thay vì tên file
+      onChange(file.name); // Truyền file vào react-hook-form thay vì tên file
     }
   };
 
@@ -37,11 +40,12 @@ const InputTypeFile = <T extends FieldValues>({
           >
             {value ? (
               <div className="w-full text-center">
-                <img
+                {/* <img
                   src={URL.createObjectURL(value)} // Hiển thị ảnh đã chọn
                   alt="Selected file"
                   className="w-48 h-48 object-cover mx-auto"
-                />
+                /> */}
+                <p className="text-gray-700">{value}</p>
                 <button
                   type="button"
                   onClick={() => handleRemoveFile(onChange)}

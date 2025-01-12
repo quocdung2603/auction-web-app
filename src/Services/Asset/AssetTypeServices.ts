@@ -1,4 +1,3 @@
-import axios from "axios";
 import { request } from "../../Common/Config/Request";
 import { AssetType } from "../../Type/Asset/AssetType";
 

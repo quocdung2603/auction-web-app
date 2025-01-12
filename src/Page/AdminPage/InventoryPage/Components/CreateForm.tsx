@@ -1,15 +1,22 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Button, notification } from "antd";
 import { Inventory } from "../../../../Type/Asset/Inventory";
 import InputTypeNumber from "../../../../Components/Input/InputTypeNumber";
 import InputTypeSelect from "../../../../Components/Input/InputTypeSelect";
 import InputTypeDateTime from "../../../../Components/Input/InputTypeDateTime";
+import { InventoryServices } from "../../../../Services/Asset/InventoryServices";
+import { ResponseDataWarehouse } from "../../../../Type/Asset/Warehouse";
+import { WarehouseServices } from "../../../../Services/Asset/WarehouseServices";
+import { ResponseDataAsset } from "../../../../Type/Asset/Asset";
+import { AssetServices } from "../../../../Services/Asset/AssetServices";
 
-interface CreateFormFields extends Inventory { }
+interface CreateFormFields extends Inventory {}
 
 type CreateEditArticleFormProps = {
   initForm?: CreateFormFields;
+  getAll: () => void;
+  closeModal: () => void;
 };
 
 const defaultFormValues = {
@@ -23,30 +30,55 @@ const defaultFormValues = {
   assetStatusID: 0,
 };
 
-const warehouseList = [
-  { value: 1, label: "Asset Type 1" },
-  { value: 2, label: "Asset Type 2" },
-  { value: 3, label: "Asset Type 3" },
-  { value: 4, label: "Asset Type 4" },
-  { value: 5, label: "Asset Type 5" },
-];
-
-const assetList = [
-  { value: 1, label: "Asset Status 1" },
-  { value: 2, label: "Asset Status 2" },
-  { value: 3, label: "Asset Status 3" },
-  { value: 4, label: "Asset Status 4" },
-  { value: 5, label: "Asset Status 5" },
-];
-
-const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
-  const {
-    control,
-    reset,
-    handleSubmit,
-  } = useForm<CreateFormFields>({
+const CreateForm: React.FC<CreateEditArticleFormProps> = ({
+  initForm,
+  getAll,
+  closeModal,
+}) => {
+  const { control, reset, handleSubmit } = useForm<CreateFormFields>({
     defaultValues: defaultFormValues,
   });
+
+  const [warehouseList, setWarehouseList] = useState<
+    { value: number; label: string }[]
+  >([]);
+
+  const [assetList, setAssetList] = useState<
+    { value: number; label: string }[]
+  >([]);
+
+  const getAllWarehouse = async () => {
+    try {
+      const res: ResponseDataWarehouse = await WarehouseServices.getAll();
+      const formattedData = res.metadata.data.map((item) => ({
+        value: item.warehouseID,
+        label: item.location,
+      }));
+      setWarehouseList(formattedData);
+    } catch (error) {
+      alert("lỗi");
+      console.log(error);
+    }
+  };
+
+  const getAllAsset = async () => {
+    try {
+      const res: ResponseDataAsset = await AssetServices.getAll();
+      const formattedData = res.metadata.data.map((item) => ({
+        value: item.assetID,
+        label: item.assetName,
+      }));
+      setAssetList(formattedData);
+    } catch (error) {
+      alert("lỗi");
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getAllWarehouse();
+    getAllAsset();
+  }, []);
 
   useEffect(() => {
     if (initForm) {
@@ -60,12 +92,26 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
     try {
       if (initForm) {
         // API Update logic
-        notification.success({ message: "Cập nhật thành công" });
-        alert(data)
+        InventoryServices.update(initForm.inventoryID.toString(), data)
+          .then(() => {
+            notification.success({ message: "Cập nhật thành công" });
+            closeModal();
+            getAll();
+          })
+          .catch(() => {
+            notification.error({ message: "Cập nhật thất bại" });
+          });
       } else {
         // API Create logic
-        notification.success({ message: "Thêm thành công" });
-        alert(JSON.stringify(data));
+        InventoryServices.create(data)
+          .then(() => {
+            notification.success({ message: "Thêm thành công" });
+            closeModal();
+            getAll();
+          })
+          .catch(() => {
+            notification.error({ message: "Thêm thất bại" });
+          });
       }
       reset(defaultFormValues);
     } catch (err) {
@@ -74,11 +120,7 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
   };
 
   return (
-    <form
-      method="POST"
-      className="space-y-6"
-      onSubmit={handleSubmit(onSubmit)}
-    >
+    <form method="POST" className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
       <InputTypeNumber
         name="quantity"
         control={control}
@@ -113,7 +155,7 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
         name="assetID"
         control={control}
         rules={{ required: "Vui lòng chọn danh mục" }}
-        title="Danh mục sản phẩm"
+        title="Tài sản"
         titleOption={assetList}
       />
       <div className="text-right">

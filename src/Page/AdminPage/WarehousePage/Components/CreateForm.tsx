@@ -3,22 +3,25 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { Button, notification } from "antd";
 import InputTypeString from "../../../../Components/Input/InputTypeString";
 import { Warehouse } from "../../../../Type/Asset/Warehouse";
-interface CreateFormFields extends Warehouse { }
+import { WarehouseServices } from "../../../../Services/Asset/WarehouseServices";
+interface CreateFormFields extends Warehouse {}
 
 type CreateEditArticleFormProps = {
   initForm?: CreateFormFields;
+  getAll: () => void;
+  closeModal: () => void;
 };
 
 const defaultFormValues = {
   location: "",
 };
 
-const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
-  const {
-    control,
-    reset,
-    handleSubmit,
-  } = useForm<CreateFormFields>({
+const CreateForm: React.FC<CreateEditArticleFormProps> = ({
+  initForm,
+  getAll,
+  closeModal,
+}) => {
+  const { control, reset, handleSubmit } = useForm<CreateFormFields>({
     defaultValues: defaultFormValues,
   });
 
@@ -34,12 +37,30 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
     try {
       if (initForm) {
         // API Update logic
-        notification.success({ message: "Cập nhật thành công" });
-        alert(data)
+        WarehouseServices.update(initForm.warehouseID.toString(), data)
+          .then(() => {
+            notification.success({ message: "Cập nhật thành công" });
+            getAll();
+            closeModal();
+          })
+          .catch(() => {
+            notification.error({
+              message: "Cập nhật thất bại ",
+            });
+          });
       } else {
         // API Create logic
-        notification.success({ message: "Thêm thành công" });
-        alert(JSON.stringify(data));
+        WarehouseServices.create(data)
+          .then(() => {
+            notification.success({ message: "ThêmThêm thành công" });
+            getAll();
+            closeModal();
+          })
+          .catch(() => {
+            notification.error({
+              message: "Thêm thất bại ",
+            });
+          });
       }
       reset(defaultFormValues);
     } catch (err) {
@@ -48,11 +69,7 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
   };
 
   return (
-    <form
-      method="POST"
-      className="space-y-6"
-      onSubmit={handleSubmit(onSubmit)}
-    >
+    <form method="POST" className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
       <InputTypeString
         name="location"
         control={control}

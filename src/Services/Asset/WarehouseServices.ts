@@ -27,11 +27,11 @@ export const WarehouseServices = {
     }
   },
   update: async (id: string, data: Warehouse) => {
+    const req = {
+      location: data.location,
+    };
     try {
-      const response = await request.put(
-        `/asset-service/warehouse/${id}`,
-        data
-      );
+      const response = await request.put(`/asset-service/warehouse/${id}`, req);
       return response.data;
     } catch (error) {
       console.log(error);

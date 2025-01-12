@@ -14,17 +14,17 @@ interface CreateFormFields extends Inspector {}
 type CreateEditArticleFormProps = {
   initForm?: CreateFormFields;
   getAll: () => void;
+  closeModal: () => void;
 };
-
-
 
 const CreateForm: React.FC<CreateEditArticleFormProps> = ({
   initForm,
   getAll,
+  closeModal,
 }) => {
   const defaultFormValues = {
     license: "",
-    userId: initForm? initForm.id : 1,
+    userId: initForm ? initForm.id : 1,
   };
   const { control, reset, handleSubmit } = useForm<CreateFormFields>({
     defaultValues: defaultFormValues,
@@ -32,6 +32,7 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({
   const [userList, setUserList] = useState<{ value: number; label: string }[]>(
     []
   );
+
   useEffect(() => {
     if (initForm) {
       reset(initForm);
@@ -42,28 +43,30 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({
   const createInspector = async (data: Inspector) => {
     try {
       await InspectorServices.create(data);
-      getAll();
       notification.success({ message: "Thêm thành công" });
+      getAll();
+      closeModal();
     } catch (error) {
       notification.error({ message: "Thêm thất bại" });
       console.log(error);
     }
   };
-  const updateInspector = async(id: number, data: Inspector)=>{
+  const updateInspector = async (id: number, data: Inspector) => {
     try {
-      await InspectorServices.update(id,data);
-      getAll();
+      await InspectorServices.update(id, data);
       notification.success({ message: "Cập nhật thành công" });
+      getAll();
+      closeModal();
     } catch (error) {
       notification.error({ message: "Cập nhật thất bại" });
       console.log(error);
     }
-  }
+  };
   const onSubmit: SubmitHandler<CreateFormFields> = async (data) => {
     try {
       if (initForm) {
         // API Update logic
-        updateInspector(initForm.id,data);
+        updateInspector(initForm.id, data);
       } else {
         // API Create logic
         createInspector(data);
@@ -79,7 +82,7 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({
       const res: ResponseDataUser = await UserServices.getAll();
       const formattedData = res.data.map((item) => ({
         value: item.id,
-        label:  item.id+": "+item.name , 
+        label: item.id + ": " + item.name,
       }));
       setUserList(formattedData);
     } catch (error) {

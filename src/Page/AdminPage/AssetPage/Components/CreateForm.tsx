@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Button, notification } from "antd";
 import InputDescription from "../../../../Components/Input/InputDescription";
@@ -7,11 +7,20 @@ import { Asset } from "../../../../Type/Asset/Asset";
 import InputTypeNumber from "../../../../Components/Input/InputTypeNumber";
 import InputTypeSelect from "../../../../Components/Input/InputTypeSelect";
 import InputTypeFile from "../../../../Components/Input/InputTypeFile";
+import { AssetType, ResponseData } from "../../../../Type/Asset/AssetType";
+import { AssetTypeServices } from "../../../../Services/Asset/AssetTypeServices";
+import { ResponseDataInspector } from "../../../../Type/Inspector/Inspector";
+import { InspectorServices } from "../../../../Services/Inspsector/InspectorServices";
+import { ResponseDataAssetStatus } from "../../../../Type/Asset/AssetStatus";
+import { AssetStatusServices } from "../../../../Services/Asset/AssetStatusServices";
+import { AssetServices } from "../../../../Services/Asset/AssetServices";
 
-interface CreateFormFields extends Asset { }
+interface CreateFormFields extends Asset {}
 
 type CreateEditArticleFormProps = {
   initForm?: CreateFormFields;
+  getAll: () => void;
+  closeModal: () => void;
 };
 
 const defaultFormValues = {
@@ -25,38 +34,72 @@ const defaultFormValues = {
   assetStatusID: 0,
 };
 
-const assetType = [
-  { value: 1, label: "Asset Type 1" },
-  { value: 2, label: "Asset Type 2" },
-  { value: 3, label: "Asset Type 3" },
-  { value: 4, label: "Asset Type 4" },
-  { value: 5, label: "Asset Type 5" },
-];
-
-const assetStatus = [
-  { value: 1, label: "Asset Status 1" },
-  { value: 2, label: "Asset Status 2" },
-  { value: 3, label: "Asset Status 3" },
-  { value: 4, label: "Asset Status 4" },
-  { value: 5, label: "Asset Status 5" },
-];
-
-const inspector = [
-  { value: 1, label: "Inspector 1" },
-  { value: 2, label: "Inspector 2" },
-  { value: 3, label: "Inspector 3" },
-  { value: 4, label: "Inspector 4" },
-  { value: 5, label: "Inspector 5" },
-];
-
-const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
-  const {
-    control,
-    reset,
-    handleSubmit,
-  } = useForm<CreateFormFields>({
+const CreateForm: React.FC<CreateEditArticleFormProps> = ({
+  initForm,
+  getAll,
+  closeModal,
+}) => {
+  const { control, reset, handleSubmit } = useForm<CreateFormFields>({
     defaultValues: defaultFormValues,
   });
+
+  const [assetType, setAssetType] = useState<
+    { value: number; label: string }[]
+  >([]);
+  const [assetStatus, setAssetStatus] = useState<
+    { value: number; label: string }[]
+  >([]);
+  const [inspector, setInspector] = useState<
+    { value: number; label: string }[]
+  >([]);
+
+  const getAllAssetType = async () => {
+    try {
+      const res: ResponseData = await AssetTypeServices.getAll();
+      const formattedData = res.metadata.data.map((item) => ({
+        value: item.assetTypeID,
+        label: item.assetTypeID + ": " + item.assetTypeName,
+      }));
+      setAssetType(formattedData);
+    } catch (error) {
+      alert("lỗi");
+      console.log(error);
+    }
+  };
+
+  const getAllInspector = async () => {
+    try {
+      const res: ResponseDataInspector = await InspectorServices.getAll();
+      const formattedData = res.data.map((item) => ({
+        value: item.id,
+        label: item.id + ": " + item.userId,
+      }));
+      setInspector(formattedData);
+    } catch (error) {
+      alert("lỗi");
+      console.log(error);
+    }
+  };
+
+  const getAllAssetStatus = async () => {
+    try {
+      const res: ResponseDataAssetStatus = await AssetStatusServices.getAll();
+      const formattedData = res.metadata.result.map((item) => ({
+        value: item.assetStatusID,
+        label: item.assetStatusID + ": " + item.assetStatusName,
+      }));
+      setAssetStatus(formattedData);
+    } catch (error) {
+      alert("lỗi");
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getAllAssetType();
+    getAllInspector();
+    getAllAssetStatus();
+  }, []);
 
   useEffect(() => {
     if (initForm) {
@@ -70,12 +113,26 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
     try {
       if (initForm) {
         // API Update logic
-        notification.success({ message: "Cập nhật thành công" });
-        alert(data)
+        AssetServices.update(initForm.assetID.toString(), data)
+          .then(() => {
+            notification.success({ message: "Cập nhật thành công" });
+            closeModal();
+            getAll();
+          })
+          .catch(() => {
+            notification.error({ message: "Cập nhật thất bại" });
+          });
       } else {
         // API Create logic
-        notification.success({ message: "Thêm thành công" });
-        alert(JSON.stringify(data));
+        AssetServices.create(data)
+          .then(() => {
+            notification.success({ message: "Thêm thành công" });
+            closeModal();
+            getAll();
+          })
+          .catch(() => {
+            notification.error({ message: "Thêm thất bại" });
+          });
       }
       reset(defaultFormValues);
     } catch (err) {
@@ -84,11 +141,7 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
   };
 
   return (
-    <form
-      method="POST"
-      className="space-y-6"
-      onSubmit={handleSubmit(onSubmit)}
-    >
+    <form method="POST" className="space-y-6" onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div className="w-full h-[300px]">
           <InputTypeFile
@@ -120,7 +173,7 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
           name="assetTypeID"
           control={control}
           rules={{ required: "Vui lòng chọn danh mục" }}
-          title="Danh mục sản phẩm"
+          title="Loại tài sản"
           titleOption={assetType}
         />
         <InputTypeSelect
@@ -134,7 +187,7 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
           name="assetStatusID"
           control={control}
           rules={{ required: "Vui lòng chọn danh mục" }}
-          title="Danh mục sản phẩm"
+          title="Trạng thái"
           titleOption={assetStatus}
         />
       </div>
@@ -142,8 +195,8 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
         name="assetDescription"
         control={control}
         placeholder="Nhập mô tả sản phẩm"
-        rules={{ required: 'Mô tả sản phẩm không được để trống!' }}
-        defaultValue={initForm?.assetDescription} 
+        rules={{ required: "Mô tả sản phẩm không được để trống!" }}
+        defaultValue={initForm?.assetDescription}
       />
       <div className="text-right">
         <Button
