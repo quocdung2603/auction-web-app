@@ -1,51 +1,33 @@
-import { AuctionSession } from "../../../Type/Auction/AuctionSession";
-import { Button, DatePicker, Modal, notification, Table, TableProps } from "antd";
+import { AuctionItem } from "../../../Type/Auction/AuctionItem";
+import {
+  Button,
+  DatePicker,
+  Modal,
+  notification,
+  Table,
+  TableProps,
+} from "antd";
 import Search, { SearchProps } from "antd/es/input/Search";
 import confirm from "antd/es/modal/confirm";
 import { useEffect, useRef, useState } from "react";
 import Columns from "./Components/Columns";
 import CreateForm from "./Components/CreateForm";
 import moment from "moment";
+import { AssetTypeServices } from "../../../Services/Asset/AssetTypeServices";
 
-const assetManagement: React.FC = () => {
+const auctionItemManagement: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalEdit, setModalEdit] = useState<{
     isOpen: boolean;
-    data: undefined | AuctionSession;
+    data: undefined | AuctionItem;
   }>({
     isOpen: false,
     data: undefined,
   });
 
-  const [listData, setListData] = useState<AuctionSession[]>(() => {
-    const defaultItem: AuctionSession = {
-      auctionSessionID: 0,
-      startTime: new Date(),
-      endTime: new Date(),
-      eventID: 1,
-      delflag: false,
-      created_at: new Date(),
-      updated_at: new Date(),
-      deleted_at: new Date(),
-      auctionItems: [
-        {
-          auctionSessionId: 0,
-          auctionItemId: 1,
-          assetId: 1,
-          startingBids: 100000,
-          bidIncrement: 5000,
-          delflag: false,
-          created_at: new Date(),
-          updated_at: new Date(),
-          deleted_at: new Date(),
-        }
-      ],
-    };
-    return Array.from({ length: 10 }, () => ({ ...defaultItem }));
-  });
+  const [listData, setListData] = useState<AuctionItem[]>([]);
 
-
-  const timeoutRef = useRef(setTimeout(() => { }, 0));
+  const timeoutRef = useRef(setTimeout(() => {}, 0));
   const [filters, setFilters] = useState({
     start: 0,
     end: Date.now(),
@@ -69,13 +51,17 @@ const assetManagement: React.FC = () => {
     setIsModalOpen(false);
   };
 
+  const getAll = async () => {
+    AssetTypeServices.getAll().then((res) => {
+      setListData(res.metadata.data);
+    });
+  };
+
   useEffect(() => {
-    // fetchArticles().then((res) => {
-    //   setArticles(res.data.data);
-    // });
+    getAll();
   }, [filters]);
 
-  const onChange: TableProps<AuctionSession>["onChange"] = (pagination) => {
+  const onChange: TableProps<AuctionItem>["onChange"] = (pagination) => {
     //refetch data
     setFilters((prev) => ({
       ...prev,
@@ -95,16 +81,12 @@ const assetManagement: React.FC = () => {
     }, 1500);
   };
 
-  const showModalEdit = (isOpen: boolean, data: AuctionSession) => {
+  const showModalEdit = (isOpen: boolean, data: AuctionItem) => {
     setModalEdit({
       isOpen,
-      data: {
-        ...data,
-        auctionItems: data.auctionItems || [], // Đảm bảo auctionItems luôn tồn tại
-      },
+      data,
     });
   };
-
 
   const showDeleteConfirm = (_id: string) => {
     confirm({
@@ -115,15 +97,16 @@ const assetManagement: React.FC = () => {
       maskClosable: true,
       closable: true,
       onOk() {
-        // deleteArticle({ _id })
-        //   .then(() => {
-        //     notification.success({ message: "Xóa thành công" });
-        //   })
-        //   .catch(() => {
-        //     notification.error({
-        //       message: "Xóa thất bại ! Kiểm tra lại nha !",
-        //     });
-        //   });
+        AssetTypeServices.delete(_id)
+          .then(() => {
+            notification.success({ message: "Xóa thành công" });
+            getAll();
+          })
+          .catch(() => {
+            notification.error({
+              message: "Xóa thất bại ! Kiểm tra lại nha !",
+            });
+          });
       },
       cancelText: "Hủy",
     });
@@ -161,7 +144,6 @@ const assetManagement: React.FC = () => {
         />
         <Button onClick={showModal}>Thêm mới</Button>
         <Modal
-          width={2000}
           title={modalEdit.isOpen ? "Sửa Thông tin" : "Thêm mới thông tin"}
           open={isModalOpen || modalEdit.isOpen}
           onCancel={closeModal}
@@ -172,7 +154,11 @@ const assetManagement: React.FC = () => {
             className: "hidden",
           }}
         >
-          <CreateForm initForm={modalEdit.data} />
+          <CreateForm
+            initForm={modalEdit.data}
+            getAll={getAll}
+            closeModal={closeModal}
+          />
         </Modal>
       </div>
       <Table
@@ -188,4 +174,4 @@ const assetManagement: React.FC = () => {
   );
 };
 
-export default assetManagement;
+export default auctionItemManagement;

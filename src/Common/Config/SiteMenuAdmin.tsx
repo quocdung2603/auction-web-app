@@ -85,13 +85,18 @@ export const SiteMenuAdmin: MenuItem[] = [
     ],
   },
   {
-    content: "Inquire and bid",
+    content: "Auction",
     icon: <IconUserManager />,
     submenu: [
       {
-        content: "Auction",
+        content: "Auction Item",
         icon: <></>,
-        href: routerLinkAdmin.Auction,
+        href: routerLinkAdmin.AuctionItem,
+      },
+      {
+        content: "Auction Session",
+        icon: <></>,
+        href: routerLinkAdmin.AuctionSession,
       },
     ],
   },

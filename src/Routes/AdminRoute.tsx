@@ -2,7 +2,7 @@ import { routerLinkAdmin } from "../Util/RouterLink";
 import HomePageAdmin from "../Page/AdminPage/HomePage/HomePageAdmin";
 import UserManagement from "../Page/AdminPage/UserPage/UserManagement";
 import AssetTypeManagement from "../Page/AdminPage/AssetType/AssetTypeManagement";
-import AuctionManagement from "../Page/AdminPage/Auction/AuctionManagement";
+import AuctionItemManagement from "../Page/AdminPage/AuctionItemPage/AuctionItemManagement";
 import AssetManagement from "../Page/AdminPage/AssetPage/AssetManagement";
 import EventManagement from "../Page/AdminPage/EventPage/eventManagement";
 import BillManagement from "../Page/AdminPage/BillPage/BillManagement";
@@ -12,6 +12,7 @@ import WarehouseManagement from "../Page/AdminPage/WarehousePage/WarehouseManage
 import RoleManagement from "../Page/AdminPage/RolePage/RoleManagement";
 import RequestManagement from "../Page/AdminPage/RequestPage/RequestManagement";
 import inspectorManagement from "../Page/AdminPage/InspectorPage/InspectorManagement";
+import auctionSessionManagement from "../Page/AdminPage/AuctionSessionPage/AuctionSessionManagement";
 
 export const AdminRoute = [
   {
@@ -27,8 +28,12 @@ export const AdminRoute = [
     element: AssetTypeManagement,
   },
   {
-    path: routerLinkAdmin.Auction,
-    element: AuctionManagement,
+    path: routerLinkAdmin.AuctionItem,
+    element: AuctionItemManagement,
+  },
+  {
+    path: routerLinkAdmin.AuctionSession,
+    element: auctionSessionManagement,
   },
   {
     path: routerLinkAdmin.Asset,
@@ -64,6 +69,6 @@ export const AdminRoute = [
   },
   {
     path: routerLinkAdmin.Inspector,
-    element: inspectorManagement
-  }
+    element: inspectorManagement,
+  },
 ];

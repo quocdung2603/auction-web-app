@@ -8,7 +8,7 @@ type AssetType = {
 };
 export { type AssetType };
 
-export interface ResponseData {
+export interface ResponseDataAssetType {
   code: number;
   message: string;
   metadata: {

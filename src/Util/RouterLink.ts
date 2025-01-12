@@ -1,7 +1,8 @@
 export enum routerLinkAdmin {
   Home = "",
   User = "user",
-  Auction = "auction",
+  AuctionItem = "auction-item",
+  AuctionSession = "auction-session",
   AssetType = "asset-type",
   Asset = "asset",
   Warehouse = "warehouse",
@@ -11,8 +12,9 @@ export enum routerLinkAdmin {
   Tax = "tax",
   Role = "role",
   Request = "request",
-  Inspector="inspector"
+  Inspector = "inspector",
 }
+
 export enum routerLinkUser {
   Home = "",
   AssetList = "/asset-list",
