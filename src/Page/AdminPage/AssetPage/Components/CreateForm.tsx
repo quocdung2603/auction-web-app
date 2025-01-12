@@ -7,7 +7,7 @@ import { Asset } from "../../../../Type/Asset/Asset";
 import InputTypeNumber from "../../../../Components/Input/InputTypeNumber";
 import InputTypeSelect from "../../../../Components/Input/InputTypeSelect";
 import InputTypeFile from "../../../../Components/Input/InputTypeFile";
-import { AssetType, ResponseData } from "../../../../Type/Asset/AssetType";
+import { ResponseDataAssetType } from "../../../../Type/Asset/AssetType";
 import { AssetTypeServices } from "../../../../Services/Asset/AssetTypeServices";
 import { ResponseDataInspector } from "../../../../Type/Inspector/Inspector";
 import { InspectorServices } from "../../../../Services/Inspsector/InspectorServices";
@@ -55,7 +55,7 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({
 
   const getAllAssetType = async () => {
     try {
-      const res: ResponseData = await AssetTypeServices.getAll();
+      const res: ResponseDataAssetType = await AssetTypeServices.getAll();
       const formattedData = res.metadata.data.map((item) => ({
         value: item.assetTypeID,
         label: item.assetTypeID + ": " + item.assetTypeName,
@@ -141,7 +141,12 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({
   };
 
   return (
-    <form method="POST" className="space-y-6" onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
+    <form
+      method="POST"
+      className="space-y-6"
+      onSubmit={handleSubmit(onSubmit)}
+      encType="multipart/form-data"
+    >
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div className="w-full h-[300px]">
           <InputTypeFile

@@ -1,7 +1,7 @@
 import { request } from "../../Common/Config/Request";
 import { AuctionSession } from "../../Type/Auction/AuctionSession";
 
-export const AuctionServices = {
+export const AuctionSessionServices = {
   getAll: async (
     page: number,
     limit: number,
