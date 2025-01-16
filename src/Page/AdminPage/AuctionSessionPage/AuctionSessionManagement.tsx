@@ -13,7 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import Columns from "./Components/Columns";
 import CreateForm from "./Components/CreateForm";
 import moment from "moment";
-import { AssetTypeServices } from "../../../Services/Asset/AssetTypeServices";
+import { AuctionSessionServices } from "../../../Services/Auction/AuctionSessionServices";
 
 const auctionSessionManagement: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -52,8 +52,8 @@ const auctionSessionManagement: React.FC = () => {
   };
 
   const getAll = async () => {
-    AssetTypeServices.getAll().then((res) => {
-      setListData(res.metadata.data);
+    AuctionSessionServices.getAll().then((res) => {
+      setListData(res.metadata.auctionSessions);
     });
   };
 
@@ -97,7 +97,7 @@ const auctionSessionManagement: React.FC = () => {
       maskClosable: true,
       closable: true,
       onOk() {
-        AssetTypeServices.delete(_id)
+        AuctionSessionServices.delete(_id)
           .then(() => {
             notification.success({ message: "Xóa thành công" });
             getAll();

@@ -13,7 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import Columns from "./Components/Columns";
 import CreateForm from "./Components/CreateForm";
 import moment from "moment";
-import { AssetTypeServices } from "../../../Services/Asset/AssetTypeServices";
+import { AuctionItemServices } from "../../../Services/Auction/AuctionItem";
 
 const auctionItemManagement: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -52,8 +52,8 @@ const auctionItemManagement: React.FC = () => {
   };
 
   const getAll = async () => {
-    AssetTypeServices.getAll().then((res) => {
-      setListData(res.metadata.data);
+    AuctionItemServices.getAll().then((res) => {
+      setListData(res.metadata.auctionItem);
     });
   };
 
@@ -97,7 +97,7 @@ const auctionItemManagement: React.FC = () => {
       maskClosable: true,
       closable: true,
       onOk() {
-        AssetTypeServices.delete(_id)
+        AuctionItemServices.delete(_id)
           .then(() => {
             notification.success({ message: "Xóa thành công" });
             getAll();
@@ -144,6 +144,7 @@ const auctionItemManagement: React.FC = () => {
         />
         <Button onClick={showModal}>Thêm mới</Button>
         <Modal
+          width={800}
           title={modalEdit.isOpen ? "Sửa Thông tin" : "Thêm mới thông tin"}
           open={isModalOpen || modalEdit.isOpen}
           onCancel={closeModal}

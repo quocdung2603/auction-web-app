@@ -31,15 +31,35 @@ export const AssetServices = {
 
     console.log(req);
     try {
-      const response = await request.post("/asset-service/assets", req);
+      const response = await request.post("/asset-service/assets", req, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       return response.data;
     } catch (error) {
       console.log(error);
     }
   },
+
   update: async (id: string, data: Asset) => {
+    const req = {
+      assetName: data.assetName,
+      file: data.mainImage,
+      assetDescription: data.assetDescription,
+      assetPrice: data.assetPrice,
+      inspectorID: data.inspectorID,
+      assetTypeID: data.assetTypeID,
+      assetStatusID: data.assetStatusID,
+    };
+
+    console.log(req);
     try {
-      const response = await request.put(`/asset-service/assets/${id}`, data);
+      const response = await request.put(`/asset-service/assets/${id}`, req, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       return response.data;
     } catch (error) {
       console.log(error);

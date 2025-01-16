@@ -9,6 +9,7 @@ import { ResponseDataAuctionSession } from "../../../../Type/Auction/AuctionSess
 import { AuctionSessionServices } from "../../../../Services/Auction/AuctionSessionServices";
 import { ResponseDataAsset } from "../../../../Type/Asset/Asset";
 import { AssetServices } from "../../../../Services/Asset/AssetServices";
+import { parseDateToISO } from "../../../../Util/ConverStringToTime";
 interface CreateFormFields extends AuctionItem {}
 
 type CreateEditArticleFormProps = {
@@ -44,10 +45,15 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({
   const getAllAuctionSession = async () => {
     try {
       const res: ResponseDataAuctionSession =
-        await AuctionSessionServices.getAll(10, 10, "", "", "");
-      const formattedData = res.metadata.data.map((item) => ({
+        await AuctionSessionServices.getAll();
+      const formattedData = res.metadata.auctionSessions.map((item) => ({
         value: item.auctionSessionID,
-        label: item.auctionSessionID.toString(),
+        label:
+          item.auctionSessionID.toString() +
+          ": " +
+          parseDateToISO(item.startTime.toString()) +
+          " - " +
+          parseDateToISO(item.endTime.toString()),
       }));
       setAuctionSessionIdList(formattedData);
     } catch (error) {
@@ -61,7 +67,7 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({
       const res: ResponseDataAsset = await AssetServices.getAll();
       const formattedData = res.metadata.data.map((item) => ({
         value: item.assetID,
-        label: item.assetName,
+        label: item.assetID + ": " + item.assetName,
       }));
       setAssetIdList(formattedData);
     } catch (error) {
@@ -137,14 +143,14 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({
           name="auctionSessionId"
           control={control}
           rules={{ required: "Vui lòng chọn danh mục" }}
-          title="Trạng thái"
+          title="Mã phiên đấu giá"
           titleOption={auctionSessionIdList}
         />
         <InputTypeSelect
           name="assetId"
           control={control}
           rules={{ required: "Vui lòng chọn danh mục" }}
-          title="Trạng thái"
+          title="Mã tài sản đấu giá"
           titleOption={assetIdList}
         />
       </div>

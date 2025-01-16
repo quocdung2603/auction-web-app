@@ -2,16 +2,10 @@ import { request } from "../../Common/Config/Request";
 import { AuctionSession } from "../../Type/Auction/AuctionSession";
 
 export const AuctionSessionServices = {
-  getAll: async (
-    page: number,
-    limit: number,
-    select: string,
-    order: string,
-    filter: string
-  ) => {
+  getAll: async () => {
     try {
       const response = await request.get(
-        `/auction-management-service/auction-session?page=${page}&limit=${limit}&select=${select}&order=${order}&filter=${filter}`
+        `/auction-management-service/auction-session`
       );
       return response.data;
     } catch (error) {
@@ -43,10 +37,16 @@ export const AuctionSessionServices = {
   },
 
   update: async (id: string, data: AuctionSession) => {
+    const req = {
+      startTime: data.startTime,
+      endTime: data.endTime,
+      eventID: data.eventID,
+    };
+    console.log(req);
     try {
       const response = await request.patch(
         `/auction-management-service/auction-session/${id}`,
-        data
+        req
       );
       return response.data;
     } catch (error) {
