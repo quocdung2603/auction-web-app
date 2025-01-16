@@ -98,13 +98,13 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({
           placeholder="Thời gian kết thúc"
         />
       </div>
-      <InputTypeSelect
+      {/* <InputTypeSelect
         name="eventID"
         control={control}
         rules={{ required: "Vui lòng chọn danh mục" }}
         title="Danh mục sản phẩm"
         titleOption={eventList}
-      />
+      /> */}
       <div className="text-right">
         <Button
           type="primary"

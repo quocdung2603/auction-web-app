@@ -9,23 +9,23 @@ const Columns = (
   {
     title: "Mã tài sản đấu giá ",
     dataIndex: "auctionItemId",
-    //filter
-    filters: [
-      {
-        text: "A",
-        value: "A",
-      },
-    ],
-    filterMode: "tree",
-    filterSearch: true,
-    width: "18%",
-    align: "center",
-    onFilter: (value, record) =>
-      record.auctionItemId.toString().startsWith(value as string),
-    //sorter
-    defaultSortOrder: "descend",
-    sorter: (a, b) =>
-      a.auctionItemId.toString().localeCompare(b.auctionItemId.toString()),
+    // //filter
+    // filters: [
+    //   {
+    //     text: "A",
+    //     value: "A",
+    //   },
+    // ],
+    // filterMode: "tree",
+    // filterSearch: true,
+    // width: "18%",
+    // align: "center",
+    // onFilter: (value, record) =>
+    //   record.auctionItemId.toString().startsWith(value as string),
+    // //sorter
+    // defaultSortOrder: "descend",
+    // sorter: (a, b) =>
+    //   a.auctionItemId.toString().localeCompare(b.auctionItemId.toString()),
     //render
     render(value, record) {
       return (

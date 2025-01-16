@@ -41,7 +41,11 @@ const InputTypeFile = <T extends FieldValues>({
             {value ? (
               <div className="w-full text-center">
                 <img
-                  src={URL.createObjectURL(value)} // Hiển thị ảnh đã chọn
+                  src={
+                    typeof value === "string"
+                      ? value
+                      : URL.createObjectURL(value)
+                  } // Kiểm tra kiểu dữ liệu
                   alt="Selected file"
                   className="w-48 h-48 object-cover mx-auto"
                 />

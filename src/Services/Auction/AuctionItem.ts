@@ -2,16 +2,10 @@ import { request } from "../../Common/Config/Request";
 import { AuctionItem } from "../../Type/Auction/AuctionItem";
 
 export const AuctionItemServices = {
-  getAll: async (
-    page: number,
-    limit: number,
-    select: string,
-    order: string,
-    filter: string
-  ) => {
+  getAll: async () => {
     try {
       const response = await request.get(
-        `/auction-management-service/auction-item?page=${page}&limit=${limit}&select=${select}&order=${order}&filter=${filter}`
+        `/auction-management-service/auction-item`
       );
       return response.data;
     } catch (error) {

@@ -15,6 +15,6 @@ export interface ResponseDataAuctionSession {
   code: number;
   message: string;
   metadata: {
-    data: AuctionSession[];
+    auctionSessions: AuctionSession[];
   };
 }
