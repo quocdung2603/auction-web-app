@@ -53,7 +53,7 @@ const inventoryManagement: React.FC = () => {
 
   const getAll = async () => {
     InventoryServices.getAll().then((res) => {
-      setListData(res.data.data);
+      setListData(res.metadata.data);
     });
   };
 
@@ -100,6 +100,8 @@ const inventoryManagement: React.FC = () => {
         InventoryServices.delete(_id)
           .then(() => {
             notification.success({ message: "Xóa thành công" });
+            getAll();
+            closeModal();
           })
           .catch(() => {
             notification.error({

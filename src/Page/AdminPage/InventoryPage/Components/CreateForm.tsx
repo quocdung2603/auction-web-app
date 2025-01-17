@@ -148,7 +148,7 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({
         name="warehouseID"
         control={control}
         rules={{ required: "Vui lòng chọn danh mục" }}
-        title="Danh mục sản phẩm"
+        title="Mã kho"
         titleOption={warehouseList}
       />
       <InputTypeSelect

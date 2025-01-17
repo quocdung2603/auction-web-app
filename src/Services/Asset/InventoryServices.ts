@@ -27,6 +27,7 @@ export const InventoryServices = {
     }
   },
   update: async (id: string, data: Inventory) => {
+    console.log(data);
     try {
       const response = await request.put(
         `/asset-service/inventories/${id}`,
