@@ -55,7 +55,7 @@ export const AssetServices = {
 
     console.log(req);
     try {
-      const response = await request.put(`/asset-service/assets/${id}`, req, {
+      const response = await request.patch(`/asset-service/assets/${id}`, req, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
