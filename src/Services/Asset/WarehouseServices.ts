@@ -31,7 +31,7 @@ export const WarehouseServices = {
       location: data.location,
     };
     try {
-      const response = await request.put(`/asset-service/warehouse/${id}`, req);
+      const response = await request.patch(`/asset-service/warehouse/${id}`, req);
       return response.data;
     } catch (error) {
       console.log(error);
