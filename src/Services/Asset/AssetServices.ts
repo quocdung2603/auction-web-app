@@ -19,6 +19,8 @@ export const AssetServices = {
     }
   },
   create: async (data: Asset) => {
+    console.log(data);
+
     const req = {
       assetName: data.assetName,
       file: data.mainImage,
@@ -39,7 +41,7 @@ export const AssetServices = {
   },
   update: async (id: string, data: Asset) => {
     try {
-      const response = await request.put(`/asset-service/assets/${id}`, data);
+      const response = await request.patch(`/asset-service/assets/${id}`, data);
       return response.data;
     } catch (error) {
       console.log(error);

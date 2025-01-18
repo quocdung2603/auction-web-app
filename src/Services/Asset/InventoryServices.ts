@@ -28,7 +28,7 @@ export const InventoryServices = {
   },
   update: async (id: string, data: Inventory) => {
     try {
-      const response = await request.put(
+      const response = await request.patch(
         `/asset-service/inventories/${id}`,
         data
       );

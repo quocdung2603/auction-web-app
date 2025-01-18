@@ -15,7 +15,7 @@ import { ResponseDataAssetStatus } from "../../../../Type/Asset/AssetStatus";
 import { AssetStatusServices } from "../../../../Services/Asset/AssetStatusServices";
 import { AssetServices } from "../../../../Services/Asset/AssetServices";
 
-interface CreateFormFields extends Asset {}
+interface CreateFormFields extends Asset { }
 
 type CreateEditArticleFormProps = {
   initForm?: CreateFormFields;
@@ -25,13 +25,14 @@ type CreateEditArticleFormProps = {
 
 const defaultFormValues = {
   assetID: 0,
-  assetName: "",
-  mainImage: "",
-  assetDescription: "",
-  assetPrice: 0,
-  inspectorID: 0,
-  assetTypeID: 0,
-  assetStatusID: 0,
+  assetName: "askldfksjf",
+  mainImage: null,
+  assetDescription: "klajsdhkjasdf",
+  assetPrice: 100,
+  inspectorID: 1,
+  assetTypeID: 1,
+  assetStatusID: 1,
+  file:
 };
 
 const CreateForm: React.FC<CreateEditArticleFormProps> = ({
@@ -95,11 +96,11 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({
     }
   };
 
-  useEffect(() => {
-    getAllAssetType();
-    getAllInspector();
-    getAllAssetStatus();
-  }, []);
+  // useEffect(() => {
+  //   getAllAssetType();
+  //    getAllInspector();
+  //    getAllAssetStatus();
+  // }, []);
 
   useEffect(() => {
     if (initForm) {

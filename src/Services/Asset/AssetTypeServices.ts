@@ -31,7 +31,7 @@ export const AssetTypeServices = {
       assetTypeName: data.assetTypeName,
     };
     try {
-      const response = await request.put(
+      const response = await request.patch(
         `/asset-service/asset-types/${id}`,
         req
       );

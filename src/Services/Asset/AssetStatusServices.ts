@@ -31,7 +31,7 @@ export const AssetStatusServices = {
   },
   update: async (id: string, data: AssetStatus) => {
     try {
-      const response = await request.put(
+      const response = await request.patch(
         `/asset-service/asset-statuses/${id}`,
         data
       );
