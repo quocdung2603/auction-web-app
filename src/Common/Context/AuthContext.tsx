@@ -1,8 +1,9 @@
-import { createContext, PropsWithChildren, useContext, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { LoginRequst, ResponseLogin } from '../../Type/Account/Login';
 import { routerLinkUser } from '../../Util/RouterLink';
 import { AuthServices } from '../../Services/Account/AuthServices';
+import { notification } from 'antd';
 
 interface AuthContextType {
   login: (loginData: LoginRequst) => void;
@@ -30,6 +31,21 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     setToken(null);
     return <Navigate to={routerLinkUser.Home}/>
   };
+  const checkToken = async ()=>{
+    try {
+      const res: {data: boolean} = await AuthServices.checktoken(token);
+      if(res?.data==false)
+      {
+        logout();
+      }
+    } catch (error) {
+      notification.error({message: "Hết hạn token vui lòng đăng nhập lại!"})
+    }
+  }
+  
+  useEffect(()=>{
+    checkToken();
+  },[token])
   return (
     <AuthConext.Provider value={{login, logout, token }}>
       {children}
