@@ -3,7 +3,6 @@ import { useState } from "react";
 interface ItemProductDescription {
   title: string;
   content: string;
-  position: number;
 }
 
 interface ProductDescriptionProps {
@@ -11,27 +10,29 @@ interface ProductDescriptionProps {
 }
 
 const ProductDescription: React.FC<ProductDescriptionProps> = ({ list }) => {
-  const [active, setActive] = useState<number>(0);
+  const [activeTab, setActiveTab] = useState<number>(0);
 
   return (
-    <>
-      <div className="flex flex-row space-x-[2%] mt-[4%]">
+    <div className="mt-[4%]">
+      <div className="flex flex-row space-x-[2%]">
         {list.map((item, index) => (
           <button
-            key={index + 0}
-            className={`rounded p-4 shadow-lg hover:bg-primary transitionHight ${
-              active === item.position ? "bg-primary text-white transitionHight" : "text-black"
+            key={index}
+            className={`rounded p-4 shadow-lg hover:bg-blue-600 transition-all duration-300 ${
+              activeTab === index ? "bg-blue-600 text-white" : "text-gray-800"
             }`}
-            onClick={() => setActive(item.position)}
+            onClick={() => setActiveTab(index)}
           >
-            <p className="text-[24px] font-bold transitionHight">{item.title}</p>
+            <p className="text-xl font-semibold">{item.title}</p>
           </button>
         ))}
       </div>
-      <div className="border w-full mt-[2%] p-3">
-        {list.find((item) => item.position === active)?.content}
+      <div className="border w-full mt-[2%] p-4 rounded-lg bg-gray-100">
+        <p className="text-gray-900 text-lg">
+          {list[activeTab]?.content || "Chưa có thông tin chi tiết"}
+        </p>
       </div>
-    </>
+    </div>
   );
 };
 

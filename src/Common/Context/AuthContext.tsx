@@ -4,18 +4,34 @@ import { LoginRequst, ResponseLogin } from '../../Type/Account/Login';
 import { routerLinkUser } from '../../Util/RouterLink';
 import { AuthServices } from '../../Services/Account/AuthServices';
 import { notification } from 'antd';
+import { ResponseDataUserByToken, User } from '../../Type/Account/User';
 
 interface AuthContextType {
   login: (loginData: LoginRequst) => void;
   logout: () => void;
-  token: string | null | undefined
+  token: string | null | undefined,
+  user: User | null | undefined
 }
 
 const USER_TOKEN=import.meta.env.VITE_USER_TOKEN;
+const USER=import.meta.env.VITE_USER;
 export const AuthConext = createContext<AuthContextType | null | undefined>(undefined);
 
 export const AuthContextProvider = ({ children }: PropsWithChildren) => {
   const navigate = useNavigate();
+  const [user,setUser]=useState<User | null | undefined>(()=>{
+    const storeUser = localStorage.getItem(USER);
+    if (storeUser) {
+      try {
+        const parsedUser = JSON.parse(storeUser); 
+        return parsedUser as User; 
+      } catch (error) {
+        console.error("Error parsing user from localStorage:", error);
+        return null; 
+      }
+    }
+    return undefined;
+  });
   const [token,setToken]=useState<string | null | undefined>(()=>{
     const storeToken = localStorage.getItem(USER_TOKEN);
     return storeToken ? storeToken : undefined;
@@ -24,11 +40,17 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
   const login = async (loginData: LoginRequst) => {
     const res:ResponseLogin = await AuthServices.login(loginData.email,loginData.password);
     localStorage.setItem(USER_TOKEN,res.data);
+    const findUser:ResponseDataUserByToken = await AuthServices.findUserByToken(res.data);
+    localStorage.setItem(USER,JSON.stringify(findUser.data));
+    setUser(findUser.data);
+    setToken(res.data);
     navigate(routerLinkUser.Home);
   };
   const logout = () => {
     localStorage.removeItem(USER_TOKEN);
+    localStorage.removeItem(USER);
     setToken(null);
+    setUser(null);
     return <Navigate to={routerLinkUser.Home}/>
   };
   const checkToken = async ()=>{
@@ -39,7 +61,8 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
         logout();
       }
     } catch (error) {
-      notification.error({message: "Hết hạn token vui lòng đăng nhập lại!"})
+      notification.error({message: "Hết hạn token vui lòng đăng nhập lại!"});
+      logout();
     }
   }
   
@@ -47,7 +70,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     checkToken();
   },[token])
   return (
-    <AuthConext.Provider value={{login, logout, token }}>
+    <AuthConext.Provider value={{login, logout, token, user }}>
       {children}
     </AuthConext.Provider>
   );

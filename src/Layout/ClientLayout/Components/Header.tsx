@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 // API
 import { fakeApi } from "../../../Util/fakeApi";
 import { useAuth } from "../../../Common/Context/AuthContext";
+import { Button } from "antd";
 
 const Header = () => {
 	const {token}=useAuth();
@@ -82,7 +83,7 @@ const Header = () => {
 		};
 
 		getProducts(); // Gọi khi component mount
-	}, []);
+	}, [token]);
 	return (
     <header className="relative h-[100px] bg-primary px-custom flex justify-between shadow-custom">
       {/* left menu */}
@@ -147,9 +148,9 @@ const Header = () => {
                 <p className="text-sm font-bold">Dũng Cute</p>
               </div>
             ) : (
-              <ButtonPrimary className="relative py-2 px-4">
+              <Button className="relative py-2 px-4">
                 Đăng Nhập
-              </ButtonPrimary>
+              </Button>
             )}
             {token ? (
               <div className="absolute scale-0 w-40 flex flex-col bg-white shadow-custom z-max group-hover/login:scale-100">

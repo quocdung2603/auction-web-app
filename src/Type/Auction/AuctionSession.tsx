@@ -18,3 +18,36 @@ export interface ResponseDataAuctionSession {
     auctionSessions: AuctionSession[];
   };
 }
+
+export interface Auction {
+  id: number;
+  name: string;
+  startTime: string;
+  endTime: string;
+  paymentDeadline: number;
+  assetId: number;
+  depositFee: number;
+  bidStep: number;
+  isDelete: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  history?: [],
+  users?: []
+}
+
+export interface ResponseAuctionData {
+  code: number;
+  message: string;
+  metadata: {
+    auctionSessions: Auction[];
+  };
+}
+
+export interface ResponseAuctionDataById{
+  code: number;
+  message: string;
+  metadata: {
+    auctionSession: Auction;
+  };
+}

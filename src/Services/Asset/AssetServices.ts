@@ -10,7 +10,7 @@ export const AssetServices = {
       console.log(error);
     }
   },
-  getById: async (id: string) => {
+  getById: async (id: number) => {
     try {
       const response = await request.get(`/asset-service/assets/${id}`);
       return response.data;

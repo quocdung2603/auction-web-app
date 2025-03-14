@@ -22,3 +22,9 @@ export interface ResponseDataAsset {
     data: Asset[];
   };
 }
+export interface ResponseDataAssetById {
+  code: number;
+  message: string;
+  metadata: Asset;
+}
+
