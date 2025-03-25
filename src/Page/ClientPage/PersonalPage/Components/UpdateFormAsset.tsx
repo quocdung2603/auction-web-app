@@ -13,6 +13,16 @@ import { ResponseDataInspector } from "../../../../Type/Inspector/Inspector";
 import { AssetServices } from "../../../../Services/Asset/AssetServices";
 import { InspectorServices } from "../../../../Services/Inspsector/InspectorServices";
 import { useAuth } from "../../../../Common/Context/AuthContext";
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+
+const editorConfiguration = {
+  toolbar: {
+    items: [],
+    shouldNotGroupWhenFull: true,
+  },
+  contentsCss: ["./test.css"],
+};
 
 interface CreateFormFields extends Asset {}
 
@@ -42,7 +52,7 @@ const defaultFormValues: CreateFormFields = {
   images: [],
 };
 
-const CreateForm: React.FC<CreateEditArticleFormProps> = ({
+const UpdateForm: React.FC<CreateEditArticleFormProps> = ({
   initForm,
   getAll,
   closeModal,
@@ -121,7 +131,9 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({
       reset(defaultFormValues);
     }
   }, [initForm, reset]);
+
   const status = watch("status");
+
   return (
     <form
       method="POST"
@@ -162,7 +174,9 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({
           />
         </div>
       </div>
-      <div className={`grid grid-cols-1 ${initForm && 'sm:grid-cols-3 gap-4'} `}>
+      <div
+        className={`grid grid-cols-1 ${initForm && "sm:grid-cols-3 gap-4"}`}
+      >
         <InputTypeSelect
           name="assetTypeID"
           control={control}
@@ -178,6 +192,7 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({
               rules={{ required: "Vui lòng chọn người kiểm định" }}
               title="Người kiểm định"
               titleOption={inspector}
+              disabled={true} // Khóa trường "Người kiểm định"
             />
             <InputTypeSelect
               name="status"
@@ -185,17 +200,30 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({
               rules={{ required: "Vui lòng chọn trạng thái" }}
               title="Trạng thái"
               titleOption={assetStatus}
+              disabled={true} // Khóa trường "Trạng thái"
             />
           </>
         )}
       </div>
       {status === "unavailable" && (
-        <InputDescription
-          name="reason"
-          control={control}
-          placeholder="Lý do từ chối tài sản"
-          defaultValue={initForm?.reason}
-        />
+        <div>
+          <label className="block mb-1 text-lg text-black font-medium">
+            Lý do từ người quản trị đưa ra:
+          </label>
+          <CKEditor
+            editor={ClassicEditor}
+            config={editorConfiguration}
+            data={initForm?.reason}
+            onReady={(editor) => {
+              const editableElement = editor.ui.view.editable.element;
+              if (editableElement) {
+                editableElement.style.border = "none";
+                editableElement.style.boxShadow = "none";
+              }
+            }}
+            disabled
+          />
+        </div>
       )}
       <InputDescription
         name="assetDescription"
@@ -217,4 +245,4 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({
   );
 };
 
-export default CreateForm;
+export default UpdateForm;

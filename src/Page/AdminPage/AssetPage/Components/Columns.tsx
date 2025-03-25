@@ -1,89 +1,100 @@
 import { Asset } from "../../../../Type/Asset/Asset";
 import { Button, TableColumnsType } from "antd";
 import { Link } from "react-router-dom";
+import { IconSuccess } from "../../../../Common/Icon/Icon";
 
-const Columns = (showModalEdit: (
-  isOpen: boolean, data: Asset) => void,
-  showDeleteConfirm: (userId: string) => void
+const Columns = (
+  showModalEdit: (isOpen: boolean, data: Asset) => void,
+  showDeleteConfirm: (id: string) => void
 ): TableColumnsType<Asset> => [
-    {
-      title: "Tên tài sản",
-      dataIndex: "assetName",
-      //filter
-      filters: [
-        {
-          text: "A",
-          value: "A",
-        }
-      ],
-      filterMode: "tree",
-      filterSearch: true,
-      width: "16.67%",
-      align: "center",
-      onFilter: (value, record) => record.assetName.startsWith(value as string),
-      //sorter
-      defaultSortOrder: 'descend',
-      sorter: (a, b) => a.assetName.localeCompare(b.assetName),
-      //render
-      render(value, record) {
-        return (
-          <Link to={`/profile/${record.assetID}`} className="underline text-center">
-            {value}
-          </Link>
-        );
-      },
+  {
+    title: "ID Tài sản",
+    dataIndex: "assetID",
+    render(value) {
+      return <div className="underline text-center ">{value}</div>;
     },
-    {
-      title: "Ảnh đại diện",
-      dataIndex: "mainImage",
-      width: "16.67%",
-      align: "center",
-      render: (value) => {
-        return (
-          <div className="w-full">
-            <img
-              src={value}
-              alt="articles"
-              className="max-h-[150px] w-full object-cover"
-            />
-          </div>
-        );
+  },
+  {
+    title: "Tên tài sản",
+    dataIndex: "assetName",
+    filters: [
+      {
+        text: "A",
+        value: "A",
       },
+    ],
+    filterMode: "tree",
+    filterSearch: true,
+    width: "16.67%",
+    align: "center",
+    onFilter: (value, record) => record.assetName.startsWith(value as string),
+    defaultSortOrder: "descend",
+    sorter: (a, b) => a.assetName.localeCompare(b.assetName),
+    render(value, record) {
+      return (
+        <Link
+          to={`/profile/${record.assetID}`}
+          className="underline text-center"
+        >
+          {value}
+        </Link>
+      );
     },
-    {
-      title: "Giá tài sản",
-      dataIndex: "assetPrice",
-      width: "16.67%",
-      align: "center",
-      render: (value) => {
-        return <span className="text-center">{value}</span>;
-      },
+  },
+  {
+    title: "Ảnh đại diện",
+    dataIndex: "mainImage",
+    width: "16.67%",
+    align: "center",
+    render: (value) => {
+      return (
+        <div className="w-full">
+          <img
+            src={value}
+            alt="asset"
+            className="max-h-[150px] w-full object-cover"
+          />
+        </div>
+      );
     },
-    {
-      title: "Chức năng",
-      dataIndex: "action",
-      align: "center",
-      render(_, record) {
-        return (
-          <div className="flex flex-row justify-center space-x-3">
+  },
+  {
+    title: "Giá tài sản",
+    dataIndex: "assetPrice",
+    width: "16.67%",
+    align: "center",
+    render: (value) => {
+      return <span className="text-center">{value.toLocaleString()} VND</span>;
+    },
+  },
+  {
+    title: "Địa chỉ",
+    dataIndex: "address",
+    width: "16.67%",
+    align: "center",
+  },
+  {
+    title: "Chức năng",
+    dataIndex: "action",
+    align: "center",
+    width: "20%",
+    render: (_, record) => (
+      <div className="flex flex-row justify-center space-x-3">
+        {record.status === "sold" ? (
+          <IconSuccess></IconSuccess>
+        ) : (
+          <>
+            <Button onClick={() => showModalEdit(true, record)}>Edit</Button>
             <Button
-              onClick={() => {
-                showModalEdit(true, record);
-              }}
-            >
-              Edit
-            </Button>
-            <Button
-              onClick={() => {
-                showDeleteConfirm(record.assetID.toString());
-              }}
+              onClick={() => showDeleteConfirm(record.assetID.toString())}
             >
               Delete
             </Button>
-          </div>
-        );
-      },
-    },
-  ];
+          </>
+        )}
+      </div>
+    ),
+  },
+];
 
 export default Columns;

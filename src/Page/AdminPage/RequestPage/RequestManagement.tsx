@@ -1,4 +1,3 @@
-import { Request, ResponseDataRequest } from "../../../Type/Inspector/Request";
 import {
   Button,
   DatePicker,
@@ -8,38 +7,28 @@ import {
   TableProps,
 } from "antd";
 import Search, { SearchProps } from "antd/es/input/Search";
-import confirm from "antd/es/modal/confirm";
 import { useEffect, useRef, useState } from "react";
-import Columns from "./Components/Columns";
-import CreateForm from "./Components/CreateForm";
+import { Asset, ResponseDataAsset } from "../../../Type/Asset/Asset";
+import { AssetServices } from "../../../Services/Asset/AssetServices";
 import moment from "moment";
-import { RequestServices } from "../../../Services/Inspsector/RequestServices";
+import CreateForm from "./Components/CreateForm";
+import Columns from "./Components/Columns";
+import confirm from "antd/es/modal/confirm";
+
+
 
 const requestManagement: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalEdit, setModalEdit] = useState<{
     isOpen: boolean;
-    data: undefined | Request;
+    data: undefined | Asset;
   }>({
     isOpen: false,
     data: undefined,
   });
 
-  const [listData, setListData] = useState<Request[]>(() => {
-    const defaultItem: Request = {
-      id: 0,
-      name: "request name",
-      description:
-        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi, error!",
-      verify: true,
-      status: false,
-      inspectorId: 1,
-      userId: 1,
-      assetId: 1,
-      deflag: true,
-    };
-    return Array.from({ length: 10 }, () => ({ ...defaultItem }));
-  });
+  const [listData, setListData] = useState<Asset[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
 
   const timeoutRef = useRef(setTimeout(() => {}, 0));
   const [filters, setFilters] = useState({
@@ -65,14 +54,22 @@ const requestManagement: React.FC = () => {
     setIsModalOpen(false);
   };
 
+  const getAll = async () => {
+    try {
+      const res:ResponseDataAsset = await AssetServices.getAll();
+      const listDataAvaliable = res.metadata.data.filter((item)=>item.status!=="available");
+      setListData(listDataAvaliable);
+      setTotalItems(res.metadata.data.length);
+    } catch (error) {
+      notification.error({ message: "Failed to fetch assets" });
+    }
+  };
+
   useEffect(() => {
-    // fetchArticles().then((res) => {
-    //   setArticles(res.data.data);
-    // });
+    getAll();
   }, [filters]);
 
-  const onChange: TableProps<Request>["onChange"] = (pagination) => {
-    //refetch data
+  const onChange: TableProps<Asset>["onChange"] = (pagination) => {
     setFilters((prev) => ({
       ...prev,
       pageNumber: pagination.current ?? 1,
@@ -80,53 +77,48 @@ const requestManagement: React.FC = () => {
     }));
   };
 
-  const onSearch: SearchProps["onSearch"] = (value, _e) => {
-    //refetch data
+  const onSearch: SearchProps["onSearch"] = (value) => {
     clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
       setFilters((prev) => ({
         ...prev,
         search: value,
+        pageNumber: 1,
       }));
     }, 1500);
   };
 
-  const showModalEdit = (isOpen: boolean, data: Request) => {
+  const showModalEdit = (isOpen: boolean, data: Asset) => {
     setModalEdit({
       isOpen,
       data,
     });
   };
-  const deleteRequest= async(id: number)=>{
-    try {
-      await RequestServices.delete(id);
-      getAllRequest();
-      notification.success({ message: "Xóa thành công" });
-    } catch (error) {
-      notification.error({ message: "Xóa thất bại" });
-    }
-  }
-  const showDeleteConfirm = (_id: string) => {
+
+  const showDeleteConfirm = (id: string) => {
     confirm({
       title: "Bạn có chắc muốn xóa dữ liệu này?",
       content: "Bạn sẽ không thể khôi phục dữ liệu sau khi xóa!",
-      okText: "Xóa luôn sợ gì",
+      okText: "Xóa",
       okType: "danger",
       maskClosable: true,
       closable: true,
       onOk() {
-        deleteRequest(Number(_id));
+        AssetServices.delete(id)
+          .then(() => {
+            notification.success({ message: "Xóa thành công" });
+            getAll();
+          })
+          .catch(() => {
+            notification.error({
+              message: "Xóa thất bại ! Kiểm tra lại nha !",
+            });
+          });
       },
       cancelText: "Hủy",
     });
   };
-  const getAllRequest= async()=>{
-    const res:ResponseDataRequest=await RequestServices.getAll();
-    setListData(res.data);
-  }
-  useEffect(()=>{
-    getAllRequest();
-  },[])
+
   return (
     <div>
       <div className="flex items-center justify-end my-4 space-x-2">
@@ -135,20 +127,11 @@ const requestManagement: React.FC = () => {
           allowEmpty={[false, true]}
           onChange={(date) => {
             if (!date) return;
-
-            if (date[0]) {
-              setFilters((prev) => ({
-                ...prev,
-                start: moment(date[0]?.toString()).valueOf(),
-              }));
-            }
-
-            if (date[1]) {
-              setFilters((prev) => ({
-                ...prev,
-                end: moment(date[1]?.toString()).valueOf(),
-              }));
-            }
+            setFilters((prev) => ({
+              ...prev,
+              start: date[0] ? moment(date[0].toString()).valueOf() : prev.start,
+              end: date[1] ? moment(date[1].toString()).valueOf() : prev.end,
+            }));
           }}
         />
         <Search
@@ -163,22 +146,25 @@ const requestManagement: React.FC = () => {
           title={modalEdit.isOpen ? "Sửa Thông tin" : "Thêm mới thông tin"}
           open={isModalOpen || modalEdit.isOpen}
           onCancel={closeModal}
-          cancelButtonProps={{
-            className: "hidden",
-          }}
-          okButtonProps={{
-            className: "hidden",
-          }}
+          cancelButtonProps={{ className: "hidden" }}
+          okButtonProps={{ className: "hidden" }}
         >
-          <CreateForm initForm={modalEdit.data} getAll={getAllRequest}/>
+          <CreateForm
+            initForm={modalEdit.data}
+            getAll={getAll}
+            closeModal={closeModal}
+          />
         </Modal>
       </div>
       <Table
         columns={Columns(showModalEdit, showDeleteConfirm)}
-        dataSource={listData.map((item, index) => ({ ...item, key: index }))}
+        dataSource={listData.map((item) => ({ ...item, key: item.assetID }))}
         pagination={{
-          pageSize: 5,
-          total: listData.length,
+          current: filters.pageNumber,
+          pageSize: filters.pageSize,
+          total: totalItems,
+          showSizeChanger: true,
+          pageSizeOptions: ["5", "10", "20", "50"],
         }}
         onChange={onChange}
       />

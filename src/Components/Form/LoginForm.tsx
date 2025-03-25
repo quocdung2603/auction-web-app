@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { IconGoogle, IconFacebook } from "../../Common/Icon/Icon";
-import { User } from "../../Type/Account/User";
 
 type FormData = {
   email: string;

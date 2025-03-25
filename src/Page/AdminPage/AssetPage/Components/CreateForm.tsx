@@ -10,10 +10,9 @@ import InputTypeFile from "../../../../Components/Input/InputTypeFile";
 import { ResponseDataAssetType } from "../../../../Type/Asset/AssetType";
 import { AssetTypeServices } from "../../../../Services/Asset/AssetTypeServices";
 import { ResponseDataInspector } from "../../../../Type/Inspector/Inspector";
-import { InspectorServices } from "../../../../Services/Inspsector/InspectorServices";
-import { ResponseDataAssetStatus } from "../../../../Type/Asset/AssetStatus";
-import { AssetStatusServices } from "../../../../Services/Asset/AssetStatusServices";
 import { AssetServices } from "../../../../Services/Asset/AssetServices";
+import { InspectorServices } from "../../../../Services/Inspsector/InspectorServices";
+import { useAuth } from "../../../../Common/Context/AuthContext";
 
 interface CreateFormFields extends Asset {}
 
@@ -23,15 +22,24 @@ type CreateEditArticleFormProps = {
   closeModal: () => void;
 };
 
-const defaultFormValues = {
+const defaultFormValues: CreateFormFields = {
   assetID: 0,
+  userID: 0,
   assetName: "",
   mainImage: "",
   assetDescription: "",
   assetPrice: 0,
+  address: "",
   inspectorID: 0,
   assetTypeID: 0,
-  assetStatusID: 0,
+  assetStatusID: 1,
+  status: "pending", // Thay assetStatusID bằng status
+  reason: "",
+  delflag: false,
+  created_at: new Date(),
+  updated_at: new Date(),
+  deleted_at: new Date(),
+  images: []
 };
 
 const CreateForm: React.FC<CreateEditArticleFormProps> = ({
@@ -39,16 +47,30 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({
   getAll,
   closeModal,
 }) => {
+  
   const { control, reset, handleSubmit } = useForm<CreateFormFields>({
     defaultValues: defaultFormValues,
   });
-
+  const { user } = useAuth();
   const [assetType, setAssetType] = useState<
     { value: number; label: string }[]
   >([]);
-  const [assetStatus, setAssetStatus] = useState<
-    { value: number; label: string }[]
-  >([]);
+  const [assetStatus] = useState<
+    { value: string; label: string }[]
+  >([
+    {
+      value: "available",
+      label: "Đã thẩm định",
+    },
+    {
+      value: "unavailable",
+      label: "Từ chối",
+    },
+    {
+      value: "pending",
+      label: "Chờ thẩm định",
+    },
+  ]);
   const [inspector, setInspector] = useState<
     { value: number; label: string }[]
   >([]);
@@ -58,12 +80,11 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({
       const res: ResponseDataAssetType = await AssetTypeServices.getAll();
       const formattedData = res.metadata.data.map((item) => ({
         value: item.assetTypeID,
-        label: item.assetTypeID + ": " + item.assetTypeName,
+        label: `${item.assetTypeID}: ${item.assetTypeName}`,
       }));
       setAssetType(formattedData);
     } catch (error) {
-      alert("lỗi");
-      console.log(error);
+      notification.error({ message: "Failed to fetch asset types" });
     }
   };
 
@@ -72,35 +93,42 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({
       const res: ResponseDataInspector = await InspectorServices.getAll();
       const formattedData = res.data.map((item) => ({
         value: item.id,
-        label: item.id + ": " + item.userId,
+        label: `${item.id}: UserId:  ${item.userId} : Linse: ${item.license}`,
       }));
       setInspector(formattedData);
     } catch (error) {
-      alert("lỗi");
-      console.log(error);
-    }
-  };
-
-  const getAllAssetStatus = async () => {
-    try {
-      const res: ResponseDataAssetStatus = await AssetStatusServices.getAll();
-      const formattedData = res.metadata.result.map((item) => ({
-        value: item.assetStatusID,
-        label: item.assetStatusID + ": " + item.assetStatusName,
-      }));
-      setAssetStatus(formattedData);
-    } catch (error) {
-      alert("lỗi");
-      console.log(error);
+      notification.error({ message: "Failed to fetch inspectors" });
     }
   };
 
   useEffect(() => {
     getAllAssetType();
     getAllInspector();
-    getAllAssetStatus();
   }, []);
 
+  const onSubmit: SubmitHandler<CreateFormFields> = async (data) => {
+    try {
+      if (initForm) {
+        await AssetServices.update(initForm.assetID.toString(), data);
+        notification.success({ message: "Cập nhật thành công" });
+      } else {
+        if (user) {
+          const dataReq = { ...data, userID: user?.id };
+          await AssetServices.create(dataReq);
+          notification.success({ message: "Thêm thành công" });
+        }
+      }
+      closeModal();
+      getAll();
+      reset(defaultFormValues);
+    } catch (err) {
+      notification.error({ message: "Có lỗi xảy ra, vui lòng kiểm tra lại!" });
+    }
+  };
+  useEffect(()=>{
+    console.log(initForm);
+    
+  },[initForm])
   useEffect(() => {
     if (initForm) {
       reset(initForm);
@@ -108,37 +136,6 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({
       reset(defaultFormValues);
     }
   }, [initForm, reset]);
-
-  const onSubmit: SubmitHandler<CreateFormFields> = async (data) => {
-    try {
-      if (initForm) {
-        // API Update logic
-        AssetServices.update(initForm.assetID.toString(), data)
-          .then(() => {
-            notification.success({ message: "Cập nhật thành công" });
-            closeModal();
-            getAll();
-          })
-          .catch(() => {
-            notification.error({ message: "Cập nhật thất bại" });
-          });
-      } else {
-        // API Create logic
-        AssetServices.create(data)
-          .then(() => {
-            notification.success({ message: "Thêm thành công" });
-            closeModal();
-            getAll();
-          })
-          .catch(() => {
-            notification.error({ message: "Thêm thất bại" });
-          });
-      }
-      reset(defaultFormValues);
-    } catch (err) {
-      notification.error({ message: "Có lỗi xảy ra, vui lòng kiểm tra lại!" });
-    }
-  };
 
   return (
     <form
@@ -171,31 +168,46 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({
             title="Giá sản phẩm"
             placeholder="Nhập giá sản phẩm"
           />
+          <InputTypeString
+            name="address"
+            control={control}
+            rules={{ required: "Địa chỉ không được để trống!" }}
+            title="Địa chỉ"
+            placeholder="Nhập địa chỉ"
+          />
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <InputTypeSelect
           name="assetTypeID"
           control={control}
-          rules={{ required: "Vui lòng chọn danh mục" }}
+          rules={{ required: "Vui lòng chọn loại tài sản" }}
           title="Loại tài sản"
           titleOption={assetType}
         />
         <InputTypeSelect
           name="inspectorID"
           control={control}
-          rules={{ required: "Vui lòng chọn danh mục" }}
+          rules={{ required: "Vui lòng chọn người kiểm định" }}
           title="Người kiểm định"
           titleOption={inspector}
         />
         <InputTypeSelect
-          name="assetStatusID"
+          name="status" // Thay assetStatusID bằng status
           control={control}
-          rules={{ required: "Vui lòng chọn danh mục" }}
+          rules={{ required: "Vui lòng chọn trạng thái" }}
           title="Trạng thái"
           titleOption={assetStatus}
         />
       </div>
+      {initForm?.status === "unavailable" && (
+        <InputDescription
+          name="reason"
+          control={control}
+          placeholder="Lý do từ chối tài sản"
+          defaultValue={initForm?.reason}
+        />
+      )}
       <InputDescription
         name="assetDescription"
         control={control}

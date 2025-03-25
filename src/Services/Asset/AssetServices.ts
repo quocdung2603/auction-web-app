@@ -10,7 +10,7 @@ export const AssetServices = {
       console.log(error);
     }
   },
-  getById: async (id: string) => {
+  getById: async (id: number) => {
     try {
       const response = await request.get(`/asset-service/assets/${id}`);
       return response.data;
@@ -20,50 +20,41 @@ export const AssetServices = {
   },
   create: async (data: Asset) => {
     const req = {
+      userID: data.userID,
       assetName: data.assetName,
       file: data.mainImage,
       assetDescription: data.assetDescription,
       assetPrice: data.assetPrice,
       inspectorID: data.inspectorID,
       assetTypeID: data.assetTypeID,
-      assetStatusID: data.assetStatusID,
+      address: data.address,
     };
-
-    console.log(req);
-    try {
-      const response = await request.post("/asset-service/assets", req, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      return response.data;
-    } catch (error) {
-      console.log(error);
-    }
+    const response = await request.post("/asset-service/assets", req, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
   },
-
   update: async (id: string, data: Asset) => {
     const req = {
+      userID: data.userID,
       assetName: data.assetName,
       file: data.mainImage,
       assetDescription: data.assetDescription,
       assetPrice: data.assetPrice,
       inspectorID: data.inspectorID,
       assetTypeID: data.assetTypeID,
-      assetStatusID: data.assetStatusID,
+      address: data.address,
+      status: data.status,
+      reason: data.reason
     };
-
-    console.log(req);
-    try {
-      const response = await request.patch(`/asset-service/assets/${id}`, req, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      return response.data;
-    } catch (error) {
-      console.log(error);
-    }
+    const response = await request.patch(`/asset-service/assets/${id}`, req, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
   },
   delete: async (id: string) => {
     try {

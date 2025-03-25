@@ -10,4 +10,13 @@ export const AuthServices = {
       console.log(error);
     }
   },
+  checktoken: async(token:string| null | undefined)=>{
+    const response=await request.post("/user/auth/checktoken",{token})
+    return response.data;
+  },
+  findUserByToken: async(token: string | null | undefined)=>{
+    const response=await request.get(`/user/findbytoken/${token}`)
+    return response.data;
+  }
+
 };

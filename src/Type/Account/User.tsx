@@ -16,3 +16,8 @@ export interface ResponseDataUser{
   message: string,
   data: User[]
 }
+export interface ResponseDataUserByToken{
+  code: number,
+  message: string,
+  data: User
+}

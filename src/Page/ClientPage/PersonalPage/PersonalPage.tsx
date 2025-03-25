@@ -1,10 +1,12 @@
 import { useState, ReactNode } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link} from "react-router-dom";
 // component
 import PersonalInformation from "./Components/PersonalInformation";
 import Notification from "./Components/Notifications";
 import MyAuction from "./Components/MyAuction";
 import History from "./Components/History";
+import { useAuth } from "../../../Common/Context/AuthContext";
+import ManagementAssets from "./Components/ManagementAssets";
 
 
 interface selectPresonalProps {
@@ -13,14 +15,14 @@ interface selectPresonalProps {
 	tab: ReactNode;
 }
 const PersonalPage = () => {
-	const location = useLocation();
-	console.log(location);
+	const {logout}=useAuth();
+
 	const [select, setSelect] = useState<selectPresonalProps>({
 		parameter: "#thong-tin-ca-nhan",
 		name: "Thông tin cá nhân",
 		tab: <PersonalInformation />,
 	});
-	const [selectPreson, setSelectPerson] = useState<selectPresonalProps[]>([
+	const [selectPreson] = useState<selectPresonalProps[]>([
 		{
 			parameter: "#thong-tin-ca-nhan",
 			name: "Thông tin cá nhân",
@@ -40,6 +42,11 @@ const PersonalPage = () => {
 			parameter: "#lich-su",
 			name: "Lịch sử",
 			tab: <History/>,
+		},
+		{
+			parameter: "#sanphamcuatoi",
+			name: "Sản phẩm của tôi",
+			tab: <ManagementAssets/>,
 		},
 	]);
 
@@ -68,7 +75,7 @@ const PersonalPage = () => {
 							</Link>
 						</div>
 					))}
-					<div className="px-6 py-3 text-xl rounded shadow-custom cursor-pointer">
+					<div className="px-6 py-3 text-xl rounded shadow-custom cursor-pointer" onClick={()=>logout()}>
 						<p>Đăng xuất</p>
 					</div>
 				</div>
