@@ -17,8 +17,7 @@ import { useAuth } from "../../../Common/Context/AuthContext";
 import { Button } from "antd";
 
 const Header = () => {
-	const {token}=useAuth();
-	const [login, setLogin] = useState<boolean>(true);
+	const {token,user,logout}=useAuth();
 	const [showLogin, setShowLogin] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 	const listMenu = [
@@ -145,7 +144,7 @@ const Header = () => {
                     className="relative object-cover shrink-0 h-14 w-14 z-10 rounded-xl"
                   />
                 </div>
-                <p className="text-sm font-bold">Dũng Cute</p>
+                <p className="text-sm font-bold">{user?.name}</p>
               </div>
             ) : (
               <Button className="relative py-2 px-4">
@@ -168,7 +167,7 @@ const Header = () => {
                 <div className="hover:bg-gray-200 px-3 py-2 cursor-pointer">
                   <p>Lịch sử đấu giá</p>
                 </div>
-                <div className="hover:bg-gray-200 px-3 py-2 cursor-pointer">
+                <div className="hover:bg-gray-200 px-3 py-2 cursor-pointer" onClick={()=>{logout()}}>
                   <p>Đăng xuất</p>
                 </div>
               </div>

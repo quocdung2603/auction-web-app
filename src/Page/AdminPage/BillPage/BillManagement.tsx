@@ -1,37 +1,32 @@
-import { Bill } from "../../../Type/BillAndTax/Bill";
-import { Button, DatePicker, Modal, notification, Table, TableProps } from "antd";
+import { AuctionSession } from "../../../Type/Auction/AuctionSession"; // Only import AuctionSession
+import {
+  DatePicker,
+  Modal,
+  notification,
+  Table,
+  TableProps,
+} from "antd";
 import Search, { SearchProps } from "antd/es/input/Search";
-import confirm from "antd/es/modal/confirm";
 import { useEffect, useRef, useState } from "react";
 import Columns from "./Components/Columns";
-import CreateForm from "./Components/CreateForm";
 import moment from "moment";
+import { AuctionSessionServices } from "../../../Services/Auction/AuctionSessionServices";
+import ListUserRegister from "./Components/ListUserRegister";
 
 const billManagement: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalEdit, setModalEdit] = useState<{
     isOpen: boolean;
-    data: undefined | Bill;
+    data: undefined | AuctionSession;
   }>({
     isOpen: false,
     data: undefined,
   });
 
-  const [listData, setListData] = useState<Bill[]>(() => {
-    const defaultItem: Bill = {
-      id: 0,
-      userId: 0,
-      staffId: 0,
-      billDate: new Date(),
-      totalAmount: 0,
-      paymentTerm: new Date(),
-      paymentStatus: false,
-      billItems: [],
-    };
-    return Array.from({ length: 10 }, () => ({ ...defaultItem }));
-  });
+  const [listData, setListData] = useState<AuctionSession[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
 
-  const timeoutRef = useRef(setTimeout(() => { }, 0));
+  const timeoutRef = useRef(setTimeout(() => {}, 0));
   const [filters, setFilters] = useState({
     start: 0,
     end: Date.now(),
@@ -40,9 +35,7 @@ const billManagement: React.FC = () => {
     pageNumber: 1,
   });
 
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
+
 
   const closeModal = () => {
     if (modalEdit.data) {
@@ -55,14 +48,21 @@ const billManagement: React.FC = () => {
     setIsModalOpen(false);
   };
 
+  const getAll = async () => {
+    try {
+      const res = await AuctionSessionServices.getAll();
+      setListData(res.metadata.auctionSessions);
+      setTotalItems(res.metadata.total);
+    } catch (error) {
+      notification.error({ message: "Failed to fetch auction sessions" });
+    }
+  };
+
   useEffect(() => {
-    // fetchArticles().then((res) => {
-    //   setArticles(res.data.data);
-    // });
+    getAll();
   }, [filters]);
 
-  const onChange: TableProps<Bill>["onChange"] = (pagination) => {
-    //refetch data
+  const onChange: TableProps<AuctionSession>["onChange"] = (pagination) => {
     setFilters((prev) => ({
       ...prev,
       pageNumber: pagination.current ?? 1,
@@ -70,44 +70,21 @@ const billManagement: React.FC = () => {
     }));
   };
 
-  const onSearch: SearchProps["onSearch"] = (value, _e) => {
-    //refetch data
+  const onSearch: SearchProps["onSearch"] = (value) => {
     clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
       setFilters((prev) => ({
         ...prev,
         search: value,
+        pageNumber: 1,
       }));
     }, 1500);
   };
 
-  const showModalEdit = (isOpen: boolean, data: Bill) => {
+  const showModalEdit = (isOpen: boolean, data: AuctionSession) => {
     setModalEdit({
       isOpen,
       data,
-    });
-  };
-
-  const showDeleteConfirm = (_id: string) => {
-    confirm({
-      title: "Bạn có chắc muốn xóa dữ liệu này?",
-      content: "Bạn sẽ không thể khôi phục dữ liệu sau khi xóa!",
-      okText: "Xóa luôn sợ gì",
-      okType: "danger",
-      maskClosable: true,
-      closable: true,
-      onOk() {
-        // deleteArticle({ _id })
-        //   .then(() => {
-        //     notification.success({ message: "Xóa thành công" });
-        //   })
-        //   .catch(() => {
-        //     notification.error({
-        //       message: "Xóa thất bại ! Kiểm tra lại nha !",
-        //     });
-        //   });
-      },
-      cancelText: "Hủy",
     });
   };
 
@@ -120,19 +97,11 @@ const billManagement: React.FC = () => {
           onChange={(date) => {
             if (!date) return;
 
-            if (date[0]) {
-              setFilters((prev) => ({
-                ...prev,
-                start: moment(date[0]?.toString()).valueOf(),
-              }));
-            }
-
-            if (date[1]) {
-              setFilters((prev) => ({
-                ...prev,
-                end: moment(date[1]?.toString()).valueOf(),
-              }));
-            }
+            setFilters((prev) => ({
+              ...prev,
+              start: date[0] ? moment(date[0].toString()).valueOf() : prev.start,
+              end: date[1] ? moment(date[1].toString()).valueOf() : prev.end,
+            }));
           }}
         />
         <Search
@@ -141,28 +110,25 @@ const billManagement: React.FC = () => {
           className="w-[300px]"
           onSearch={onSearch}
         />
-        <Button onClick={showModal}>Thêm mới</Button>
         <Modal
-          width={1000}
           title={modalEdit.isOpen ? "Sửa Thông tin" : "Thêm mới thông tin"}
           open={isModalOpen || modalEdit.isOpen}
           onCancel={closeModal}
-          cancelButtonProps={{
-            className: "hidden",
-          }}
-          okButtonProps={{
-            className: "hidden",
-          }}
+          cancelButtonProps={{ className: "hidden" }}
+          okButtonProps={{ className: "hidden" }}
         >
-          <CreateForm initForm={modalEdit.data} />
+          <ListUserRegister auctionId={modalEdit.data?.id}></ListUserRegister>
         </Modal>
       </div>
       <Table
-        columns={Columns(showModalEdit, showDeleteConfirm)}
-        dataSource={listData.map((item, index) => ({ ...item, key: index }))}
+        columns={Columns(showModalEdit)}
+        dataSource={listData.map((item) => ({ ...item, key: item.id }))}
         pagination={{
-          pageSize: 5,
-          total: listData.length,
+          current: filters.pageNumber,
+          pageSize: filters.pageSize,
+          total: totalItems,
+          showSizeChanger: true,
+          pageSizeOptions: ["5", "10", "20", "50"],
         }}
         onChange={onChange}
       />

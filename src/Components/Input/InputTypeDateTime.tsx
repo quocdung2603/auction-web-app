@@ -1,5 +1,4 @@
 import { Controller, UseControllerProps, FieldValues } from "react-hook-form";
-import { parseDateToISO } from "../../Util/ConverStringToTime";
 
 interface InputTypeDateTimeProps<T extends FieldValues>
   extends UseControllerProps<T> {
@@ -27,10 +26,9 @@ const InputTypeDateTime = <T extends FieldValues>({
           <input
             id="dateInput"
             className="w-full h-10 bg-gray-200 text-black text-sm border border-black rounded-3xl px-3 py-2 transition duration-300 ease focus:outline-none shadow-sm focus:shadow-md"
-            value={parseDateToISO(value)} // Hiển thị giá trị theo định dạng ISO
+            value={typeof value === "string" ? value.split("T")[0] : ""} // Chỉ hiển thị YYYY-MM-DD
             onChange={(e) => {
-              const dateValue = new Date(e.target.value);
-              onChange(parseDateToISO(dateValue.toString())); // Cập nhật giá trị với react-hook-form
+              onChange(e.target.value); // Gửi YYYY-MM-DD trực tiếp
             }}
             placeholder={placeholder}
             type="date"

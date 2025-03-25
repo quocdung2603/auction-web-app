@@ -63,87 +63,12 @@ const CreateForm: React.FC<CreateEditArticleFormProps> = ({ initForm }) => {
     }
   }, [initForm, reset]);
 
-  const onSubmit: SubmitHandler<CreateFormFields> = async (data) => {
-    try {
-      if (initForm) {
-        // API Update logic
-        notification.success({ message: "Cập nhật thành công" });
-        alert(data)
-      } else {
-        // API Create logic
-        notification.success({ message: "Thêm thành công" });
-        alert(JSON.stringify(data));
-      }
-      reset(defaultFormValues);
-    } catch (err) {
-      notification.error({ message: "Có lỗi xảy ra, vui lòng kiểm tra lại!" });
-    }
-  };
+
 
   return (
-    <form
-      method="POST"
-      className="space-y-6"
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <InputTypeSelect
-          name="userId"
-          control={control}
-          rules={{ required: "Vui lòng chọn danh mục" }}
-          title="Danh mục sản phẩm"
-          titleOption={userList}
-        />
-        <InputTypeSelect
-          name="staffId"
-          control={control}
-          rules={{ required: "Vui lòng chọn danh mục" }}
-          title="Danh mục sản phẩm"
-          titleOption={staffList}
-        />
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <InputTypeDateTime
-          title="Ngày tạo"
-          name="billDate"
-          control={control}
-          rules={{ required: "Vui lòng chọn ngày" }}
-          placeholder="Nhập ngày tạo"
-        />
-        <InputTypeNumber
-          name="totalAmount"
-          control={control}
-          rules={{ required: "Vui lòng nhập số tiền" }}
-          title="Số tiền"
-          placeholder="Nhập số tiền"
-        />
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <InputTypeDateTime
-          title="Thời hạn thanh toán"
-          name="paymentTerm"
-          control={control}
-          rules={{ required: "Vui lòng chọn ngày" }}
-          placeholder="Thời hạn thanh toán"
-        />
-        <InputTypeSelect
-          name="paymentStatus"
-          control={control}
-          rules={{ required: "Vui lòng chọn danh mục" }}
-          title="Danh mục sản phẩm"
-          titleOption={paymentStatusList}
-        />
-      </div>
-      <div className="text-right">
-        <Button
-          type="primary"
-          htmlType="submit"
-          className="bg-blue-600 hover:bg-blue-700 text-white"
-        >
-          {initForm ? "Cập nhật" : "Tạo"}
-        </Button>
-      </div>
-    </form>
+    <div>
+      
+    </div>
   );
 };
 

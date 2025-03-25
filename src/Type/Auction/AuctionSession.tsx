@@ -1,15 +1,18 @@
-type AuctionSession = {
-  auctionSessionID: number;
-  startTime: Date;
-  endTime: Date;
-  eventID: number;
-  delflag: boolean;
-  created_at: Date;
-  updated_at: Date;
-  deleted_at: Date;
-};
+export interface AuctionSession {
+  id: number;
+  name: string;
+  startTime: string;
+  endTime: string;
+  paymentDeadline: number;
+  assetId: number;
+  depositFee: string; 
+  bidStep: string;    
+  isDelete: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+}
 
-export { type AuctionSession };
 
 export interface ResponseDataAuctionSession {
   code: number;
@@ -50,4 +53,17 @@ export interface ResponseAuctionDataById{
   metadata: {
     auctionSession: Auction;
   };
+}
+
+export interface AuctionBid {
+  id: number;
+  userId: number;
+  auctionId: number;
+  price: number;
+  status: boolean;
+}
+export interface ResponseDataAuctionBid{
+  code: number;
+  message: string;
+  data: AuctionBid[]
 }

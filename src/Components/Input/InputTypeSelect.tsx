@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Controller, Control, FieldValues, UseControllerProps, useController } from "react-hook-form";
+import { useState } from "react";
+import { FieldValues, UseControllerProps, useController } from "react-hook-form";
 
 interface Options {
   value: any;
@@ -9,6 +9,7 @@ interface Options {
 interface InputTypeSelectProps<T extends FieldValues> extends UseControllerProps<T> {
   title: string;
   titleOption: Options[];
+  disabled?: boolean; // Đã có sẵn trong interface của bạn
 }
 
 const InputTypeSelect = <T extends FieldValues>({
@@ -17,6 +18,7 @@ const InputTypeSelect = <T extends FieldValues>({
   title,
   titleOption,
   rules,
+  disabled = false,
 }: InputTypeSelectProps<T>) => {
   const [searchTerm, setSearchTerm] = useState(""); // Trạng thái tìm kiếm
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Trạng thái mở/đóng dropdown
@@ -39,14 +41,16 @@ const InputTypeSelect = <T extends FieldValues>({
     <div className="relative w-full min-w-[200px] mb-5">
       <label className="block mb-1 text-lg text-black font-medium">{title}</label>
       <div
-        className="w-full h-10 bg-gray-200 text-black text-sm border border-black rounded-3xl px-3 py-2 transition duration-300 ease focus:outline-none shadow-sm focus:shadow-md cursor-pointer"
-        onClick={() => setIsDropdownOpen(!isDropdownOpen)} // Toggle dropdown
+        className={`w-full h-10 bg-gray-200 text-black text-sm border border-black rounded-3xl px-3 py-2 transition duration-300 ease focus:outline-none shadow-sm focus:shadow-md cursor-pointer ${
+          disabled ? "bg-gray-300 cursor-not-allowed opacity-50" : ""
+        }`}
+        onClick={() => !disabled && setIsDropdownOpen(!isDropdownOpen)} // Chỉ toggle dropdown nếu không bị disable
       >
         {value
           ? titleOption.find((option) => option.value === value)?.label || "Chọn..."
           : "Chọn..."}
       </div>
-      {isDropdownOpen && (
+      {isDropdownOpen && !disabled && (
         <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
           {/* Input tìm kiếm */}
           <div className="p-2">
@@ -66,9 +70,9 @@ const InputTypeSelect = <T extends FieldValues>({
                 value === item.value ? "bg-gray-200" : ""
               }`}
               onClick={() => {
-                onChange(item.value); // Cập nhật giá trị đã chọn
-                setIsDropdownOpen(false); // Đóng dropdown
-                setSearchTerm(""); // Xóa từ khóa tìm kiếm
+                onChange(item.value);
+                setIsDropdownOpen(false);
+                setSearchTerm("");
               }}
             >
               {item.label}

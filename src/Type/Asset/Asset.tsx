@@ -1,3 +1,7 @@
+interface infoImage{
+  id: string,
+  url: string
+}
 type Asset = {
   assetID: number;
   assetName: string;
@@ -11,6 +15,11 @@ type Asset = {
   created_at: Date;
   updated_at: Date;
   deleted_at: Date;
+  userID: number,
+  address: string,
+  images: infoImage[],
+  status?: string,
+  reason?: string
 };
 
 export { type Asset };

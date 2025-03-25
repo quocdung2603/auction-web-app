@@ -1,90 +1,109 @@
-import { Tax, TaxType } from "../../../../Type/BillAndTax/Tax";
 import { Button, TableColumnsType } from "antd";
-import { Link } from "react-router-dom";
+import moment from "moment";
+import { Transaction } from "../../../../Type/Billing/BillingType";
+import { IconSuccess } from "../../../../Common/Icon/Icon";
 
-const Columns = (showModalEdit: (
-    isOpen: boolean, data: Tax) => void,
-    showDeleteConfirm: (userId: string) => void
-  ): TableColumnsType<Tax> => [
-    {
-      title: "Tên thuế",
-      dataIndex: "taxName",
-      //filter
-      filters: [
-        {
-          text: "A",
-          value: "A",
-        }
-      ],
-      filterMode: "tree",
-      filterSearch: true,
-      width: "16.67%",
-      align: "center",
-      onFilter: (value, record) => record.taxName.startsWith(value as string),
-      //sorter
-      defaultSortOrder: 'descend',
-      sorter: (a, b) => a.taxName.localeCompare(b.taxName),
-      //render
-      render(value, record) {
-        return (
-          <Link to={`/profile/${record.id}`} className="underline text-center">
-            {value}
-          </Link>
-        );
-      },
-    },
-    {
-      title: "Giá trị",
-      dataIndex: "taxAmount",
-      width: "16.67%",
-      align: "center",
-      render: (value) => {
-        return <span className="text-center">{value}</span>;
-      },
-    },
-    {
-      title: "Loại thuế",
-      dataIndex: "taxType",
-      width: "16.67%",
-      align: "center",
-      render: (value) => {
-        return <span className="text-center">{value}</span>;
-      },
-    },
-    {
-      title: "Mô tả ngắn",
-      dataIndex: "taxDescription",
-      width: "16.67%",
-      align: "center",
-      render: (value) => {
-        return <span className="text-center">{new DOMParser().parseFromString(value, 'text/html').body.innerText}</span>;
-      },
-    },
-    {
-      title: "Chức năng",
-      dataIndex: "action",
-      align: "center",
-      render(_, record) {
-        return (
-          <div className="flex flex-row justify-center space-x-3">
+const Columns = (
+  handleCompleteTransaction: (id: number) => void,
+  handleCancelTransaction: (id: number) => void
+): TableColumnsType<Transaction> => [
+  {
+    title: "ID Giao dịch",
+    dataIndex: "id",
+    width: "10%",
+    align: "center",
+    sorter: (a, b) => a.id - b.id,
+    render: (value) => <span>{value}</span>,
+  },
+  {
+    title: "ID Đấu giá",
+    dataIndex: "auctionId",
+    width: "10%",
+    align: "center",
+    sorter: (a, b) => a.auctionId - b.auctionId,
+    render: (value) => <span>{value}</span>,
+  },
+  {
+    title: "ID Người dùng",
+    dataIndex: "userId",
+    width: "10%",
+    align: "center",
+    sorter: (a, b) => a.userId - b.userId,
+    render: (value) => <span>{value}</span>,
+  },
+  {
+    title: "Hạn chót",
+    dataIndex: "deadlineDate",
+    width: "15%",
+    align: "center",
+    sorter: (a, b) =>
+      moment(a.deadlineDate).unix() - moment(b.deadlineDate).unix(),
+    render: (value) => <span>{moment(value).format("DD/MM/YYYY HH:mm")}</span>,
+  },
+  {
+    title: "Ngày thanh toán",
+    dataIndex: "submitDate",
+    width: "15%",
+    align: "center",
+    sorter: (a, b) =>
+      (a.submitDate ? moment(a.submitDate).unix() : 0) -
+      (b.submitDate ? moment(b.submitDate).unix() : 0),
+    render: (value) => (
+      <span>
+        {value ? moment(value).format("DD/MM/YYYY HH:mm") : "Chưa gửi"}
+      </span>
+    ),
+  },
+  {
+    title: "Số tiền",
+    dataIndex: "amount",
+    width: "15%",
+    align: "center",
+    sorter: (a, b) => a.amount - b.amount,
+    render: (value) => <span>{value.toLocaleString()} VND</span>,
+  },
+  {
+    title: "Trạng thái",
+    dataIndex: "status",
+    width: "10%",
+    align: "center",
+    filters: [
+      { text: "Pending", value: "Pending" },
+      { text: "Completed", value: "Completed" },
+      { text: "Cancelled", value: "Cancelled" },
+    ],
+    onFilter: (value, record) => record.status === value,
+    render: (value) => <span>{value}</span>,
+  },
+  {
+    title: "Chức năng",
+    dataIndex: "action",
+    align: "center",
+    render: (_, record) => (
+      <div className="flex flex-row justify-center space-x-3">
+        {record.status === "Done" ? (
+          <IconSuccess></IconSuccess>
+        ) : (
+          <>
             <Button
-              onClick={() => {
-                showModalEdit(true, record);
-              }}
+              type="primary"
+              onClick={() => handleCompleteTransaction(record.id)}
+              disabled={record.status !== "Complete"}
             >
-              Edit
+              Hoàn thành
             </Button>
             <Button
-              onClick={() => {
-                showDeleteConfirm(record.id.toString());
-              }}
+              danger
+              onClick={() => handleCancelTransaction(record.id)}
+              disabled={record.status !== "Pending"}
             >
-              Delete
+              Hủy
             </Button>
-          </div>
-        );
-      },
-    },
-  ];
+          </>
+        )}
+      </div>
+    ),
+  },
+];
 
 export default Columns;

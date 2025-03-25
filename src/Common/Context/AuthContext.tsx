@@ -1,5 +1,5 @@
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { LoginRequst, ResponseLogin } from '../../Type/Account/Login';
 import { routerLinkUser } from '../../Util/RouterLink';
 import { AuthServices } from '../../Services/Account/AuthServices';
@@ -51,7 +51,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     localStorage.removeItem(USER);
     setToken(null);
     setUser(null);
-    return <Navigate to={routerLinkUser.Home}/>
+    navigate(routerLinkUser.Home);
   };
   const checkToken = async ()=>{
     try {
@@ -68,7 +68,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
   
   useEffect(()=>{
     checkToken();
-  },[token])
+  },[token,user])
   return (
     <AuthConext.Provider value={{login, logout, token, user }}>
       {children}

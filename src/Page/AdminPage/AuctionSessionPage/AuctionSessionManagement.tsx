@@ -1,4 +1,4 @@
-import { AuctionSession } from "../../../Type/Auction/AuctionSession";
+import { AuctionSession } from "../../../Type/Auction/AuctionSession"; // Only import AuctionSession
 import {
   Button,
   DatePicker,
@@ -26,6 +26,7 @@ const auctionSessionManagement: React.FC = () => {
   });
 
   const [listData, setListData] = useState<AuctionSession[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
 
   const timeoutRef = useRef(setTimeout(() => {}, 0));
   const [filters, setFilters] = useState({
@@ -52,9 +53,13 @@ const auctionSessionManagement: React.FC = () => {
   };
 
   const getAll = async () => {
-    AuctionSessionServices.getAll().then((res) => {
+    try {
+      const res = await AuctionSessionServices.getAll();
       setListData(res.metadata.auctionSessions);
-    });
+      setTotalItems(res.metadata.total);
+    } catch (error) {
+      notification.error({ message: "Failed to fetch auction sessions" });
+    }
   };
 
   useEffect(() => {
@@ -62,7 +67,6 @@ const auctionSessionManagement: React.FC = () => {
   }, [filters]);
 
   const onChange: TableProps<AuctionSession>["onChange"] = (pagination) => {
-    //refetch data
     setFilters((prev) => ({
       ...prev,
       pageNumber: pagination.current ?? 1,
@@ -70,13 +74,13 @@ const auctionSessionManagement: React.FC = () => {
     }));
   };
 
-  const onSearch: SearchProps["onSearch"] = (value, _e) => {
-    //refetch data
+  const onSearch: SearchProps["onSearch"] = (value) => {
     clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
       setFilters((prev) => ({
         ...prev,
         search: value,
+        pageNumber: 1,
       }));
     }, 1500);
   };
@@ -88,7 +92,7 @@ const auctionSessionManagement: React.FC = () => {
     });
   };
 
-  const showDeleteConfirm = (_id: string) => {
+  const showDeleteConfirm = (id: string) => {
     confirm({
       title: "Bạn có chắc muốn xóa dữ liệu này?",
       content: "Bạn sẽ không thể khôi phục dữ liệu sau khi xóa!",
@@ -97,7 +101,7 @@ const auctionSessionManagement: React.FC = () => {
       maskClosable: true,
       closable: true,
       onOk() {
-        AuctionSessionServices.delete(_id)
+        AuctionSessionServices.delete(id)
           .then(() => {
             notification.success({ message: "Xóa thành công" });
             getAll();
@@ -121,19 +125,11 @@ const auctionSessionManagement: React.FC = () => {
           onChange={(date) => {
             if (!date) return;
 
-            if (date[0]) {
-              setFilters((prev) => ({
-                ...prev,
-                start: moment(date[0]?.toString()).valueOf(),
-              }));
-            }
-
-            if (date[1]) {
-              setFilters((prev) => ({
-                ...prev,
-                end: moment(date[1]?.toString()).valueOf(),
-              }));
-            }
+            setFilters((prev) => ({
+              ...prev,
+              start: date[0] ? moment(date[0].toString()).valueOf() : prev.start,
+              end: date[1] ? moment(date[1].toString()).valueOf() : prev.end,
+            }));
           }}
         />
         <Search
@@ -147,12 +143,8 @@ const auctionSessionManagement: React.FC = () => {
           title={modalEdit.isOpen ? "Sửa Thông tin" : "Thêm mới thông tin"}
           open={isModalOpen || modalEdit.isOpen}
           onCancel={closeModal}
-          cancelButtonProps={{
-            className: "hidden",
-          }}
-          okButtonProps={{
-            className: "hidden",
-          }}
+          cancelButtonProps={{ className: "hidden" }}
+          okButtonProps={{ className: "hidden" }}
         >
           <CreateForm
             initForm={modalEdit.data}
@@ -163,10 +155,13 @@ const auctionSessionManagement: React.FC = () => {
       </div>
       <Table
         columns={Columns(showModalEdit, showDeleteConfirm)}
-        dataSource={listData.map((item, index) => ({ ...item, key: index }))}
+        dataSource={listData.map((item) => ({ ...item, key: item.id }))}
         pagination={{
-          pageSize: 5,
-          total: listData.length,
+          current: filters.pageNumber,
+          pageSize: filters.pageSize,
+          total: totalItems,
+          showSizeChanger: true,
+          pageSizeOptions: ["5", "10", "20", "50"],
         }}
         onChange={onChange}
       />

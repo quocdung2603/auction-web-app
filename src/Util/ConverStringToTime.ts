@@ -10,3 +10,8 @@ export const parseDateToISO = (dateString: string): string => {
 
   return `${year}-${month}-${day} Time ${hours}:${minutes}:${seconds}`;
 };
+
+export const parseDateToISO1 = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toISOString().split("T")[0]; // Chỉ lấy phần YYYY-MM-DD
+};
